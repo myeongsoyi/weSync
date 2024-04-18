@@ -2,6 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+* frontend 폴더로 진입 후 (cd frontend) 패키지 설치할 것 (yarn install)
+* 무언가 설치하거나 조작할 때 npm 대신 yarn 사용 (yarn add 등등...)
+
 First, run the development server:
 
 ```bash
