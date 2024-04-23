@@ -13,17 +13,20 @@
     margin: 0.3rem;
     background-color: white;
     border-radius: 50%;
-    // transition: transform 0.5s ease-in-out; /* 부드러운 변화를 위한 트랜지션 */
+    display: inline-block;
     &:hover {
-        animation: rotate 1s linear infinite; /* 회전 애니메이션 */
+        animation: rotateAndScale 1s linear infinite /* 회전 애니메이션 */
     }
 }
 
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
+@keyframes rotateAndScale {
+    0% {
+        transform: rotate(0deg) scale(1); /* 시작과 끝에서 원래 크기와 회전각 */
     }
-    to {
-        transform: rotate(360deg);
+    50% {
+        transform: rotate(180deg) scale(1.2); /* 180도에서 크기가 1.2배 */
+    }
+    100% {
+        transform: rotate(360deg) scale(1)
     }
 }
