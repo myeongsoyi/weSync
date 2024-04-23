@@ -3,10 +3,16 @@
 import Image from "next/image";
 import React from "react";
 import { Layout, Button } from "antd";
+import Swal from "sweetalert2";
 import Link from "next/link";
 
 export default function HomePage() {
   const { Header } = Layout;
+
+  // 간단한 알림
+  const handleAlert = () => {
+    Swal.fire("안녕하세요!", "SweetAlert로 만든 알림입니다.", "info");
+  };
 
   return (
     <Layout style={{backgroundColor:'#FFFFFF'}}>
@@ -32,7 +38,7 @@ export default function HomePage() {
           items={items}
           style={{ flex: 1, minWidth: 0, display: "flex", justifyContent: "center"}}
         /> */}
-        <Button type="primary" onClick={()=>alert('로그인 클릭')}>로그인</Button>
+        <Button type="primary" onClick={handleAlert}>로그인</Button>
       </Header>
     </Layout>
   );

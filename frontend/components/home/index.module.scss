@@ -1,0 +1,23 @@
+.title {
+    position: relative;
+    padding: 10px;
+    background-color: lightblue;
+}
+
+.title::before, .title::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    border: 2px solid red;
+}
+
+.title::after {
+    top: -10px;
+    right: -10px;
+    bottom: -10px;
+    left: -10px;
+    border-color: blue;
+}
