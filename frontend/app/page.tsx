@@ -1,5 +1,7 @@
 import React from "react";
 import Navigation from "@/components/common/navigations/navMain";
+import AlertTest from "@/components/home/alertTest";
+import styles from "@/components/home/index.module.scss";
 
 export default function HomePage() {
 
@@ -16,8 +18,11 @@ export default function HomePage() {
             // borderRadius: borderRadiusLG,
           }}
         >
-          <h1>Hello world</h1>
+          <h1 className={styles.title}>Hello world</h1>
+          <p>css 테스트</p>
+          <hr />
           <span>Content : 스크롤이 있는 경우</span>
+          <AlertTest/>
         </div>
       </div>
     </div>

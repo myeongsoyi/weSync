@@ -38,15 +38,22 @@ html {
 }
 
 .content {
+    // 100vh에서 nav와 footer의 높이만큼 뺀다.
+    min-height: calc(100vh - 100px - 120px);
     margin: 0 10%;
     font-size: rem(16);
 }
 
 // 푸터 관련 설정
 html, body {
+    // min-height: 100%; /* 브라우저 창 전체 높이로 설정 */
     height: 100%; /* 브라우저 창 전체 높이로 설정 */
     margin: 0;
     padding: 0;
+}
+
+.swal2-height-auto {
+    height: 100% !important;  /* 또는 원하는 높이 값으로 설정 */
 }
 
 .page-container {
@@ -60,6 +67,7 @@ main {
 }
 
 footer {
+    height: 120px;
     background: #ccc; /* 푸터 배경색 설정 */
     padding: 10px 0; /* 푸터 패딩 설정 */
     text-align: center; /* 텍스트 중앙 정렬 */
@@ -132,138 +140,139 @@ footer {
   color: $color-red;
 }
 
-// 아래는 기본 스타일 초기화 코드 (현재는 일부 주석화)
+// 아래는 기본 스타일 초기화 코드 (주석화)
 
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-}
+// html,
+// body,
+// div,
+// span,
+// applet,
+// object,
+// iframe,
+// // h# 은 따로 만들어야하지만 일단 기본값을 쓰자.
+// // h1,
+// // h2,
+// // h3,
+// // h4,
+// // h5,
+// // h6,
+// p,
+// blockquote,
+// pre,
+// a,
+// abbr,
+// acronym,
+// address,
+// big,
+// cite,
+// code,
+// del,
+// dfn,
+// em,
+// img,
+// ins,
+// kbd,
+// q,
+// s,
+// samp,
+// small,
+// strike,
+// strong,
+// sub,
+// sup,
+// tt,
+// var,
+// b,
+// u,
+// i,
+// center,
+// dl,
+// dt,
+// dd,
+// ol,
+// ul,
+// li,
+// fieldset,
+// form,
+// label,
+// legend,
+// table,
+// caption,
+// tbody,
+// tfoot,
+// thead,
+// tr,
+// th,
+// td,
+// article,
+// aside,
+// canvas,
+// details,
+// embed,
+// figure,
+// figcaption,
+// footer,
+// header,
+// hgroup,
+// menu,
+// nav,
+// output,
+// ruby,
+// section,
+// summary,
+// time,
+// mark,
+// audio,
+// video {
+//     margin: 0;
+//     padding: 0;
+//     border: 0;
+//     font-size: 100%;
+//     font: inherit;
+//     vertical-align: baseline;
+// }
 
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-    display: block;
-}
+// /* HTML5 display-role reset for older browsers */
+// article,
+// aside,
+// details,
+// figcaption,
+// figure,
+// footer,
+// header,
+// hgroup,
+// menu,
+// nav,
+// section {
+//     display: block;
+// }
 
-body {
-    line-height: 1;
-}
+// body {
+//     line-height: 1;
+// }
 
-ol,
-ul {
-    list-style: none;
-}
+// ol,
+// ul {
+//     list-style: none;
+// }
 
-blockquote,
-q {
-    quotes: none;
-}
+// blockquote,
+// q {
+//     quotes: none;
+// }
 
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-    content: "";
-    content: none;
-}
+// blockquote:before,
+// blockquote:after,
+// q:before,
+// q:after {
+//     content: "";
+//     content: none;
+// }
 
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
+// table {
+//     border-collapse: collapse;
+//     border-spacing: 0;
+// }
 
 /* body {
     padding-top: 150px;
