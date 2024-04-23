@@ -2,6 +2,138 @@
 @tailwind components;
 @tailwind utilities;
 
+// html {
+//   min-width: 320px;
+//   max-width: 600px;
+//   margin: 0 auto;
+//   // border: 1px solid black;
+
+//   // 스크롤바 숨기기
+//   -ms-overflow-style: none; /* IE and Edge */
+//   scrollbar-width: none; /* Firefox */
+//   ::-webkit-scrollbar {
+//     display: none; /* Chrome, Safari, Opera*/
+//   }
+// }
+
+// body {
+//   padding: rem(16) rem(26);
+// }
+
+// .box {
+//   -ms-overflow-style: none; /* IE and Edge */
+//   scrollbar-width: none; /* Firefox */
+// }
+// .box::-webkit-scrollbar {
+//   display: none; /* Chrome, Safari, Opera*/
+// }
+
+body {
+    font-size: rem(16);
+}
+
+// 최소 너비 설정
+html {
+    min-width: 640px;
+}
+
+.content {
+    margin: 0 10%;
+    font-size: rem(16);
+}
+
+// 푸터 관련 설정
+html, body {
+    height: 100%; /* 브라우저 창 전체 높이로 설정 */
+    margin: 0;
+    padding: 0;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; /* 최소 높이를 화면 높이로 설정 */
+}
+
+main {
+    flex: 1; /* main 내용이 확장하여 남은 공간을 모두 채움 */
+}
+
+footer {
+    background: #ccc; /* 푸터 배경색 설정 */
+    padding: 10px 0; /* 푸터 패딩 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+//font
+
+@for $i from 1 through length($headingFontList) {
+  /* 리스트 길이 만큼 순회 */
+  h#{$i} {
+    font-size: nth($headingFontList, $i);
+    font-weight: bold;
+    color: $color-text1;
+    line-height: normal;
+  }
+}
+
+.text-body {
+  font-size: $fs-5;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+.text-body2 {
+  font-size: $fs-6;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+.text-caption {
+  font-size: $fs-7;
+  font-weight: $fw-medium;
+  color: $color-text1;
+  line-height: normal;
+}
+
+.text-button {
+  font-size: $fs-4;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+// .text-logo {
+//   font-family: "Oliver";
+//   font-size: $fs-3;
+//   color: $color-text1;
+// }
+
+// .text-big-logo {
+//   font-family: "Oliver";
+//   font-size: rem(40);
+//   color: $color-text1;
+// }
+
+// .text-deco {
+//   font-family: "UhBeeSe_hyun";
+//   font-size: $fs-3;
+//   color: $color-text1;
+// }
+
+.c-text2 {
+  color: $color-text2;
+}
+
+.c-text3 {
+  color: $color-text3;
+}
+
+.c-main {
+  color: $color-red;
+}
+
+// 아래는 기본 스타일 초기화 코드 (현재는 일부 주석화)
+
 html,
 body,
 div,
@@ -131,43 +263,6 @@ q:after {
 table {
     border-collapse: collapse;
     border-spacing: 0;
-}
-
-body {
-    font-size: 16px;
-}
-
-// 최소 너비 설정
-html {
-    min-width: 640px;
-}
-
-.content {
-    margin: 0 10%;
-    font-size: 1rem;
-}
-
-// 푸터 관련 설정
-html, body {
-    height: 100%; /* 브라우저 창 전체 높이로 설정 */
-    margin: 0;
-    padding: 0;
-}
-
-.page-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%; /* 최소 높이를 화면 높이로 설정 */
-}
-
-main {
-    flex: 1; /* main 내용이 확장하여 남은 공간을 모두 채움 */
-}
-
-footer {
-    background: #ccc; /* 푸터 배경색 설정 */
-    padding: 10px 0; /* 푸터 패딩 설정 */
-    text-align: center; /* 텍스트 중앙 정렬 */
 }
 
 /* body {
