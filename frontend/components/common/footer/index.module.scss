@@ -6,14 +6,18 @@
 }
 
 .center {
-    margin: auto 20vw;
+    display: relative;
+    left: 50%;
+    margin: auto;
+    color: $color-yellow;
 }
 
 .icon {
-    margin: 0.3rem;
+    // margin: 0.3rem;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
+    // aspect-ratio: 1;
     &:hover {
         animation: rotateAndScale 1s linear infinite /* 회전 애니메이션 */
     }
