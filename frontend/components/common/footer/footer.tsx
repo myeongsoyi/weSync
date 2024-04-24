@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import styles from "./index.module.scss";
 
-export default function Footer() {
+export default function Footer() {  
   return (
     <footer className="flex justify-center p-6 bg-sky-700 text-white overflow-x-hidden">
       <div className={`flex bg-white p-2 rounded-xl ${styles.logo}`}>
@@ -33,5 +33,5 @@ export default function Footer() {
         />
       </div>
     </footer>
-  );
+  );  
 }
