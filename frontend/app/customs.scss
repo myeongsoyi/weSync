@@ -1,0 +1,72 @@
+
+// sweet alert
+.swal-confirm-button {
+  margin: auto 10px;
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px solid $color-brown;
+  font-weight: 500;
+  min-width: rem(70);
+  background-color: $color-dark-yellow;
+  /* 배경색 */
+  color: $color-brown;
+  /* 텍스트 색상 */
+}
+
+.swal-cancel-button {
+  margin: auto 10px;
+  padding: 10px;
+  border-radius: 15px;
+  border: 2px solid $color-brown;
+  font-weight: 500;
+  min-width: rem(70);
+  background-color: $color-white-yellow;
+  /* 배경색 */
+  color: $color-brown;
+  /* 텍스트 색상 */
+}
+
+/* 팝업 테두리 스타일링 */
+.swal2-popup {
+  border: 15px solid $color-dark-yellow;
+  border-radius: 40px;
+}
+
+/* 타이틀 테두리 스타일링 */
+.swal2-title {
+  // border-bottom: 2px solid #4a90e2;
+  // background-color: $color-dark-yellow;
+  padding-bottom: 10px;
+  /* 패딩 추가 */
+  color: $color-light-black;
+  // padding-top: 0;
+  font-size: rem(32);
+}
+
+.swal2-text {
+  border-radius: 40px;
+  background-color: $color-light-yellow;
+}
+
+// antd switch
+.ant-switch-checked {
+  background-color: #61de56 !important;
+}
+
+// antd card
+.ant-card-body {
+  padding: 0 10px 10px !important;
+}
+
+.ant-card-head {
+  border-bottom: none !important;
+  min-height: 36px !important;
+  padding: 0 16px !important;
+}
+
+// .ant-avatar-circle {
+//   background-color: white !important;
+//   img {
+//     padding: 5px !important;
+//   }
+// }
