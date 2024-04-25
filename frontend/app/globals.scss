@@ -39,9 +39,8 @@ html {
 
 .content {
     // 100vh에서 nav와 footer의 높이만큼 뺀다.
-    min-height: calc(100vh - 100px - 120px);
-    margin: 0 10%;
-    font-size: rem(16);
+    min-height: calc(100vh - 14vh - 16vh);
+    margin: 0 12%;
 }
 
 // 푸터 관련 설정
@@ -67,7 +66,7 @@ main {
 }
 
 footer {
-    height: 120px;
+    height: 16vh;
     background: #ccc; /* 푸터 배경색 설정 */
     padding: 10px 0; /* 푸터 패딩 설정 */
     text-align: center; /* 텍스트 중앙 정렬 */
@@ -138,53 +137,6 @@ footer {
 
 .c-main {
   color: $color-red;
-}
-
-.swal-confirm-button {
-  margin: auto 10px;
-  padding: 10px;
-  border-radius: 15px;
-  border: 2px solid $color-brown;
-  font-weight: 500;
-  min-width: rem(70);
-  background-color: $color-dark-yellow; /* 배경색 */
-  color: $color-brown; /* 텍스트 색상 */
-}
-
-.swal-cancel-button {
-  margin: auto 10px;
-  padding: 10px;
-  border-radius: 15px;
-  border: 2px solid $color-brown;
-  font-weight: 500;
-  min-width: rem(70);
-  background-color: $color-white-yellow; /* 배경색 */
-  color: $color-brown; /* 텍스트 색상 */
-}
-
-/* 팝업 테두리 스타일링 */
-.swal2-popup {
-  border: 15px solid $color-dark-yellow;
-  border-radius: 40px;
-}
-
-/* 타이틀 테두리 스타일링 */
-.swal2-title {
-  // border-bottom: 2px solid #4a90e2;
-  // background-color: $color-dark-yellow;
-  padding-bottom: 10px; /* 패딩 추가 */
-  color: $color-light-black;
-  // padding-top: 0;
-  font-size: rem(32);
-}
-
-.swal2-text {
-  border-radius: 40px;
-  background-color: $color-light-yellow;
-}
-
-.ant-switch-checked {
-  background-color: #61de56 !important;
 }
 
 // 아래는 기본 스타일 초기화 코드 (주석화)

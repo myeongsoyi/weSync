@@ -6,8 +6,8 @@ import styles from "./index.module.scss";
 
 export default function Footer() {  
   return (
-    <footer className="flex justify-center items-center p-6 bg-sky-700 text-white overflow-x-hidden">
-      <div className="flex-1 flex">
+    <footer className="flex justify-center items-center py-auto px-6 bg-sky-700 text-white overflow-x-hidden">
+      <div className="flex-1 flex justify-center">
       <div className={`bg-white p-2 rounded-xl ${styles.logo}`}>
         <Image
           src={"/svgs/logo.svg"}
