@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+
+// import ReactDOM from 'react-dom'; 미지원으로 인한 수정
+import { createRoot } from 'react-dom/client';
+
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Space, Switch } from 'antd';
 import { Button } from 'antd';
@@ -88,8 +91,10 @@ export default function AlertTest() {
       },
 
       didOpen: () => {
+        // ReactDom.render 대신 createRoot 사용
         // React 컴포넌트를 SweetAlert2의 HTML에 마운트
-        ReactDOM.render(
+        const root = createRoot(document.getElementById('antd-component')! as Element);
+        root.render(
           <Space direction="vertical">
             <Button type="primary">AntD Button</Button>
             <Button type="primary">AntD Button</Button>
@@ -99,15 +104,14 @@ export default function AlertTest() {
               
               // defaultChecked
             />
-          </Space>,
-          document.getElementById('antd-component'),
+          </Space>
         );
       },
       willClose: () => {
+        // ReactDom.unmountComponentAtNode 대신 createRoot.unmount 사용
         // SweetAlert2 닫힐 때 마운트 해제
-        ReactDOM.unmountComponentAtNode(
-          document.getElementById('antd-component') as Element,
-        );
+        const root = createRoot(document.getElementById('antd-component')! as Element);
+        root.unmount();
       },
       // background: "#121212",
     }).then((result) => {
