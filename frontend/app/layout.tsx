@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import React from "react";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import Footer from "@/components/common/footer/footer";
+import Footer from "@/components/common/footer/index";
 
 import "./globals.scss";
+import "./customs.scss";
 
 const notoSansKr = Noto_Sans_KR({ subsets: ["cyrillic"] });
 
