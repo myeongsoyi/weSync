@@ -6,8 +6,9 @@ import styles from "./index.module.scss";
 
 export default function Footer() {  
   return (
-    <footer className="flex justify-center p-6 bg-sky-700 text-white overflow-x-hidden">
-      <div className={`flex bg-white p-2 rounded-xl ${styles.logo}`}>
+    <footer className="flex justify-center items-center p-6 bg-sky-700 text-white overflow-x-hidden">
+      <div className="flex-1 flex">
+      <div className={`bg-white p-2 rounded-xl ${styles.logo}`}>
         <Image
           src={"/svgs/logo.svg"}
           alt="로고"
@@ -18,19 +19,22 @@ export default function Footer() {
           style={{ cursor: "pointer" }}
         />
       </div>
-      <div className="flex">
+      </div>
+      <div className="flex-1 flex">
         <p className={`m-auto w-fit ${styles.center}`}>
           weSync ©{new Date().getFullYear()} Created by A310
         </p>
       </div>
+      <div className="flex-1 flex justify-center">
       <div className={styles.icon}>
         <Image
           src={"/images/wesync_icon.png"}
           alt="아이콘"
-          height={70}
-          width={70}
-          className="p-1 rounded-full"
+          height={67}
+          width={67}
+          className="p-1.5 rounded-full border-1 border-white m-auto"
         />
+      </div>
       </div>
     </footer>
   );  
