@@ -33,7 +33,7 @@ interface IParams {
   }[];
 }
 
-export default async function CardTeams({ teams }: IParams) {
+export default function CardTeams({ teams }: IParams) {
   //   const teams = await getMainTeams();
 
   const router = useRouter();
@@ -60,7 +60,7 @@ export default async function CardTeams({ teams }: IParams) {
         <Link href="/team/list">
         <h2 className='font-extrabold'>TEAMS</h2>
         </Link>
-        <PlusOutlined style={{ fontSize: '20px', fontWeight: 800 }} />
+        <PlusOutlined style={{ fontSize: '20px', fontWeight: 500 }} />
       </div>
       <h3>Ongoing</h3>
       <div className="flex flex-wrap gap-2 mt-4 ">
@@ -74,6 +74,7 @@ export default async function CardTeams({ teams }: IParams) {
             // height: '100%',
           }}
           className="bg-amber-50 flex justify-center text-center cursor-pointer"
+          hoverable
           onClick={() => router.push('team/create')}
         >
           <div className="flex flex-col justify-center items-center">

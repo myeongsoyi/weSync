@@ -1,5 +1,4 @@
-import React from 'react';
-import { getMainTeams } from '@/services/home/mainTeams';
+import { getMainTeams } from '@/services/home';
 import CardTeams from './cardTeam';
 import styles from './index.module.scss';
 
