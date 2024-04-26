@@ -8,7 +8,7 @@ import {
   PlusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import styles from './index.module.scss';
+// import styles from './index.module.scss';
 import { Avatar, Badge, Card, Tag, Tooltip } from 'antd';
 import { Group } from 'antd/es/avatar';
 import Image from 'next/image';
@@ -82,10 +82,10 @@ export default function CardTeams({ teams }: IParams) {
             <PlusCircleOutlined style={{ fontSize: '100px', color: 'gold' }} />
           </div>
         </Card>
-        {teams.map((team) => (
+        {teams.map((team,i) => (
           <Link
             href={`/team/${team.id}`}
-            key={team.id}
+            key={i}
             style={{ width: '32%' }}
           >
             <Card
@@ -127,7 +127,7 @@ export default function CardTeams({ teams }: IParams) {
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
-                  {team.members.slice(0, 5).map((member) => (
+                  {team.members.slice(0, 5).map((member,i) => (
                     <Badge
                       count={
                         member.isLeader ? (
@@ -139,13 +139,13 @@ export default function CardTeams({ teams }: IParams) {
                         )
                       }
                       offset={[-18, -5]}
+                      key={i}
                     >
                       <Tooltip placement="top" title={member.name} arrow={true}>
                         <Avatar
                           src={member.profileImg}
                           alt={member.name}
                           size={36}
-                          key={member.id}
                           style={{ borderColor: '#FFC500' }}
                         ></Avatar>
                       </Tooltip>

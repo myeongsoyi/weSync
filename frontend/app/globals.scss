@@ -46,7 +46,7 @@ html {
 // 푸터 관련 설정
 html, body {
     // min-height: 100%; /* 브라우저 창 전체 높이로 설정 */
-    height: 100%; /* 브라우저 창 전체 높이로 설정 */
+    min-height: 100%; /* 브라우저 창 전체 높이로 설정 */
     margin: 0;
     padding: 0;
 }
