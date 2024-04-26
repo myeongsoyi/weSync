@@ -68,8 +68,8 @@ export async function getMainTeams() {
         },
         {
             id: 2,
-            name: "팀2",
-            song: "노래2",
+            name: "팀2 asdd asdaAWAWDDAS ASDAssdsd",
+            song: "노래2 asdasdsa asdasd asdaefggf hjgjm",
             myPosition: {
                 position: "포지션2",
                 color: "#FFD700"
@@ -123,11 +123,23 @@ export async function getMainTeams() {
                     name: "멤버3",
                     profileImg: "svgs/profile-temp.svg",
                     isLeader: false,
-                }
+                },
+                {
+                    id: 4,
+                    name: "멤버4",
+                    profileImg: "svgs/profile-temp.svg",
+                    isLeader: false,
+                },
+                {
+                    id: 5,
+                    name: "멤버5",
+                    profileImg: "svgs/profile-temp.svg",
+                    isLeader: false,
+                },
             ]
         },
         {
-            id: 1,
+            id: 4,
             name: "팀4",
             song: "노래4",
             myPosition: {
