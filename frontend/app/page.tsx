@@ -2,6 +2,7 @@ import React from "react";
 import Navigation from "@/components/common/navigations/navMain";
 import AlertTest from "@/components/home/alertTest";
 import styles from "@/components/home/index.module.scss";
+import Link from "next/link";
 
 export default function HomePage() {
 
@@ -23,6 +24,7 @@ export default function HomePage() {
           <hr />
           <span>Content : 스크롤이 있는 경우</span>
           <AlertTest/>
+          <Link href={`/team`}>TEAM</Link>
         </div>
       </div>
     </div>
