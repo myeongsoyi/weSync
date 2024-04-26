@@ -23,7 +23,7 @@ interface IParams {
 
 export default function ListRecord({ records }: IParams) {
   const { Column, ColumnGroup } = Table;
-  console.log(records);
+//   console.log(records);
   return (
     <>
       <Table dataSource={records} pagination={false}>
