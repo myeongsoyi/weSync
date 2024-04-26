@@ -57,8 +57,8 @@ export default function CardTeams({ teams }: IParams) {
   return (
     <>
       <div className="flex gap-1 cursor-pointer my-4">
-        <Link href="/team/list">
-        <h2 className='font-extrabold'>TEAMS</h2>
+        <Link href="/my-team">
+          <h2 className="font-extrabold">TEAMS</h2>
         </Link>
         <PlusOutlined style={{ fontSize: '20px', fontWeight: 500 }} />
       </div>
@@ -75,7 +75,7 @@ export default function CardTeams({ teams }: IParams) {
           }}
           className="bg-amber-50 flex justify-center text-center cursor-pointer"
           hoverable
-          onClick={() => router.push('team/create')}
+          onClick={() => router.push('/create')}
         >
           <div className="flex flex-col justify-center items-center">
             <h1 className="m-6 text-amber-400">CREATE</h1>
