@@ -22,16 +22,17 @@ interface IParams {
 }
 
 export default function ListRecord({ records }: IParams) {
-  const { Column, ColumnGroup } = Table;
-//   console.log(records);
+  // const { Column, ColumnGroup } = Table;
+  const { Column } = Table;
+  // console.log(records);
   return (
     <>
-      <Table dataSource={records} pagination={false}>
+      <Table dataSource={records} pagination={false} rowKey="id">
         <Column title="곡명" dataIndex="songName" key="songName" />
         <Column
           title="포지션"
           dataIndex="position"
-          key="position"
+          key="포지션"
           render={(position) => (
             <>
               <Tag
