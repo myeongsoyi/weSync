@@ -22,14 +22,14 @@ export default function HomePage() {
           alignItems: "center",
           justifyContent: "space-between",
           background: "#FFFFFF",
-          height: '100px',
+          height: '14vh',
         }}
       >
         <Link href="/welcome">
           <Button type="primary">Welcome</Button>
         </Link>
-        <Link href="/">
-        <Image src={"/svgs/logo.svg"} alt="로고" width={200} height={150} />
+        <Link href="/" style={{width:'auto', height:'auto'}}>
+        <Image src={"/svgs/logo.svg"} alt="로고" width={200} height={150} priority />
         </Link>
         {/* <Menu
           // theme="dark"
