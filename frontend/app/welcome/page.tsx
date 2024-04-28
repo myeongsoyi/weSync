@@ -1,6 +1,16 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './index.module.scss';
+import { Carousel } from 'antd';
+import React from 'react';
+
+const contentStyle: React.CSSProperties = {
+  height: '400px',
+  color: '#fff',
+  lineHeight: '900px',
+  textAlign: 'center',
+  background: '#364d79',
+};
 
 export default function welcome() {
   return (
@@ -8,38 +18,46 @@ export default function welcome() {
       <div className="content">
         <div
           style={{
-            minHeight: 300,
-            // height: "85vh",
             padding: 12,
           }}
         >
-          <div className="grid place-items-center">
-            <Image
-              className={styles.logo}
-              src={'/svgs/logo.svg'}
-              alt="로고"
-              width={100}
-              height={100}
-            />
-            {/* <div className="flex-row my-20">
-              <p className='flex'>
-              <span className="m-auto text-3xl">Human Voice Is The Best Instrument</span>
-              </p>
-              <h3>You can Play Score, Record Voice and Combine Files at weSync</h3>
-              <h3>Syncronize voices and make wonderful a capella music!</h3>
-              <p className="flex">
-                <span className="m-auto">목소리는 신이 주신 최고의 악기</span>
-              </p>
-            </div> */}
-            <Link href={'/'}>
+          <div>
+            <div className="flex justify-center">
               <Image
-                className={styles.kakao}
-                src={'/svgs/kakao.png'}
+                className={styles.logo}
+                src={'/svgs/logo.svg'}
                 alt="로고"
-                width={200}
+                width={100}
                 height={100}
               />
-            </Link>
+            </div>
+            <div className="flex justify-center">
+              <Link href={'/'}>
+                <Image
+                  className={styles.kakao}
+                  src={'/svgs/kakao.png'}
+                  alt="카톡로그인"
+                  width={150}
+                  height={100}
+                />
+              </Link>
+            </div>
+            <div>
+              <Carousel autoplay autoplaySpeed={3000} speed={500}>
+                <div>
+                  <h3 style={contentStyle}>1</h3>
+                </div>
+                <div>
+                  <h3 style={contentStyle}>2</h3>
+                </div>
+                <div>
+                  <h3 style={contentStyle}>3</h3>
+                </div>
+                <div>
+                  <h3 style={contentStyle}>4</h3>
+                </div>
+              </Carousel>
+            </div>
           </div>
         </div>
       </div>
