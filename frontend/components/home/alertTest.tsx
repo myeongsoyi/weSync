@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 
 // import ReactDOM from 'react-dom'; 미지원으로 인한 수정
-import { createRoot } from 'react-dom/client';
+// swalRoot 타입 참조를 위해 Root 추가
+import { createRoot, Root } from 'react-dom/client';
 
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Space, Switch } from 'antd';
@@ -11,6 +12,9 @@ import { Button } from 'antd';
 import Swal from 'sweetalert2';
 
 // sweet alert 테스트용 컴포넌트, 차후 삭제 예정
+
+// root 인스턴스를 저장할 변수
+let swalRoot: Root | null = null;
 
 export default function AlertTest() {
   const [email, setEmail] = useState('');
@@ -89,12 +93,19 @@ export default function AlertTest() {
         confirmButton: 'swal-confirm-button', // 사용자 정의 클래스
         cancelButton: 'swal-cancel-button',
       },
-
+      
       didOpen: () => {
         // ReactDom.render 대신 createRoot 사용
         // React 컴포넌트를 SweetAlert2의 HTML에 마운트
-        const root = createRoot(document.getElementById('antd-component')! as Element);
-        root.render(
+        const container = document.getElementById('antd-component');
+        if (!container) return;
+
+        // 이미 마운트된 root가 있는지 확인하고, 없으면 새로 생성
+        if (!swalRoot) {
+          swalRoot = createRoot(container);
+        }
+
+        swalRoot.render(
           <Space direction="vertical">
             <Button type="primary">AntD Button</Button>
             <Button type="primary">AntD Button</Button>
@@ -110,8 +121,10 @@ export default function AlertTest() {
       willClose: () => {
         // ReactDom.unmountComponentAtNode 대신 createRoot.unmount 사용
         // SweetAlert2 닫힐 때 마운트 해제
-        const root = createRoot(document.getElementById('antd-component')! as Element);
-        root.unmount();
+        if (swalRoot) {
+          swalRoot.unmount();
+          swalRoot = null; // 참조 초기화
+        }
       },
       // background: "#121212",
     }).then((result) => {
