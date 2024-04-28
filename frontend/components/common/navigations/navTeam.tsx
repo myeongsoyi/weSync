@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { Layout, Button, Popover, Avatar, Space } from 'antd';
+import { Layout, Button, Popover, Avatar } from 'antd';
 import { UserOutlined, SettingFilled } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
@@ -46,8 +46,8 @@ export default function TeamPage() {
 
   const content = (
     <div>
-      {teams.map((team) => (
-        <p className="flex mt-1 first:mt-0">
+      {teams.map((team, index) => (
+        <p key={index} className="flex mt-1 first:mt-0">
           <Link className="m-auto" href={`/teams/${team.id}`}>
             <div className="flex-col min-w-32">
               <p className="text-center  text-gray-800  text-sm font-semibold">
