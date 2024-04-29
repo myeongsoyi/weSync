@@ -140,3 +140,14 @@
 @mixin c-text3 {
   color: $color-text3;
 }
+
+@mixin team-nav {
+  outline: 3px solid $color-dark-yellow;
+  color: $color-text3;
+  border-top-left-radius: rem(16);
+  border-top-right-radius: rem(16);
+  display: flex;
+  &:nth-child(even) {
+      margin: 0 rem(3);
+  }
+}
