@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Navigation from '@/components/common/navigations/navMain';
+import Navigation from '@/components/common/navigations/navTeam';
 import InnerNavigation from '@/components/team/innerNav';
 import React from 'react';
 
