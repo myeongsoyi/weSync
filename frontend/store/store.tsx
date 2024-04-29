@@ -1,6 +1,6 @@
 // zustand 스토어 예시 파일
 
-import create from "zustand";
+import { create } from "zustand";
 
 interface Store {
   selectedButton: string | null;
