@@ -1,12 +1,11 @@
 'use client';
 
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 // import { getMainTeams } from '@/services/home/mainTeams';
 import {
   CrownFilled,
   PlusCircleOutlined,
-  PlusOutlined,
 } from '@ant-design/icons';
 // import styles from './index.module.scss';
 import { Avatar, Badge, Card, Tag, Tooltip } from 'antd';
@@ -33,8 +32,43 @@ interface IParams {
   }[];
 }
 
+function useViewportWidth() {
+  const [width, setWidth] = useState(0); // 초기 너비 설정
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // 초기 너비 설정 2
+      setWidth(window.innerWidth);
+
+      const handleResize = () => {
+        setWidth(window.innerWidth); // 창 크기가 변경될 때 너비 업데이트
+      };
+
+      window.addEventListener('resize', handleResize); // 창 크기 변경 이벤트 리스너 추가
+
+      return () => {
+        window.removeEventListener('resize', handleResize); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+      };
+    }
+  }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시에만 실행
+
+  return width;
+}
+
 export default function CardTeams({ teams }: IParams) {
+  const [memNum, setMemNum] = useState(5);  // 너비에 따른 멤버 수 상태 변수
+  const width = useViewportWidth();  // 너비 상태 변수
   //   const teams = await getMainTeams();
+
+  useEffect(() => {
+    if (width < 720) {  // 너비가 720px 미만일 때
+      setMemNum(3);  // 멤버 수를 3명으로 설정
+    } else if (width < 840) {  // 너비가 840px 미만일 때
+      setMemNum(4);  // 멤버 수를 4명으로 설정
+    } else {  // 일반 데스크탑 화면일 때
+      setMemNum(5);  // 멤버 수를 5명으로 설정
+    }
+  }, [width]);  // 너비가 변경될 때마다 실행
 
   const router = useRouter();
   // console.log(teams);
@@ -56,13 +90,6 @@ export default function CardTeams({ teams }: IParams) {
 
   return (
     <>
-      <div className="flex gap-1 cursor-pointer my-4">
-        <Link href="/my-team">
-          <h2 className="font-extrabold">TEAMS</h2>
-        </Link>
-        <PlusOutlined style={{ fontSize: '20px', fontWeight: 500 }} />
-      </div>
-      <h3>Ongoing</h3>
       <div className="flex flex-wrap gap-2 mt-4 ">
         <Card
           style={{
@@ -71,9 +98,8 @@ export default function CardTeams({ teams }: IParams) {
             textAlign: 'center',
             borderRadius: '10px',
             border: '3px solid #FFC500',
-            // height: '100%',
           }}
-          className="bg-amber-50 flex justify-center text-center cursor-pointer"
+          className="flex justify-center text-center cursor-pointer"
           hoverable
           onClick={() => router.push('/create')}
         >
@@ -96,10 +122,10 @@ export default function CardTeams({ teams }: IParams) {
                 textAlign: 'center',
                 borderRadius: '10px',
                 border: '3px solid #FFC500',
+                backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)': 'white'}`,
               }}
               title={team.name + 'asdsadasdsadasdas'}
               hoverable
-              className="even:bg-amber-100 odd:bg-amber-50"
             >
               <div className="flex mb-1">
                 <Image src="svgs/note.svg" width={15} height={15} alt="음표" />
@@ -112,7 +138,7 @@ export default function CardTeams({ teams }: IParams) {
                   style={{
                     border: `1px solid ${team.myPosition.color}`,
                     color: `${team.myPosition.color}`,
-                    margin: '4px 0px',
+                    margin: '0.75rem 0',
                   }}
                   bordered={false}
                 >
@@ -122,12 +148,12 @@ export default function CardTeams({ teams }: IParams) {
               <Avatar
                 src={team.teamImg}
                 alt="팀"
-                size={64}
+                size={80}
                 style={{ borderColor: '#FFC500' }}
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
-                  {team.members.slice(0, 5).map((member,i) => (
+                  {team.members.slice(0, memNum).map((member,i) => (
                     <Badge
                       count={
                         member.isLeader ? (
@@ -151,9 +177,9 @@ export default function CardTeams({ teams }: IParams) {
                       </Tooltip>
                     </Badge>
                   ))}
-                  {team.members.length > 5 && (
+                  {team.members.length > memNum && (
                     <Avatar size={36} style={{ borderColor: '#FFC500' }}>
-                      +{team.members.length - 5}
+                      +{team.members.length - memNum}
                     </Avatar>
                   )}
                 </Group>

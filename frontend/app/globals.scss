@@ -79,7 +79,7 @@ footer {
   h#{$i} {
     font-size: nth($headingFontList, $i);
     font-weight: bold;
-    color: $color-text1;
+    // color: $color-text1;
     line-height: normal;
   }
 }
