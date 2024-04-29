@@ -22,5 +22,8 @@ public class User {
     private String nickname;
 
     @Column(name = "img_url")
-    private String img_url;
+    private String imgUrl;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 }
