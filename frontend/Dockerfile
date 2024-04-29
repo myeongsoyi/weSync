@@ -20,4 +20,4 @@ RUN yarn build
 
 # 7. 애플리케이션 실행
 EXPOSE 3000
-CMD ["yarn", "start"]
+CMD ["node", ".next/standalone/server.js"]
