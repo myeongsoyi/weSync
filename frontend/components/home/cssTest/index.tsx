@@ -1,4 +1,6 @@
 import styles from './index.module.scss';
+import FirstChild from '@/components/common/storeTest/FirstChild';
+import SecondChild from '@/components/common/storeTest/SecondChild';
 
 export default function cssTest() {
   return (
@@ -14,6 +16,8 @@ export default function cssTest() {
       <p>css 테스트</p>
       <hr />
       <span>Content : 스크롤이 있는 경우</span>
+      <FirstChild />
+      <SecondChild />
     </div>
   );
 }
