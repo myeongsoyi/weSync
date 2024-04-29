@@ -14,21 +14,27 @@ export default function InnerNavigation() {
   const pathname = usePathname().split('/').pop();
 
   return (
-    <div className="grid grid-cols-3 gap-4 p-4 w-full bg-green-300">
-      <Link href={`/team/${teamId}/information`}>
-        <div className={pathname === 'information' ? styles.yes : styles.no}>
-          INFORMATION
-        </div>
+    <div className={`grid grid-cols-3 w-full ${styles.navContainer}`}>
+      <Link
+        href={`/team/${teamId}/information`}
+        className={pathname === 'information' ? styles.yes : styles.no}
+        prefetch
+      >
+        <span className={styles.title}>INFORMATION</span>
       </Link>
-      <Link href={`/team/${teamId}/record`}>
-        <div className={pathname === 'record' ? styles.yes : styles.no}>
-          RECORD
-        </div>
+      <Link
+        href={`/team/${teamId}/record`}
+        className={pathname === 'record' ? styles.yes : styles.no}
+        prefetch
+      >
+        <span className={styles.title}>RECORD</span>
       </Link>
-      <Link href={`/team/${teamId}/workspace`}>
-        <div className={pathname === 'workspace' ? styles.yes : styles.no}>
-          WORKSPACE
-        </div>
+      <Link
+        href={`/team/${teamId}/workspace`}
+        className={pathname === 'workspace' ? styles.yes : styles.no}
+        prefetch
+      >
+        <span className={styles.title}>WORKSPACE</span>
       </Link>
     </div>
   );

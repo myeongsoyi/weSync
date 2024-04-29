@@ -1,7 +1,21 @@
+.navContainer {
+    height: rem(60);
+}
+
+
 .yes {
-    background-color: orange;
+    background-color: $color-yellow;
+    @include team-nav;
+    color: $color-brown;
 }
 
 .no {
-    background-color: pink;
+    background-color: $color-white-yellow;
+    @include team-nav;
+}
+
+.title {
+    font-size: rem(22);
+    font-weight: bold;
+    margin: auto;
 }
