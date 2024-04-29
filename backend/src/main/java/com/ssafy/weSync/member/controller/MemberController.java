@@ -18,4 +18,9 @@ public class MemberController {
         return "Hello World2";
     }
 
+    @GetMapping("/3")
+    public String Test3(){
+        return "Hello World3";
+    }
+
 }
