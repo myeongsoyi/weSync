@@ -8,9 +8,9 @@ import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -30,12 +30,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
 
+    @Value("${kakao.client.id}")
+    private String kakaoClientId;
+
     public UserService(UserRepository userRepository, RestTemplateBuilder builder) {
         this.userRepository = userRepository;
         restTemplate = builder.build();
     }
 
-    public ResponseEntity<Response> kakaoCallback(String authorizationCode) throws JSONException {
+    public ResponseEntity<Response<LoginDto>> kakaoCallback(String authorizationCode){
 
         //토큰 받기
         String tokenUrl = "https://kauth.kakao.com/oauth/token";
@@ -45,7 +48,7 @@ public class UserService {
 
         MultiValueMap<String, String> tokenBody = new LinkedMultiValueMap<>();
         tokenBody.add("grant_type", "authorization_code");
-        tokenBody.add("client_id", "e727d2a8c4603102e14f05db20f8e942");
+        tokenBody.add("client_id", kakaoClientId);
         tokenBody.add("redirect_uri", "http://localhost:3000/home");
         tokenBody.add("code", authorizationCode);
 
@@ -113,14 +116,14 @@ public class UserService {
 
     }
 
-    public ResponseEntity<Response> deleteUser(HttpServletRequest request){
+    public ResponseEntity<Response<LoginDto>> deleteUser(HttpServletRequest request){
 
         String accessToken = request.getHeader("Authorization");
 
         ResponseEntity<String> kakaoResponse = logoutFromKakao(accessToken);
 
         long userId;
-        Response responseBody = new Response();
+        Response<LoginDto> responseBody = new Response<>();
 
         if(kakaoResponse.getStatusCode() == HttpStatus.OK){
             String kakaoResponseBody = kakaoResponse.getBody();
@@ -144,11 +147,10 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<Response> logout(HttpServletRequest request){
-
+    public ResponseEntity<Response<LoginDto>> logout(HttpServletRequest request){
         String accessToken = request.getHeader("Authorization");
         ResponseEntity<String> kakaoResponse = logoutFromKakao(accessToken);
-        Response responseBody = new Response();
+        Response<LoginDto> responseBody = new Response<>();
 
         if(kakaoResponse.getStatusCode() == HttpStatus.OK){
             responseBody.setSuccess(true);
@@ -174,11 +176,9 @@ public class UserService {
         headers.add("Authorization", accessToken);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(logoutUrl, requestEntity, String.class);
 
-        return responseEntity;
+        return restTemplate.postForEntity(logoutUrl, requestEntity, String.class);
     }
 
 }

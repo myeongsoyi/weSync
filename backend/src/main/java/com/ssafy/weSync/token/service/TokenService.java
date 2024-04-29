@@ -1,19 +1,18 @@
 package com.ssafy.weSync.token.service;
 
+import com.ssafy.weSync.global.ApiResponse.ErrorResponse;
 import com.ssafy.weSync.global.ApiResponse.Response;
+import com.ssafy.weSync.token.dto.TokenDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Base64;
-import java.util.Enumeration;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,39 +24,47 @@ public class TokenService {
         restTemplate = builder.build();
     }
 
-    public ResponseEntity<Response> updateAccessToken(HttpServletRequest request) throws JSONException{
+    @Value("${kakao.client.id}")
+    private String kakaoClientId;
 
+    public ResponseEntity<Response<TokenDto>> updateAccessToken(HttpServletRequest request){
 
-//        Enumeration<String> headerNames = request.getHeaderNames();
-//        while (headerNames.hasMoreElements()) {
-//            String headerName = headerNames.nextElement();
-//            String headerValue = request.getHeader(headerName);
-//            System.out.println(headerName + ": " + headerValue);
-//        }
         String refreshToken = request.getHeader("Authorization").replaceFirst("Bearer ", "");
-        System.out.println(9999);
-        System.out.println(refreshToken);
-        String url = "https://kauth.kakao.com/oauth/token";
+        String kakaoUrl = "https://kauth.kakao.com/oauth/token";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+        HttpHeaders kakaoHeaders = new HttpHeaders();
+        kakaoHeaders.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "refresh_token");
-        body.add("client_id", "e727d2a8c4603102e14f05db20f8e942");
-        body.add("refresh_token", refreshToken);
+        MultiValueMap<String, String> kakaoBody = new LinkedMultiValueMap<>();
+        kakaoBody.add("grant_type", "refresh_token");
+        kakaoBody.add("client_id", kakaoClientId);
+        kakaoBody.add("refresh_token", refreshToken);
 
-        HttpEntity<MultiValueMap<String, String>> req = new HttpEntity<>(body, headers);
-        ResponseEntity<String> res = restTemplate.postForEntity(url, req, String.class);
+        HttpEntity<MultiValueMap<String, String>> kakaoRequest = new HttpEntity<>(kakaoBody, kakaoHeaders);
+        ResponseEntity<String> kakaoResponse = restTemplate.postForEntity(kakaoUrl, kakaoRequest, String.class);
 
-        if(res.getStatusCode() == HttpStatus.OK){
-            System.out.println(res.getBody());
-            String responseBody = res.getBody();
+        Response<TokenDto> responseBody = new Response<>();
 
-            System.out.println("updateToken");
+        if(kakaoResponse.getStatusCode() == HttpStatus.OK){
+            String kakaoResponseBody = kakaoResponse.getBody();
+
+            JSONObject kakaoJsonObject = new JSONObject(kakaoResponseBody);
+
+            String accessToken = kakaoJsonObject.getString("access_token");
+            Integer accessTokenExpireTime = kakaoJsonObject.getInt("expires_in");
+            TokenDto responseToken = new TokenDto(accessToken,accessTokenExpireTime);
+            responseBody = new Response<>(true,responseToken,null);
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
         }
-
-        ResponseEntity<Response> r = null;
-        return r;
+        else{
+            HttpHeaders responseHeaders = new HttpHeaders();
+            ErrorResponse responseError = new ErrorResponse("400", "카카오 API 호출이 실패했습니다.");
+            responseBody.setSuccess(false);
+            responseBody.setError(responseError);
+            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(400));
+        }
     }
 }
