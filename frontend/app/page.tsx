@@ -1,4 +1,3 @@
-import React from 'react';
 import Navigation from '@/components/common/navigations/navMain';
 import AlertTest from '@/components/home/alertTest';
 import MainTeams from '@/components/home/mainTeams';

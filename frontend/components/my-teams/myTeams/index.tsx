@@ -1,14 +1,12 @@
-import { getMainTeams } from '@/services/home';
+import { getMyTeams } from '@/services/my-teams';
 import CardTeams from './cardTeam';
 import styles from './index.module.scss';
 import Link from 'next/link';
-import { PlusOutlined } from '@ant-design/icons';
 
 
 export default async function MainTeams() {
-  const teams = await getMainTeams();
-  // const myTeam = teams.filter((team) => team.id === 1);
-  // console.log(myTeam);
+  const teams = await getMyTeams();
+
   // const teams: {
   //     id: number;
   //     name: string;
@@ -28,12 +26,10 @@ export default async function MainTeams() {
   return (
     <div className={styles.outer}>
       <div className="flex gap-1 my-4">
-        <Link className='flex' href="/my-teams">
-          <h2 className="font-extrabold">TEAMS</h2>
-        <PlusOutlined style={{ fontSize: '20px', fontWeight: 500 }} />
+        <Link href="/my-teams">
+          <h2 className="font-extrabold">ALL TEAMS</h2>
         </Link>
       </div>
-      <h3>Ongoing</h3>
       <CardTeams teams={teams} />
     </div>
   );
