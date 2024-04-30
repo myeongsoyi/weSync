@@ -1,4 +1,5 @@
-
+import TeamMembers from "@/components/team/information/members";
+import TeamNotices from "@/components/team/information/notice";
 interface IParams {
   params: { teamId: string };
 }
@@ -14,8 +15,10 @@ export async function generateMetadata({ params: { teamId } }: IParams) {
 
 export default function TeamPage({ params: { teamId } }: IParams) {
   return (
-    <>
-      <h1>팀 ID : {teamId}</h1>
-    </>
+    <div className="flex flex-row">
+      <TeamMembers teamId={teamId}/>
+      <TeamNotices teamId={teamId}/>
+    </div>
+    
   );
 }
