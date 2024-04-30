@@ -1,10 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Avatar, Button, List, Skeleton } from 'antd';
+import { Avatar, List} from 'antd';
 import Item from 'antd/es/list/Item';
 import { Meta } from 'antd/es/list/Item';
-
 // interface DataType {
 //   gender?: string;
 //   name: {
