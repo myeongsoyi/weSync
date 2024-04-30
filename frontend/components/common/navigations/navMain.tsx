@@ -22,7 +22,7 @@ export default function HomePage() {
           alignItems: "center",
           justifyContent: "space-between",
           background: "#FFFFFF",
-          height: '14vh',
+          height: '12vh',
         }}
       >
         <Link href="/welcome">

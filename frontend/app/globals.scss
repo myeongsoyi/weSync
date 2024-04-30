@@ -39,8 +39,9 @@ html {
 
 .content {
     // 100vh에서 nav와 footer의 높이만큼 뺀다.
-    min-height: calc(100vh - 14vh - 16vh);
+    min-height: calc(100vh - 12vh - 14vh);
     margin: 0 12%;
+    padding: rem(12) 0 rem(32);
 }
 
 // 푸터 관련 설정
@@ -66,7 +67,7 @@ main {
 }
 
 footer {
-    height: 16vh;
+    height: 14vh;
     background: #ccc; /* 푸터 배경색 설정 */
     padding: 10px 0; /* 푸터 패딩 설정 */
     text-align: center; /* 텍스트 중앙 정렬 */
