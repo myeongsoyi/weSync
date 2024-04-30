@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Navigation from '@/components/common/navigations/navTeam';
 import InnerNavigation from '@/components/team/innerNav';
 import React from 'react';
+import styles from './index.module.scss';
 
 
 export const metadata: Metadata = {
@@ -23,7 +24,9 @@ export default function Layout({
       <Navigation />
       <div className="content">
         <InnerNavigation />
-        {children}
+        <div className={styles.innerBox}>
+          {children}
+        </div>
       </div>
     </div>
   );

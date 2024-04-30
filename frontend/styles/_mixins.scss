@@ -142,12 +142,13 @@
 }
 
 @mixin team-nav {
-  outline: 3px solid $color-dark-yellow;
+  outline: rem(3) solid $color-dark-yellow;
   color: $color-text3;
   border-top-left-radius: rem(16);
   border-top-right-radius: rem(16);
   display: flex;
   &:nth-child(even) {
-      margin: 0 rem(3);
+    margin: 0 rem(3) rem(3);
   }
+  margin-bottom: rem(3);
 }

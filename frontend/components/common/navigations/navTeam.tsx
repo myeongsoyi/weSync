@@ -132,9 +132,12 @@ export default function TeamPage() {
                 type="text"
                 style={{
                   padding: '0 10px',
+                  // display: 'flex',
                 }}
+                icon={<SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
+              }
               >
-                <SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
+                {/* <SettingFilled style={{ color: 'gray', fontSize: '20px', margin:'auto' }} /> */}
               </Button>
             </div>
           </div>
