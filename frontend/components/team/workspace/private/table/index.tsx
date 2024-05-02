@@ -1,7 +1,16 @@
 'use client';
 
+// import AudioPlayer from 'react-h5-audio-player';
+// import 'react-h5-audio-player/lib/styles.css';
 import { Table, Tag, Button } from 'antd';
-import { useRef, useEffect } from 'react';
+import { useAudioStore } from '@/store/audioStore';
+import FixedAudioPlayer from './FixedAudioPlayer';
+import {
+  CommentOutlined,
+  PauseCircleOutlined,
+  PlayCircleOutlined,
+} from '@ant-design/icons';
+// import H5AudioPlayer from 'react-h5-audio-player';
 // import { getMainRecords } from '@/services/home';
 
 interface IParams {
@@ -12,6 +21,7 @@ interface IParams {
       name: string;
       url: string;
     };
+    singer: string;
     position: {
       name: string;
       color: string;
@@ -25,20 +35,32 @@ interface IParams {
   }[];
 }
 
-export default function ListRecord({ records }: IParams) {
-  const audiosRef = useRef<HTMLAudioElement[]>([]);
-  // const { Column, ColumnGroup } = Table;
-  const { Column } = Table;
-  // console.log(records);
+interface ISong {
+  id: number;
+  name: string;
+  url: string;
+}
 
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때 각 오디오의 볼륨을 0.2로 설정
-    audiosRef.current.forEach((audio) => {
-      if (audio) {
-        audio.volume = 0.2;
-      }
-    });
-  }, []);
+export default function ListRecord({ records }: IParams) {
+  const { currentId, playing, togglePlayPause, setCurrentTrack } =
+    useAudioStore((state) => ({
+      currentId: state.currentId,
+      playing: state.playing,
+      togglePlayPause: state.togglePlayPause,
+      setCurrentTrack: state.setCurrentTrack,
+    }));
+
+  function togglePlay(song: ISong) {
+    if (currentId !== song.id) {
+      setCurrentTrack(song.url, song.id);
+    } else {
+      togglePlayPause();
+    }
+  }
+
+  const { Column } = Table;
+  // const { Column, ColumnGroup } = Table;
+  // console.log(records);
 
   return (
     <>
@@ -48,17 +70,21 @@ export default function ListRecord({ records }: IParams) {
           dataIndex="song"
           key="song"
           render={(song) => (
-            <div className='flex'>
-              <audio
-                controls
-                ref={(el) => {
-                  audiosRef.current[song.id] = el as HTMLAudioElement;
-                }}
-                preload="auto"
-              >
-                <source src={`${song.url}`} type="audio/mpeg" />
-              </audio>
-              <Button className='m-auto'>댓글 모달</Button>
+            <div className="flex">
+              <Button
+                onClick={() => togglePlay(song)}
+                className="m-auto"
+                type='text'
+                icon={
+                  currentId === song.id && playing ? (
+                    <PauseCircleOutlined style={{fontSize:28}}/>
+                  ) : (
+                    <PlayCircleOutlined style={{fontSize:28}}/>
+                  )
+                }
+                style={{ height: '40px', width: '40px'}}
+              />
+              <Button className="m-auto" type='text' icon={<CommentOutlined style={{fontSize:28}}/>} style={{ height: '40px', width: '40px'}}/>
             </div>
           )}
         />
@@ -77,7 +103,6 @@ export default function ListRecord({ records }: IParams) {
               >
                 {position.name}
               </Tag>
-              {/* <Tag color='pink'>태그</Tag> */}
             </>
           )}
         />
@@ -111,6 +136,7 @@ export default function ListRecord({ records }: IParams) {
           )}
         />
       </Table>
+      <FixedAudioPlayer />
     </>
   );
 }

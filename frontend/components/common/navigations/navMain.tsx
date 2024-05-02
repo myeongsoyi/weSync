@@ -23,6 +23,7 @@ export default function HomePage() {
           justifyContent: "space-between",
           background: "#FFFFFF",
           height: '12vh',
+          minHeight: '90px',
         }}
       >
         <Link href="/welcome">
