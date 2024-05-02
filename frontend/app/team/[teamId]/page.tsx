@@ -23,6 +23,7 @@ export default function TeamPage({ params: { teamId } }: IParams) {
   return (
     <>
       <h1>팀 ID : {teamId}</h1>
+      <h2>Loading...</h2>
     </>
   );
 }
