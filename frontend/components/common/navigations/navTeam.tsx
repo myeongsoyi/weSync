@@ -1,48 +1,117 @@
 'use client';
 
-import Image from 'next/image';
 import React, { useState } from 'react';
-import { Layout, Button, Popover, Avatar } from 'antd';
+import { Layout, Button, Avatar, Menu, Dropdown, message, Popover } from 'antd';
 import { UserOutlined, SettingFilled } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
+import Image from 'next/image';
+import { MenuInfo } from 'rc-menu/lib/interface';
 
-const teams = [
-  {
-    id: 1,
-    name: 'Team1',
-    song: 'Song1',
-  },
-  {
-    id: 2,
-    name: 'Bellcanto',
-    song: 'Song2',
-  },
-  {
-    id: 3,
-    name: '안녕',
-    song: 'Song3',
-  },
-  {
-    id: 4,
-    name: 'a',
-    song: 'Song4',
-  },
-  {
-    id: 5,
-    name: 'Team5',
-    song: 'Song5',
-  },
+interface Team {
+  id: number;
+  name: string;
+  song: string;
+}
+
+const teams: Team[] = [
+  { id: 1, name: 'Team1', song: 'Song1' },
+  { id: 2, name: 'Bellcanto', song: 'Song2' },
+  { id: 3, name: '안녕', song: 'Song3' },
+  { id: 4, name: 'a', song: 'Song4' },
+  { id: 5, name: 'Team5', song: 'Song5' },
 ];
 
 export default function TeamPage() {
   const { Header } = Layout;
 
   const [open, setOpen] = useState(false);
+  const [positions] = useState([]);
+  const [currentTeamId, setCurrentTeamId] = useState<number>(1); // 초기 팀 ID 설정
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
+  const handleMenuClick = async (e: MenuInfo) => {
+    const { key } = e;
+  
+    if (key === 'leave-team') {
+      // 팀 떠나기에 대한 간단한 확인
+      Swal.fire({
+        title: '정말로 팀을 떠나시겠습니까?',
+        icon: 'warning',
+        iconColor: 'red',
+        showCancelButton: true,
+        confirmButtonColor: 'red',
+        cancelButtonColor: 'grey',
+        confirmButtonText: '예 ',
+        cancelButtonText: '아니오',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // 팀 떠나기 로직 처리
+          message.success('Team left successfully.');
+        }
+      });
+    } else if (key === 'delete-team') {
+      // 팀 삭제하기에 대한 보다 엄격한 확인
+      Swal.fire({
+        title: '정말로 팀을 삭제하시겠습니까?',
+        icon: 'warning',
+        iconColor: 'red',
+        customClass: {
+          popup: 'swal2-warnpop'
+        },
+        input: 'text',
+        inputLabel: "삭제된 정보는 복구되지 않습니다.",
+        inputPlaceholder: '삭제하겠습니다',
+        inputValidator: (value) => {
+          if (!value) {
+            return '"삭제하겠습니다"를 입력해주세요';
+          } else if (value !== '삭제하겠습니다') {
+            return '입력값이 잘못되었습니다';
+          }
+          return null;
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // 팀 삭제 로직 처리
+          message.success('Team deleted successfully.');
+        }
+      });
+    }
+  };
+
+  const settingsMenu = (
+    <Menu
+      onClick={handleMenuClick}
+      style={{ textAlign: 'center' }}
+    >
+      <Menu.Item key="create-invite-link" style={{ fontWeight: 'bold'}}>
+        초대 링크 생성
+      </Menu.Item>
+      <Menu.Item key="set-position" disabled={positions.length === 0} style={{ fontWeight: 'bold'}}>
+        내 포지션 설정
+      </Menu.Item>
+      <Menu.Item key="edit-team-info" style={{ fontWeight: 'bold', color: 'blue' }}>
+        팀 정보 변경
+      </Menu.Item>
+      <Menu.Item key="leave-team" style={{ fontWeight: 'bold', color: 'red' }}>
+        팀 나가기
+      </Menu.Item>
+      <Menu.Item
+        key="delete-team"
+        style={{ color: 'white', fontWeight: 'bold', backgroundColor: 'red' }}
+      >
+        팀 삭제
+      </Menu.Item>
+    </Menu>
+  );
+  
 
   const content = (
     <div>
@@ -91,7 +160,7 @@ export default function TeamPage() {
               <Avatar size={55} icon={<UserOutlined />} />
             </div>
             <div className="flex-row">
-              <Link href="/team">
+            <Link href={`/team/${currentTeamId}/information`}>
                 <p className="text-center text-3xl text-gray-700 font-bold w-40">
                   ACAROA
                 </p>
@@ -127,23 +196,18 @@ export default function TeamPage() {
                 </Popover>
               </div>
             </div>
-            <div>
-              <Button
-                type="text"
-                style={{
-                  padding: '0 10px',
-                }}
-              >
-                <SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
-              </Button>
-            </div>
           </div>
+          <Dropdown overlay={settingsMenu} trigger={['click']}>
+            <Button type="text" style={{ padding: '0 10px' }}>
+              <SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
+            </Button>
+          </Dropdown>
         </div>
 
         {/* end */}
         <div className="flex flex-1 justify-end items-center">
           <div className="flex flex-row intems-center">
-            <div className='mr-1'>
+            <div className="mr-1">
               <Avatar size={40} icon={<UserOutlined />} />
             </div>
             <div className="flex flex-col items-center">
@@ -151,7 +215,7 @@ export default function TeamPage() {
                 이승연님
               </p>
               <Button type="text" size="small" onClick={handleAlert}>
-                <p className="text-xs text-cente text-amber-500 font-bold">
+                <p className="text-xs text-cente atext-amber-500 font-bold text-yellow-500">
                   로그아웃
                 </p>
               </Button>
