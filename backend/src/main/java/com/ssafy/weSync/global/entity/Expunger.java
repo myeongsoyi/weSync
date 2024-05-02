@@ -1,4 +1,4 @@
-package com.ssafy.weSync.global.domain;
+package com.ssafy.weSync.global.entity;
 
 public enum Expunger {
     Admin, normal
