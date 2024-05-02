@@ -1,17 +1,19 @@
 package com.ssafy.weSync.team.entity;
 
+import com.ssafy.weSync.global.entity.BaseTime;
 import com.ssafy.weSync.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "team_user")
-public class TeamUser {
+public class TeamUser extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_user_id")

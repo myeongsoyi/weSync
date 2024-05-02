@@ -1,5 +1,6 @@
 package com.ssafy.weSync.team.entity;
 
+import com.ssafy.weSync.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "TEAM")
-public class Team {
+public class Team extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
