@@ -79,3 +79,59 @@
 //     padding: 5px !important;
 //   }
 // }
+
+
+
+// .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+//   color: red!important; /* 이 부분을 원하는 색상 코드로 변경 */
+// }
+
+// Tabs 컴포넌트 전체에 적용되는 스타일
+.tabs-custom {
+  .ant-tabs-nav {
+    margin: 0 !important;
+  }
+
+  // 모든 탭의 기본 글자 색상을 빨간색으로 설정
+  .ant-tabs-tab-btn {
+    color: $color-orange;
+    font-size: rem(20);
+  }
+
+  // 활성 탭에 대한 추가 스타일
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    font-weight: bold; // 활성 탭의 글자를 굵게
+    font-size: rem(24); // 활성 탭의 글자 크기
+    color: $color-orange !important;// 활성 탭의 글자 색상 (필요한 경우 여기서 조정)
+  }
+  
+
+  .ant-tabs-nav-wrap {
+    width: 100% !important;
+  }
+  
+  .ant-tabs-nav-list {
+    width: 100% !important;
+  
+  }
+  
+  /* 탭 너비 설정 */
+  .ant-tabs-tab {
+    flex: 1 1 0%!important; /* 각 탭이 동일한 너비를 가지도록 설정 */
+    height: rem(70) !important; /* 탭 높이 설정 */
+  }
+  
+  .ant-tabs-tab-btn {
+    margin: auto !important; /* 탭 내용을 수평 중앙 정렬 */
+  }
+  
+  .ant-tabs-nav-operations {
+    display: none !important; /* 탭 우측의 추가 버튼 숨김 */
+  }
+  
+  /* 활성 탭 표시기의 색상 변경 */
+  .ant-tabs-ink-bar {
+    background-color: $color-orange !important; /* 여기서 색상을 원하는 색상으로 설정하세요 */
+    height: rem(6) !important; /* 높이 설정 */
+  }
+}
