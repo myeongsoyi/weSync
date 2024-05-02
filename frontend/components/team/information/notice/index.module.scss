@@ -1,6 +1,7 @@
 .noticebox {
     background-color: $color-white-yellow;
-    // margin-bottom: 4vh;
-    width : 100%;
+    margin-bottom: 4vh;
+    width: calc(100%/3)*2;
     min-width: rem(300);
+    padding-bottom: 3vh;
 }

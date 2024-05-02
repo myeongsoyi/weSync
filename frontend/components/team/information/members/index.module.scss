@@ -1,7 +1,8 @@
 .memberbox {
     background-color: $color-yellow;
     padding: 20px;
-    // margin-bottom: 4vh;
-    width : 15vw;
+    margin-bottom: 4vh;
+    width: calc(100%/3);
     min-width: rem(300);
+
 }
