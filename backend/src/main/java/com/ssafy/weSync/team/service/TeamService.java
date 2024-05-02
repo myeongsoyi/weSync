@@ -3,6 +3,7 @@ package com.ssafy.weSync.team.service;
 import com.ssafy.weSync.global.ApiResponse.ErrorResponse;
 import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.team.dto.response.TeamIdDto;
+import com.ssafy.weSync.team.dto.response.TeamInfoDto;
 import com.ssafy.weSync.team.dto.response.TeamLinkDto;
 import com.ssafy.weSync.team.dto.response.TeamUserDto;
 import com.ssafy.weSync.team.entity.Invitation;
@@ -22,6 +23,8 @@ import java.util.UUID;
 @Service
 @Transactional
 public class TeamService {
+
+
 
     private final TeamRepository teamRepository;
     private final InvitationRepository invitationRepository;
@@ -92,5 +95,10 @@ public class TeamService {
             responseBody.setError(responseError);
             return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(400));
         }
+    }
+
+
+    public ResponseEntity<Response<TeamInfoDto>>getActiveTeams() {
+        return  null;
     }
 }
