@@ -5,18 +5,18 @@ import { Suspense } from 'react';
 
 export default function WorkSpaceTabs() {
   const label: React.ReactNode[] = [
-    <div className="w-max text-center">
+    <div className="w-max text-center" key={'public-tab'}>
       <span>PUBLIC</span>
     </div>,
-    <div className="w-max text-center">
+    <div className="w-max text-center" key={'private-tab'}>
       <span>PRIVATE</span>
     </div>,
   ];
   const contents: React.ReactNode[] = [
-    <Suspense>
+    <Suspense key={'public'}>
       <Public />
     </Suspense>,
-    <Suspense>
+    <Suspense key={'private'}>
       <Private />
     </Suspense>,
   ];
