@@ -2,6 +2,7 @@ package com.ssafy.weSync.team.controller;
 
 import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.team.dto.response.TeamIdDto;
+import com.ssafy.weSync.team.dto.response.TeamInfoDto;
 import com.ssafy.weSync.team.dto.response.TeamLinkDto;
 import com.ssafy.weSync.team.dto.response.TeamUserDto;
 import com.ssafy.weSync.team.service.TeamService;
@@ -23,7 +24,7 @@ public class TeamController {
         return teamService.getTeamLink(id);
     }
 
-    //팀 초대 링크 생성
+    //유저 강퇴
     @DeleteMapping("{id}")
     public ResponseEntity<Response<TeamUserDto>> deleteTeamUser(@PathVariable Long id) {
         return teamService.deleteTeamUser(id);
@@ -33,6 +34,12 @@ public class TeamController {
     @GetMapping("invite/{UUID}")
     public ResponseEntity<Response<TeamIdDto>> redirectToTeam(@PathVariable String UUID) {
         return teamService.redirectToTeam(UUID);
+    }
+
+    //진행중인 팀목록 조회
+    @GetMapping("active")
+    public ResponseEntity<Response<TeamInfoDto>> getActiveTeams() {
+        return teamService.getActiveTeams();
     }
 
 }
