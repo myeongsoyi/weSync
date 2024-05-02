@@ -1,17 +1,14 @@
 'use client';
 
-// import AudioPlayer from 'react-h5-audio-player';
-// import 'react-h5-audio-player/lib/styles.css';
-import { Table, Tag, Button } from 'antd';
-import { useSingleAudioStore } from '@/store/singleAudioStore';
-import FixedAudioPlayer from './FixedAudioPlayer';
+import React from 'react';
+import { Table, Tag, Button, Checkbox } from 'antd';
+import { useMultiAudioStore } from '@/store/multiAudioStore';
+import MultiAudioPlayer from './MultiAudioPlayer';
 import {
-  CommentOutlined,
-  PauseCircleOutlined,
   PlayCircleOutlined,
+  PauseCircleOutlined,
+  CommentOutlined,
 } from '@ant-design/icons';
-// import H5AudioPlayer from 'react-h5-audio-player';
-// import { getMainRecords } from '@/services/home';
 
 interface IParams {
   records: {
@@ -42,21 +39,7 @@ interface ISong {
 }
 
 export default function ListRecord({ records }: IParams) {
-  const { currentId, playing, togglePlayPause, setCurrentTrack } =
-    useSingleAudioStore((state) => ({
-      currentId: state.currentId,
-      playing: state.playing,
-      togglePlayPause: state.togglePlayPause,
-      setCurrentTrack: state.setCurrentTrack,
-    }));
-
-  function togglePlay(song: ISong) {
-    if (currentId !== song.id) {
-      setCurrentTrack(song.url, song.id);
-    } else {
-      togglePlayPause();
-    }
-  }
+  const {  togglePlayPause, tracks, addTrack, removeTrack } = useMultiAudioStore();
 
   const { Column } = Table;
   // const { Column, ColumnGroup } = Table;
@@ -69,24 +52,39 @@ export default function ListRecord({ records }: IParams) {
           title=""
           dataIndex="song"
           key="song"
-          render={(song) => (
-            <div className="flex">
+          render={(song: ISong) => (
+            <div className="flex items-center">
+              <Checkbox
+                onChange={() => toggleTrack(song)}
+                checked={selectedTracks.some((t) => t.id === song.id)}
+              />
               <Button
-                onClick={() => togglePlay(song)}
+                onClick={() => togglePlayPause()}
                 className="m-auto"
-                type='text'
+                type="text"
                 icon={
-                  currentId === song.id && playing ? (
-                    <PauseCircleOutlined style={{fontSize:28}}/>
+                  playing ? (
+                    <PauseCircleOutlined style={{ fontSize: 28 }} />
                   ) : (
-                    <PlayCircleOutlined style={{fontSize:28}}/>
+                    <PlayCircleOutlined style={{ fontSize: 28 }} />
                   )
                 }
-                style={{ height: '40px', width: '40px'}}
+                style={{ height: '40px', width: '40px' }}
               />
-              <Button className="m-auto" type='text' icon={<CommentOutlined style={{fontSize:28}}/>} style={{ height: '40px', width: '40px'}}/>
+              <Button
+                className="m-auto"
+                type="text"
+                icon={<CommentOutlined style={{ fontSize: 28 }} />}
+                style={{ height: '40px', width: '40px' }}
+              />
             </div>
           )}
+        />
+        <Column
+          title="이름"
+          dataIndex="singer"
+          key="이름"
+          render={(singer) => <p className="whitespace-nowrap">{singer}</p>}
         />
         <Column
           title="포지션"
@@ -136,7 +134,7 @@ export default function ListRecord({ records }: IParams) {
           )}
         />
       </Table>
-      <FixedAudioPlayer />
+      <MultiAudioPlayer />
     </>
   );
 }

@@ -9,7 +9,7 @@ interface AudioState {
   togglePlayPause: () => void;
 }
 
-export const useAudioStore = create<AudioState>((set) => ({
+export const useSingleAudioStore = create<AudioState>((set) => ({
   currentTrackUrl: '',
   playing: false,
   currentId: null,
