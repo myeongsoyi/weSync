@@ -2,12 +2,12 @@
 
 // import React, { useEffect, useRef, useState } from 'react';
 import React, { useEffect, useRef } from 'react';
-import { useAudioStore } from '@/store/audioStore';
+import { useSingleAudioStore } from '@/store/singleAudioStore';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
 export default function FixedAudioPlayer() {
-  const { currentTrackUrl, currentId, playing } = useAudioStore();
+  const { currentTrackUrl, currentId, playing } = useSingleAudioStore();
   const audioRef = useRef<AudioPlayer>(null);
 //   const [initialVolume, setInitialVolume] = useState<number>(0.3); // 기본 볼륨 상태
 
