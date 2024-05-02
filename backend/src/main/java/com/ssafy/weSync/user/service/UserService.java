@@ -93,6 +93,7 @@ public class UserService {
             //기존회원
             else{
                 userId = user.get().getUserId();
+
             }
 
             //세션 저장
