@@ -13,8 +13,9 @@ export async function generateMetadata({ params: { teamId } }: IParams) {
   };
 }
 
-export default function TeamPage({ params: { teamId } }: IParams) {
-  return (
+// export default function TeamPage({ params: { teamId } }: IParams) {
+export default function TeamPage() {
+return (
     <div className={styles.tabs}>
       <Tabs />
     </div>
