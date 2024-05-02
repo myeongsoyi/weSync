@@ -1,4 +1,4 @@
-package com.ssafy.weSync.global.domain;
+package com.ssafy.weSync.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
