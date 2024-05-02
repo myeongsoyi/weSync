@@ -77,7 +77,7 @@ public class TeamService {
         }
     }
 
-    public ResponseEntity<Response<TeamIdDto>>redirectToTeam(String UUID){
+    public ResponseEntity<Response<TeamIdDto>>redirectToTeam(String UUI
         String link = "http://localhost:8080/api/team/invite/" + UUID;
         Invitation invitation = invitationRepository.findByLink(link).get();
         HttpHeaders responseHeaders = new HttpHeaders();
