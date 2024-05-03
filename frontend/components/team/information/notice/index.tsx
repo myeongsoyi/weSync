@@ -1,17 +1,18 @@
 import styles from './index.module.scss';
 import { getTeamNotices } from '@/services/team';
 import NoticeList from './noticeList';
-import { Pagination, Button, Tooltip } from 'antd';
-import { EditFilled } from '@ant-design/icons';
+import { Pagination, Tooltip } from 'antd';
 import NoticeWrite from './noticeWrite/noticeWrite'; 
 
 interface IParams {
   teamId: string;
 }
 
-export default async function TeamNotices({ teamId }: IParams) {
-  const notices = await getTeamNotices(teamId);
-  // console.log(notices);
+
+export default async function TeamNotices({teamId} :IParams) {
+
+    const notices = await getTeamNotices(teamId);
+
 
   return (
     <div className={styles.noticebox}>

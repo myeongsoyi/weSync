@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import TeamCreate from '../teamcreate/createmodal';
+
 // import { getMainTeams } from '@/services/home/mainTeams';
-import {
-  CrownFilled,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
+import { CrownFilled, PlusCircleOutlined } from '@ant-design/icons';
 // import styles from './index.module.scss';
 import { Avatar, Badge, Card, Tag, Tooltip } from 'antd';
 import { Group } from 'antd/es/avatar';
@@ -56,21 +54,23 @@ function useViewportWidth() {
 }
 
 export default function CardTeams({ teams }: IParams) {
-  const [memNum, setMemNum] = useState(5);  // 너비에 따른 멤버 수 상태 변수
-  const width = useViewportWidth();  // 너비 상태 변수
+  const [memNum, setMemNum] = useState(5); // 너비에 따른 멤버 수 상태 변수
+  const width = useViewportWidth(); // 너비 상태 변수
   //   const teams = await getMainTeams();
 
   useEffect(() => {
-    if (width < 720) {  // 너비가 720px 미만일 때
-      setMemNum(3);  // 멤버 수를 3명으로 설정
-    } else if (width < 840) {  // 너비가 840px 미만일 때
-      setMemNum(4);  // 멤버 수를 4명으로 설정
-    } else {  // 일반 데스크탑 화면일 때
-      setMemNum(5);  // 멤버 수를 5명으로 설정
+    if (width < 720) {
+      // 너비가 720px 미만일 때
+      setMemNum(3); // 멤버 수를 3명으로 설정
+    } else if (width < 840) {
+      // 너비가 840px 미만일 때
+      setMemNum(4); // 멤버 수를 4명으로 설정
+    } else {
+      // 일반 데스크탑 화면일 때
+      setMemNum(5); // 멤버 수를 5명으로 설정
     }
-  }, [width]);  // 너비가 변경될 때마다 실행
+  }, [width]); // 너비가 변경될 때마다 실행ya
 
-  const router = useRouter();
   // console.log(teams);
   // const teams: {
   //     id: number;
@@ -101,19 +101,17 @@ export default function CardTeams({ teams }: IParams) {
           }}
           className="flex justify-center text-center cursor-pointer"
           hoverable
-          onClick={() => router.push('/create')}
+          onClick={() => {
+            TeamCreate();
+          }}
         >
           <div className="flex flex-col justify-center items-center">
             <h1 className="m-6 text-amber-400">CREATE</h1>
             <PlusCircleOutlined style={{ fontSize: '100px', color: 'gold' }} />
           </div>
         </Card>
-        {teams.map((team,i) => (
-          <Link
-            href={`/team/${team.id}`}
-            key={i}
-            style={{ width: '32%' }}
-          >
+        {teams.map((team, i) => (
+          <Link href={`/team/${team.id}`} key={i} style={{ width: '32%' }}>
             <Card
               style={{
                 //   width: '32%',
@@ -122,7 +120,7 @@ export default function CardTeams({ teams }: IParams) {
                 textAlign: 'center',
                 borderRadius: '10px',
                 border: '3px solid #FFC500',
-                backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)': 'white'}`,
+                backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)' : 'white'}`,
               }}
               title={team.name + 'asdsadasdsadasdas'}
               hoverable
@@ -153,7 +151,7 @@ export default function CardTeams({ teams }: IParams) {
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
-                  {team.members.slice(0, memNum).map((member,i) => (
+                  {team.members.slice(0, memNum).map((member, i) => (
                     <Badge
                       count={
                         member.isLeader ? (

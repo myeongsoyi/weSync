@@ -27,7 +27,7 @@ export default function TeamPage() {
 
   const [open, setOpen] = useState(false);
   const [positions] = useState([]);
-  const [currentTeamId, setCurrentTeamId] = useState<number>(1); // 초기 팀 ID 설정
+  const [currentTeamId] = useState<number>(1); // 초기 팀 ID 설정
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
@@ -117,7 +117,7 @@ export default function TeamPage() {
     <div>
       {teams.map((team, index) => (
         <p key={index} className="flex mt-1 first:mt-0">
-          <Link className="m-auto" href={`/teams/${team.id}`}>
+          <Link className="m-auto" href={`/team/${team.id}/information`}>
             <div className="flex-col min-w-32">
               <p className="text-center  text-gray-800  text-sm font-semibold">
                 {team.name}
