@@ -1,14 +1,17 @@
 package com.ssafy.weSync.global.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTime {
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -17,7 +20,7 @@ public abstract class BaseTime {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_by")
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @Enumerated(EnumType.STRING)
