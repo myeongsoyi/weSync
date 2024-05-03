@@ -1,20 +1,42 @@
 import styles from './index.module.scss';
 import { getTeamNotices } from '@/services/team';
-import NoticeList from './noticeList'
+import NoticeList from './noticeList';
+import { Pagination, Button, Tooltip } from 'antd';
+import { EditFilled } from '@ant-design/icons';
+import NoticeWrite from './noticeWrite/noticeWrite'; 
 
 interface IParams {
-    teamId : string
+  teamId: string;
 }
 
-export default async function TeamNotices({teamId} :IParams) {
-
-    const notices = await getTeamNotices(teamId);
-    console.log(notices);
+export default async function TeamNotices({ teamId }: IParams) {
+  const notices = await getTeamNotices(teamId);
+  // console.log(notices);
 
   return (
     <div className={styles.noticebox}>
-      <div className="text-center bg-yellow-400 py-2"><span className='text-3xl font-bold'>Notice</span></div>
-      <NoticeList notices = {notices} />
+      <div className="text-center bg-yellow-400 py-2 ">
+        <span className="text-3xl font-bold">NOTICE</span>
+      </div>
+      <NoticeList notices={notices} />
+      <div className="flex ustify-between items-center px-2">
+        <div style={{ width: 48, marginLeft: '0.75rem' }} />
+        <Pagination
+          defaultCurrent={1}
+          total={50}
+          pageSize={5}
+          style={{ flex: 1, textAlign: 'center' }}
+        />
+        <Tooltip placement="top" title={'글 작성하기'} arrow={true}>
+          {/* <Button
+            className="mr-3"
+            type="text"
+            icon={<EditFilled style={{ fontSize: 24 }} />}
+            style={{ width: 48 }}
+          /> */}
+          <NoticeWrite/>
+        </Tooltip>
+      </div>
     </div>
   );
 }

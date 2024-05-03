@@ -1,5 +1,6 @@
 import TeamMembers from "@/components/team/information/members";
 import TeamNotices from "@/components/team/information/notice";
+
 interface IParams {
   params: { teamId: string };
 }

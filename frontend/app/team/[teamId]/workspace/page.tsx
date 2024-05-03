@@ -1,4 +1,5 @@
-
+import Tabs from '@/components/team/workspace/tabs';
+import styles from './index.module.scss';
 interface IParams {
   params: { teamId: string };
 }
@@ -12,10 +13,11 @@ export async function generateMetadata({ params: { teamId } }: IParams) {
   };
 }
 
-export default function TeamPage({ params: { teamId } }: IParams) {
-  return (
-    <>
-      <h1>팀 ID : {teamId}</h1>
-    </>
+// export default function TeamPage({ params: { teamId } }: IParams) {
+export default function TeamPage() {
+return (
+    <div className={styles.tabs}>
+      <Tabs />
+    </div>
   );
 }
