@@ -25,10 +25,10 @@ public class TeamController {
     }
 
     //유저 강퇴
-    @DeleteMapping("{id}")
-    public ResponseEntity<Response<TeamUserDto>> deleteTeamUser(@PathVariable Long id) {
-        return teamService.deleteTeamUser(id);
-    }
+//    @DeleteMapping("{id}")
+//    public ResponseEntity<Response<TeamUserDto>> deleteTeamUser(@PathVariable Long id) {
+//        return teamService.deleteTeamUser(id);
+//    }
 
     //초대된 팀으로 이동
     @GetMapping("invite/{UUID}")
@@ -37,9 +37,9 @@ public class TeamController {
     }
 
     //진행중인 팀목록 조회
-    @GetMapping("active")
-    public ResponseEntity<Response<TeamInfoDto>> getActiveTeams() {
-        return teamService.getActiveTeams();
-    }
+//    @GetMapping("active")
+//    public ResponseEntity<Response<TeamInfoDto>> getActiveTeams() {
+//        return teamService.getActiveTeams();
+//    }
 
 }
