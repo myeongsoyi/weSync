@@ -13,8 +13,6 @@ interface IParams {
 }
 
 export default function NoticeList({ notices }: IParams) {
-  // console.log(notices);
-
   return (
     <Space
       direction="vertical"
