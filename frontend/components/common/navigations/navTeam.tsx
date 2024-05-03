@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MenuInfo } from 'rc-menu/lib/interface';
+import TeamModify from '@/components/team/information/teaminfomodal/modifymodal';
 
 interface Team {
   id: number;
@@ -34,7 +35,7 @@ export default function TeamPage() {
   };
   const handleMenuClick = async (e: MenuInfo) => {
     const { key } = e;
-  
+
     if (key === 'leave-team') {
       // 팀 떠나기에 대한 간단한 확인
       Swal.fire({
@@ -52,6 +53,15 @@ export default function TeamPage() {
           message.success('Team left successfully.');
         }
       });
+    } else if (key === 'edit-team-info') {
+      const currentTeam = teams.find((t) => t.id === currentTeamId);
+      if (currentTeam) {
+        TeamModify(
+          currentTeam.name,
+          currentTeam.song,
+          'path/to/current-team-image.jpg',
+        );
+      }
     } else if (key === 'delete-team') {
       // 팀 삭제하기에 대한 보다 엄격한 확인
       Swal.fire({
@@ -59,10 +69,10 @@ export default function TeamPage() {
         icon: 'warning',
         iconColor: 'red',
         customClass: {
-          popup: 'swal2-warnpop'
+          popup: 'swal2-warnpop',
         },
         input: 'text',
-        inputLabel: "삭제된 정보는 복구되지 않습니다.",
+        inputLabel: '삭제된 정보는 복구되지 않습니다.',
         inputPlaceholder: '삭제하겠습니다',
         inputValidator: (value) => {
           if (!value) {
@@ -87,17 +97,21 @@ export default function TeamPage() {
   };
 
   const settingsMenu = (
-    <Menu
-      onClick={handleMenuClick}
-      style={{ textAlign: 'center' }}
-    >
-      <Menu.Item key="create-invite-link" style={{ fontWeight: 'bold'}}>
+    <Menu onClick={handleMenuClick} style={{ textAlign: 'center' }}>
+      <Menu.Item key="create-invite-link" style={{ fontWeight: 'bold' }}>
         초대 링크 생성
       </Menu.Item>
-      <Menu.Item key="set-position" disabled={positions.length === 0} style={{ fontWeight: 'bold'}}>
+      <Menu.Item
+        key="set-position"
+        disabled={positions.length === 0}
+        style={{ fontWeight: 'bold' }}
+      >
         내 포지션 설정
       </Menu.Item>
-      <Menu.Item key="edit-team-info" style={{ fontWeight: 'bold', color: 'blue' }}>
+      <Menu.Item
+        key="edit-team-info"
+        style={{ fontWeight: 'bold', color: 'blue' }}
+      >
         팀 정보 변경
       </Menu.Item>
       <Menu.Item key="leave-team" style={{ fontWeight: 'bold', color: 'red' }}>
@@ -111,7 +125,6 @@ export default function TeamPage() {
       </Menu.Item>
     </Menu>
   );
-  
 
   const content = (
     <div>
@@ -148,9 +161,25 @@ export default function TeamPage() {
           minHeight: '90px',
         }}
       >
-        <div className="flex-1">
-          <Link href="/">
-            <Image src={'/svgs/logo.svg'} alt="로고" width={130} height={100} />
+        <div
+          className="flex-1"
+          style={{ display: 'flex', alignItems: 'center', height: '100%' }}
+        >
+          <Link href="/" passHref>
+            <span
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Image
+                src={'/svgs/logo.svg'}
+                alt="로고"
+                width={130}
+                height={100}
+              />
+            </span>
           </Link>
         </div>
 
@@ -161,7 +190,7 @@ export default function TeamPage() {
               <Avatar size={55} icon={<UserOutlined />} />
             </div>
             <div className="flex-row">
-            <Link href={`/team/${currentTeamId}/information`}>
+              <Link href={`/team/${currentTeamId}/information`}>
                 <p className="text-center text-3xl text-gray-700 font-bold w-40">
                   ACAROA
                 </p>
