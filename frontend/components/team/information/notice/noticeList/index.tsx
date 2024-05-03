@@ -1,9 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Avatar, Button, List, Skeleton } from 'antd';
-import Item from 'antd/es/list/Item';
-import { Meta } from 'antd/es/list/Item';
+import { Card, Space, Button, Tooltip } from 'antd';
+import { PushpinFilled } from '@ant-design/icons';
 
 interface IParams {
   notices: {
@@ -14,30 +12,56 @@ interface IParams {
   }[];
 }
 
-
 export default function NoticeList({ notices }: IParams) {
-  console.log(notices);
-
+  // console.log(notices);
 
   return (
-    <div className='h-96 overflow-auto px-5 py-2'>
-      <List
-        className="demo-loadmore-list"
-        // loading={initLoading}
-        itemLayout="horizontal"
-        dataSource={notices}
-        renderItem={(item) => (
-          <Item>
-            {/* <Skeleton avatar title={false} loading={item.} active> */}
-            <Meta className=' text-center'
-              title={<p>{item.detail}</p>}
-              description={<p>{item.date}</p>}
-            />
-            {item.pinned ? <div>pinned</div> : <div>space</div> }
-            {/* </Skeleton> */}
-          </Item>
-        )}
-      />
-    </div>
+    <Space
+      direction="vertical"
+      size={30}
+      style={{ width: '100%', padding: '20px' }}
+    >
+      {notices.map((notice) => (
+        <Card
+          key={notice.id}
+          title={notice.date} // 공지의 날짜를 제목으로 사용
+          extra={
+            notice.pinned ? (
+              <Tooltip placement="top" title={'글 고정 해제'} arrow={true}>
+              <Button
+                type="text"
+                icon={
+                  <PushpinFilled
+                    style={{ color: 'crimson', fontSize: '16px' }}
+                  />
+                }
+              />
+              </Tooltip>
+            ) : (
+              <Tooltip placement="top" title={'글 고정'} arrow={true}>
+              <Button
+                type="text"
+                icon={
+                  <PushpinFilled
+                    style={{ color: 'lightgray', fontSize: '16px' }}
+                  />
+                }
+              />
+              </Tooltip>
+            )
+          }
+          style={{ width: '100%', padding: '10px 0' }}
+        >
+          <div className="text-wrap">
+            <h4
+              className="text-center text-pretty"
+              style={{ wordWrap: 'break-word', padding: '10PX 120px' }}
+            >
+              {notice.detail}
+            </h4>
+          </div>
+        </Card>
+      ))}
+    </Space>
   );
 }

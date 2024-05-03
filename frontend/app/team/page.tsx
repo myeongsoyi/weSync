@@ -1,9 +1,9 @@
-import Navigation from "@/components/common/navigations/navTeam"
+// import Navigation from "@/components/common/navigations/navTeam"
 
 export default function TeamPage() {
     return (
         <div>
-            team
+            <span>팀 페이지</span>
         </div>
         
     )
