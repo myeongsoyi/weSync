@@ -145,6 +145,7 @@ export default function TeamPage() {
           justifyContent: 'center',
           background: '#FFFFFF',
           height: '12vh',
+          minHeight: '90px',
         }}
       >
         <div className="flex-1">

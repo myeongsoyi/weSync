@@ -37,6 +37,7 @@ export async function getTeamPrivateRecords() {
                 name: 'song1',
                 url: '/audios/m1.mp3'
             },
+            singer: '김싸피',
             position: {
                 name: '테너',
                 color: 'red',
@@ -55,6 +56,7 @@ export async function getTeamPrivateRecords() {
                 name: 'song2',
                 url: '/audios/m2.mp3'
             },
+            singer: '최싸피',
             position: {
                 name: '테너',
                 color: 'red',
@@ -73,6 +75,7 @@ export async function getTeamPrivateRecords() {
                 name: 'song3',
                 url: '/audios/m4a.m4a'
             },
+            singer: '박서울',
             position: {
                 name: '퍼커션',
                 color: 'blue',
@@ -91,6 +94,7 @@ export async function getTeamPrivateRecords() {
                 name: 'song4',
                 url: '/audios/w1.wav'
             },
+            singer: '이삼반',
             position: {
                 name: '퍼커션',
                 color: 'blue',
