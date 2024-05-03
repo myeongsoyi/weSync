@@ -4,7 +4,6 @@
 // import 'react-h5-audio-player/lib/styles.css';
 import { Table, Tag, Button } from 'antd';
 import { useSingleAudioStore } from '@/store/singleAudioStore';
-import FixedAudioPlayer from './FixedAudioPlayer';
 import {
   CommentOutlined,
   PauseCircleOutlined,
@@ -41,14 +40,16 @@ interface ISong {
   url: string;
 }
 
-export default function ListRecord({ records }: IParams) {
+export default function PrivateListRecord({ records }: IParams) {
+  // const { currentId, playing, togglePlayPause, setCurrentTrack } =
+  //   useSingleAudioStore((state) => ({
+  //     currentId: state.currentId,
+  //     playing: state.playing,
+  //     togglePlayPause: state.togglePlayPause,
+  //     setCurrentTrack: state.setCurrentTrack,
+  //   }));
   const { currentId, playing, togglePlayPause, setCurrentTrack } =
-    useSingleAudioStore((state) => ({
-      currentId: state.currentId,
-      playing: state.playing,
-      togglePlayPause: state.togglePlayPause,
-      setCurrentTrack: state.setCurrentTrack,
-    }));
+    useSingleAudioStore();
 
   function togglePlay(song: ISong) {
     if (currentId !== song.id) {
@@ -74,17 +75,22 @@ export default function ListRecord({ records }: IParams) {
               <Button
                 onClick={() => togglePlay(song)}
                 className="m-auto"
-                type='text'
+                type="text"
                 icon={
                   currentId === song.id && playing ? (
-                    <PauseCircleOutlined style={{fontSize:28}}/>
+                    <PauseCircleOutlined style={{ fontSize: 28 }} />
                   ) : (
-                    <PlayCircleOutlined style={{fontSize:28}}/>
+                    <PlayCircleOutlined style={{ fontSize: 28 }} />
                   )
                 }
-                style={{ height: '40px', width: '40px'}}
+                style={{ height: '36px', width: '36px' }}
               />
-              <Button className="m-auto" type='text' icon={<CommentOutlined style={{fontSize:28}}/>} style={{ height: '40px', width: '40px'}}/>
+              <Button
+                className="m-auto"
+                type="text"
+                icon={<CommentOutlined style={{ fontSize: 28 }} />}
+                style={{ height: '36px', width: '36px' }}
+              />
             </div>
           )}
         />
@@ -136,7 +142,6 @@ export default function ListRecord({ records }: IParams) {
           )}
         />
       </Table>
-      <FixedAudioPlayer />
     </>
   );
 }

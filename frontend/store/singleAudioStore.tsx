@@ -6,6 +6,7 @@ interface AudioState {
   playing: boolean;
   currentId: number | null;
   setCurrentTrack: (url: string, id: number) => void;
+  stopTrack: () => void;
   togglePlayPause: () => void;
 }
 
@@ -15,5 +16,6 @@ export const useSingleAudioStore = create<AudioState>((set) => ({
   currentId: null,
   setCurrentTrack: (url, id) =>
     set({ currentTrackUrl: url, currentId: id, playing: true }),
+  stopTrack: () => set({ currentTrackUrl: '', currentId: null, playing: false }),
   togglePlayPause: () => set((state) => ({ playing: !state.playing })),
 }));

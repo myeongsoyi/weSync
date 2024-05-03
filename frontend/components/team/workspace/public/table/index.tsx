@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Table, Tag, Button, Checkbox } from 'antd';
+import { useSingleAudioStore } from '@/store/singleAudioStore';
 import { useMultiAudioStore } from '@/store/multiAudioStore';
-import MultiAudioPlayer from './MultiAudioPlayer';
 import {
   PlayCircleOutlined,
   PauseCircleOutlined,
@@ -38,12 +38,29 @@ interface ISong {
   url: string;
 }
 
-export default function ListRecord({ records }: IParams) {
-  const {  togglePlayPause, tracks, addTrack, removeTrack } = useMultiAudioStore();
-
+export default function PublicListRecord({ records }: IParams) {
+  const {
+    tracks,
+    toggleTrack,
+    isPlaying
+  } = useMultiAudioStore();
+  const { currentId, playing, togglePlayPause, setCurrentTrack, stopTrack } =
+    useSingleAudioStore();
   const { Column } = Table;
   // const { Column, ColumnGroup } = Table;
   // console.log(records);
+  function togglePlay(song: ISong) {
+    setCurrentTrack('', 0)
+    if (currentId !== song.id) {
+      setCurrentTrack(song.url, song.id);
+    } else {
+      togglePlayPause();
+    }
+  }
+
+  useEffect(() => {
+    console.log(tracks);
+  }, [tracks]);
 
   return (
     <>
@@ -55,27 +72,29 @@ export default function ListRecord({ records }: IParams) {
           render={(song: ISong) => (
             <div className="flex items-center">
               <Checkbox
-                onChange={() => toggleTrack(song)}
-                checked={selectedTracks.some((t) => t.id === song.id)}
+                onChange={() => [toggleTrack(song.id, song.url, song.name), stopTrack()]}
+                checked={tracks.some((t) => t.id === song.id)}
+                style={{ marginRight: '8px' }}
+                disabled={isPlaying}
               />
               <Button
-                onClick={() => togglePlayPause()}
+                onClick={() => togglePlay(song)}
                 className="m-auto"
                 type="text"
                 icon={
-                  playing ? (
+                  currentId === song.id && playing ? (
                     <PauseCircleOutlined style={{ fontSize: 28 }} />
                   ) : (
                     <PlayCircleOutlined style={{ fontSize: 28 }} />
                   )
                 }
-                style={{ height: '40px', width: '40px' }}
+                style={{ height: '36px', width: '36px' }}
               />
               <Button
                 className="m-auto"
                 type="text"
                 icon={<CommentOutlined style={{ fontSize: 28 }} />}
-                style={{ height: '40px', width: '40px' }}
+                style={{ height: '36px', width: '36px' }}
               />
             </div>
           )}
@@ -134,7 +153,8 @@ export default function ListRecord({ records }: IParams) {
           )}
         />
       </Table>
-      <MultiAudioPlayer />
+      {/* <FixedAudioPlayer />
+      {tracks.length > 0 && <MultiAudioPlayer />} */}
     </>
   );
 }

@@ -5,18 +5,32 @@ interface TrackState {
   tracks: Array<{
     id: number;
     url: string;
+    name: string;
     playing: boolean;
     volume: number;
   }>;
-  togglePlayPause: (id: number) => void;
+  isPlaying: boolean;
+  toggleTrack: (id: number, url: string, name: string) => void;
+  togglePlayPauseOne: (id: number) => void;
   setVolume: (id: number, volume: number) => void;
-  addTrack: (id: number, url: string) => void;
-  removeTrack: (id: number) => void;
+  playAll: () => void;
+  pauseAll: () => void;
+  setVolumeAll: (volume: number) => void;
+  setIsPlaying: (isPlaying: boolean) => void;
+  // setCurrentTime: (id: number, time: number) => void;
 }
 
 export const useMultiAudioStore = create<TrackState>((set, get) => ({
   tracks: [],
-  togglePlayPause: (id) => {
+  isPlaying: false,
+  toggleTrack: (id: number, url: string, name: string) => {
+    // tracks에 id가 있는지 확인하고 있으면 제거하고 없으면 추가
+    const newTracks = get().tracks.some(track => track.id === id)
+      ? get().tracks.filter(track => track.id !== id)
+      : [...get().tracks, { id, url, name, playing: false, volume: 0.25 }];
+    set({ tracks: newTracks });
+  },
+  togglePlayPauseOne: (id: number,) => {
     const newTracks = get().tracks.map(track =>
       track.id === id ? { ...track, playing: !track.playing } : track
     );
@@ -28,12 +42,25 @@ export const useMultiAudioStore = create<TrackState>((set, get) => ({
     );
     set({ tracks: newTracks });
   },
-  addTrack: (id, url) => {
-    const newTrack = { id, url, playing: false, volume: 0.5 };
-    set(state => ({ tracks: [...state.tracks, newTrack] }));
-  },
-  removeTrack: (id) => {
-    const newTracks = get().tracks.filter(track => track.id !== id);
+  playAll: () => {
+    const newTracks = get().tracks.map(track => ({ ...track, playing: true }));
     set({ tracks: newTracks });
-  }
+  },
+  pauseAll: () => {
+    const newTracks = get().tracks.map(track => ({ ...track, playing: false }));
+    set({ tracks: newTracks });
+  },
+  setVolumeAll: volume => {
+    const newTracks = get().tracks.map(track => ({ ...track, volume }));
+    set({ tracks: newTracks });
+  },
+  setIsPlaying: isPlaying => {
+    set({ isPlaying });
+  },
+  // setCurrentTime: (id, time) => {
+  //   const newTracks = get().tracks.map(track =>
+  //     track.id === id ? { ...track, currentTime: time } : track
+  //   );
+  //   set({ tracks: newTracks });
+  // },
 }));
