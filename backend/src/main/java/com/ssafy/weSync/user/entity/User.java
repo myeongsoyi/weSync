@@ -1,5 +1,6 @@
 package com.ssafy.weSync.user.entity;
 
+import com.ssafy.weSync.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "User")
 @Data
 @NoArgsConstructor
-public class User {
+public class User extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

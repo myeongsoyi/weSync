@@ -5,11 +5,10 @@ import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.user.dto.LoginDto;
 import com.ssafy.weSync.user.entity.User;
 import com.ssafy.weSync.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
@@ -24,9 +23,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UserService {
-
-    @Autowired
-    private HttpSession session;
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
 
@@ -93,18 +89,15 @@ public class UserService {
             //기존회원
             else{
                 userId = user.get().getUserId();
-            }
 
-            //세션 저장
-            session.setAttribute("nickname", nickname);
-            session.setAttribute("id", userId);
-            session.setAttribute("img", img);
+            }
 
             LoginDto responseUser = new LoginDto(userId, nickname, img, "bearer", accessToken, expires_in, refreshToken, refresh_token_expires_in);
             Response<LoginDto> responseBody = new Response<>(true,responseUser,null);
 
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+
             return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
 
         } else {
