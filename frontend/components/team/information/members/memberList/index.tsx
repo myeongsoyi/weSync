@@ -15,6 +15,7 @@ interface IParams {
 }
 
 export default function TeamMemberList({ members }: IParams) {
+
   const handleMenuClick = async (memberId: number, action: string, memberName: string) => {
     if (action === 'remove_member') {
       // Show confirmation modal
@@ -31,6 +32,7 @@ export default function TeamMemberList({ members }: IParams) {
         confirmButtonColor: 'red',
         denyButtonColor: 'grey',  // Grey for the deny button
       });
+
 
       if (result.isConfirmed) {
         try {
@@ -56,7 +58,7 @@ export default function TeamMemberList({ members }: IParams) {
   );
 
   return (
-    <div className='h-96 overflow-auto'>
+    <div className='overflow-auto'>
       <List
         className="demo-loadmore-list"
         itemLayout="horizontal"
