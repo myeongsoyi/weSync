@@ -2,6 +2,8 @@ import { Tabs } from 'antd';
 import Public from '../public';
 import Private from '../private';
 import { Suspense } from 'react';
+import FixedAudioPlayer from '@/components/common/FixedAudioPlayer';
+import MultiAudioPlayer from '@/components/common/MultiAudioPlayer';
 
 export default function WorkSpaceTabs() {
   const label: React.ReactNode[] = [
@@ -38,6 +40,8 @@ export default function WorkSpaceTabs() {
         })}
         className="tabs-custom"
       ></Tabs>
+      <FixedAudioPlayer />
+      <MultiAudioPlayer />
     </>
   );
 }

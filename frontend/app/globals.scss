@@ -34,13 +34,18 @@ body {
 
 // 최소 너비 설정
 html {
-    min-width: 640px;
+    min-width: 684px;
 }
 
 .content {
     // 100vh에서 nav와 footer의 높이만큼 뺀다.
-    min-height: calc(100vh - 12vh - 14vh);
+    min-height: min(100vh - 12vh - 14vh, 100vh - 90px - 100px);
+    min-width: 684px;
     margin: 0 12%;
+    @media screen and (max-width: 900px){
+      margin: 0 auto;     
+      width: 684px;
+    }
     padding: rem(12) 0 rem(32);
 }
 
@@ -68,6 +73,7 @@ main {
 
 footer {
     height: 14vh;
+    min-height: 100px;
     background: #ccc; /* 푸터 배경색 설정 */
     padding: 10px 0; /* 푸터 패딩 설정 */
     text-align: center; /* 텍스트 중앙 정렬 */

@@ -1,16 +1,14 @@
 'use client';
 
-// import AudioPlayer from 'react-h5-audio-player';
-// import 'react-h5-audio-player/lib/styles.css';
-import { Table, Tag, Button } from 'antd';
+import React, { useEffect } from 'react';
+import { Table, Tag, Button, Checkbox } from 'antd';
 import { useSingleAudioStore } from '@/store/singleAudioStore';
+import { useMultiAudioStore } from '@/store/multiAudioStore';
 import {
-  CommentOutlined,
-  PauseCircleOutlined,
   PlayCircleOutlined,
+  PauseCircleOutlined,
+  CommentOutlined,
 } from '@ant-design/icons';
-// import H5AudioPlayer from 'react-h5-audio-player';
-// import { getMainRecords } from '@/services/home';
 
 interface IParams {
   records: {
@@ -40,18 +38,19 @@ interface ISong {
   url: string;
 }
 
-export default function PrivateListRecord({ records }: IParams) {
-  // const { currentId, playing, togglePlayPause, setCurrentTrack } =
-  //   useSingleAudioStore((state) => ({
-  //     currentId: state.currentId,
-  //     playing: state.playing,
-  //     togglePlayPause: state.togglePlayPause,
-  //     setCurrentTrack: state.setCurrentTrack,
-  //   }));
-  const { currentId, playing, togglePlayPause, setCurrentTrack } =
+export default function PublicListRecord({ records }: IParams) {
+  const {
+    tracks,
+    toggleTrack,
+    isPlaying
+  } = useMultiAudioStore();
+  const { currentId, playing, togglePlayPause, setCurrentTrack, stopTrack } =
     useSingleAudioStore();
-
+  const { Column } = Table;
+  // const { Column, ColumnGroup } = Table;
+  // console.log(records);
   function togglePlay(song: ISong) {
+    setCurrentTrack('', 0)
     if (currentId !== song.id) {
       setCurrentTrack(song.url, song.id);
     } else {
@@ -59,9 +58,9 @@ export default function PrivateListRecord({ records }: IParams) {
     }
   }
 
-  const { Column } = Table;
-  // const { Column, ColumnGroup } = Table;
-  // console.log(records);
+  useEffect(() => {
+    console.log(tracks);
+  }, [tracks]);
 
   return (
     <>
@@ -70,8 +69,14 @@ export default function PrivateListRecord({ records }: IParams) {
           title=""
           dataIndex="song"
           key="song"
-          render={(song) => (
-            <div className="flex">
+          render={(song: ISong) => (
+            <div className="flex items-center">
+              <Checkbox
+                onChange={() => [toggleTrack(song.id, song.url, song.name), stopTrack()]}
+                checked={tracks.some((t) => t.id === song.id)}
+                style={{ marginRight: '8px' }}
+                disabled={isPlaying}
+              />
               <Button
                 onClick={() => togglePlay(song)}
                 className="m-auto"
@@ -93,6 +98,12 @@ export default function PrivateListRecord({ records }: IParams) {
               />
             </div>
           )}
+        />
+        <Column
+          title="이름"
+          dataIndex="singer"
+          key="이름"
+          render={(singer) => <p className="whitespace-nowrap">{singer}</p>}
         />
         <Column
           title="포지션"
@@ -142,6 +153,8 @@ export default function PrivateListRecord({ records }: IParams) {
           )}
         />
       </Table>
+      {/* <FixedAudioPlayer />
+      {tracks.length > 0 && <MultiAudioPlayer />} */}
     </>
   );
 }
