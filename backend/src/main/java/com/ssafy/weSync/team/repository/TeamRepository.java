@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
     Optional<Team> findByTeamId(Long teamId);
+    Optional<Team> findByProfileUrl(String profileUrl);
 }
