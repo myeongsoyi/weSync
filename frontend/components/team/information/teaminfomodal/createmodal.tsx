@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 export default async function TeamCreate() {
-    const defaultImageUrl = "path/to/default-profile.jpg"; // 기본 이미지 경로 설정
+    const defaultImageUrl = "public/images/wesync_icon.jpg";
     const { value: formValues } = await Swal.fire({
       title: '팀 생성하기',
       html: `
@@ -48,7 +48,7 @@ export default async function TeamCreate() {
         <label for="swal-input3" class="file-input-label">프로필 사진 선택</label>
         <img id="image-preview" class="image-preview" src="" alt="이미지 미리보기">
         <span id="file-name" class="file-name">선택된 파일 없음</span>
-        <div style="font-size: 12px; color: #555; margin-top: 8px;">프로필 이미지는 JPG 혹은 PNG 파일만 등록 가능합니다.</div>
+        <div style="font-size: 12px; color: #555; margin-top: 8px;">프로필 이미지는 JPG 또는 PNG 파일만 등록 가능합니다.</div>
       `,
       focusConfirm: false,
       showCancelButton: true,
