@@ -20,7 +20,6 @@ import java.util.UUID;
 
 @Slf4j // log
 @Transactional
-@RequiredArgsConstructor // 클래스에 선언된 final 변수들, 필드들을 매개변수로 하는 생성자를 자동으로 생성
 @Service
 public class S3Service {
 
@@ -31,6 +30,11 @@ public class S3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public S3Service(AmazonS3Client amazonS3Client, @Value("${cloud.aws.s3.bucket}") String bucket) {
+        this.amazonS3Client = amazonS3Client;
+        this.bucket = bucket;
+    }
 
     /**
      * MultipartFile을 전달받아 File로 전환한 후 S3에 업로드
