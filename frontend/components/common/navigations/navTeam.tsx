@@ -236,7 +236,7 @@ export default function TeamPage() {
 
         {/* end */}
         <div className="flex flex-1 justify-end items-center">
-          <div className="flex flex-row intems-center">
+          <div className="flex flex-row items-center">
             <div className="mr-1">
               <Avatar size={40} icon={<UserOutlined />} />
             </div>
