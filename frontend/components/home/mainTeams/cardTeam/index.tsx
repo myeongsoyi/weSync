@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TeamCreate from '../teamcreate/createmodal';
+import TeamCreate from '../../../team/information/teaminfomodal/createmodal';
 
 // import { getMainTeams } from '@/services/home/mainTeams';
 import { CrownFilled, PlusCircleOutlined } from '@ant-design/icons';
