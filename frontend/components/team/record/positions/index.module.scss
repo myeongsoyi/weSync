@@ -1,0 +1,14 @@
+.section {
+    background-color: $color-white-yellow;
+    width: 25%;
+    padding: rem(16);
+}
+
+.controller {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: rem(4);
+    border: 1px solid $color-gray;
+    border-radius: rem(4);
+}

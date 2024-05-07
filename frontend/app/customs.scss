@@ -86,6 +86,10 @@
 //   color: red!important; /* 이 부분을 원하는 색상 코드로 변경 */
 // }
 
+.ant-table-column-title {
+  text-wrap: nowrap;
+}
+
 // Tabs 컴포넌트 전체에 적용되는 스타일
 .tabs-custom {
   .ant-tabs-nav {
