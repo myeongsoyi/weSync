@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation"; // Next.js 13에서 변경된 라우터 가져오기
+import Image from "next/image";
 
 
 interface IParams {
@@ -9,21 +10,19 @@ interface IParams {
 }
 
 
-export default function TeamPage({ params: { teamId } }: IParams) {
+export default function TeamWorkspacePage({ params: { teamId } }: IParams) {
   const router = useRouter();
 
   useEffect(() => {
-    // 라우터가 준비되었는지 확인
-    console.log('Redirecting...');
     if (router) {
       router.replace(`/team/${teamId}/information`);
     }
   }, []);
 
   return (
-    <>
-      <h1>팀 ID : {teamId}</h1>
-      <h2>Loading...</h2>
-    </>
+    <div className="py-10">
+      {/* <h1>팀 ID : {teamId}</h1> */}
+      <Image src={'/loading.gif'} alt="로딩" width={500} height={500} style={{margin: 'auto'}}></Image>
+    </div>
   );
 }

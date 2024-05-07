@@ -14,7 +14,7 @@ export async function generateMetadata({ params: { teamId } }: IParams) {
   };
 }
 
-export default function TeamPage({ params: { teamId } }: IParams) {
+export default function TeamInformationPage({ params: { teamId } }: IParams) {
   return (
     <div className="flex flex-row">
       <TeamMembers teamId={teamId}/>

@@ -1,3 +1,6 @@
+import RecordPositions from "@/components/team/record/positions";
+import RecordScore from "@/components/team/record/score";
+
 
 interface IParams {
   params: { teamId: string };
@@ -12,10 +15,11 @@ export async function generateMetadata({ params: { teamId } }: IParams) {
   };
 }
 
-export default function TeamPage({ params: { teamId } }: IParams) {
+export default function TeamRecordPage({ params: { teamId } }: IParams) {
   return (
-    <>
-      <h1>팀 ID : {teamId}</h1>
-    </>
+    <div className="flex flex-row">
+      <RecordPositions teamId={teamId} />
+      <RecordScore teamId={teamId}/>
+    </div>
   );
 }

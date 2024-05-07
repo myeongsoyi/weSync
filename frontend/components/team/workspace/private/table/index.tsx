@@ -63,6 +63,14 @@ export default function PrivateListRecord({ records }: IParams) {
   // const { Column, ColumnGroup } = Table;
   // console.log(records);
 
+  // 포지션 필터링 임시 함수
+  const positionFilters = Array.from(
+    new Set(records.map((record) => record.position.name)),
+  ).map((position) => ({
+    text: position,
+    value: position,
+  }));
+
   return (
     <>
       <Table dataSource={records} pagination={false} rowKey="id">
@@ -98,6 +106,12 @@ export default function PrivateListRecord({ records }: IParams) {
           title="포지션"
           dataIndex="position"
           key="포지션"
+          sorter={(
+            a: { position: { name: string } },
+            b: { position: { name: string } },
+          ) => a.position.name.localeCompare(b.position.name)}
+          filters={positionFilters}
+          onFilter={(value, record) => record.position.name === value}
           render={(position) => (
             <>
               <Tag
@@ -117,6 +131,7 @@ export default function PrivateListRecord({ records }: IParams) {
           title="길이"
           dataIndex="runTime"
           key="runTime"
+          sorter={(a: { runTime: number }, b: { runTime: number }) => a.runTime - b.runTime}
           render={(runTime) => {
             const minutes = Math.floor(runTime / 60);
             const seconds = runTime % 60;
