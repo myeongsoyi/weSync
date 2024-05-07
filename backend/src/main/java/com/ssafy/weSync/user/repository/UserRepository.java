@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByKakaoIdAndIsActiveTrue(Long kakaoId);
-
+    Optional<User> findByUserId(Long userId);
 }
