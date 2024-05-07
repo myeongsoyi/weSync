@@ -4,10 +4,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.ssafy.weSync.global.ApiResponse.ErrorResponse;
 import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.team.dto.request.CreateTeamInfoDto;
-import com.ssafy.weSync.team.dto.response.TeamIdDto;
-import com.ssafy.weSync.team.dto.response.TeamInfoDto;
-import com.ssafy.weSync.team.dto.response.TeamLinkDto;
-import com.ssafy.weSync.team.dto.response.TeamUserDto;
+import com.ssafy.weSync.team.dto.request.EditTeamInfoDto;
+import com.ssafy.weSync.team.dto.response.*;
 import com.ssafy.weSync.team.entity.Invitation;
 import com.ssafy.weSync.team.entity.Team;
 import com.ssafy.weSync.team.entity.TeamUser;
@@ -22,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -91,6 +91,100 @@ public class TeamService {
         }
     }
 
+    //팀 정보 수정
+    public ResponseEntity<Response<TeamIdDto>> editTeam(EditTeamInfoDto editTeamInfoDto, Long id) throws IOException {
+        if (editTeamInfoDto == null || editTeamInfoDto.getTeamProfile() == null) {
+            //에러
+            HttpHeaders responseHeaders = new HttpHeaders();
+            Response<TeamIdDto> responseBody = new Response<>();
+            responseBody.setSuccess(false);
+            responseBody.setData(null);
+            ErrorResponse responseError = new ErrorResponse("400", "잘못된 요청입니다.");
+            responseBody.setError(responseError);
+            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(400));
+        }
+        else {
+            S3Service s3Service = new S3Service(amazonS3Client, bucket);
+            String editTeamProfileUrl = s3Service.upload(editTeamInfoDto.getTeamProfile(),"teamProfile");
+
+            //팀 등록
+            Team editTeam = teamRepository.findByTeamId(id).get();
+            editTeam.setTeamName(editTeamInfoDto.getTeamName());
+            editTeam.setSongName(editTeamInfoDto.getSongName());
+            String beforeUrl = editTeam.getProfileUrl();
+            //이전 프로필 데이터 삭제
+            if(beforeUrl!=null){
+                int startIndex = beforeUrl.indexOf("teamProfile/");
+                String beforeParsingKey = beforeUrl.substring(startIndex);
+                String parsing = beforeParsingKey.replaceAll("%20", " ");
+                String parsedKey = parsing.replaceAll("%3A", ":");
+                s3Service.deleteS3Object(parsedKey);
+                System.out.println(parsedKey);
+            }
+            editTeam.setProfileUrl(editTeamProfileUrl);
+            editTeam.setIsFinished(editTeamInfoDto.getIsFinished());
+            teamRepository.save(editTeam);
+
+            //응답
+            HttpHeaders responseHeaders = new HttpHeaders();
+            Response<TeamIdDto> responseBody = new Response<>();
+            TeamIdDto teamIdDto = new TeamIdDto();
+            teamIdDto.setTeamId(id);
+            responseBody.setSuccess(true);
+            responseBody.setData(teamIdDto);
+            responseBody.setError(null);
+            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+        }
+    }
+
+    //현재 속한 팀 이름, 곡 이름, 프로필 사진, 팀장 여부, 진행중인 팀 이름, 곡 이름, 프로필 사진 조회
+    public ResponseEntity<Response<ShortCurrentTeamInfoDto>> getActiveTeamsShort(Long teamId, Long userId){
+        Team currentTeam = teamRepository.findByTeamId(teamId).get();
+
+        //응답
+        ShortCurrentTeamInfoDto shortCurrentTeamInfoDto = new ShortCurrentTeamInfoDto();
+        shortCurrentTeamInfoDto.setTeamId(teamId);
+        shortCurrentTeamInfoDto.setTeamName(currentTeam.getTeamName());
+        if(currentTeam.getSongName()!=null){
+            shortCurrentTeamInfoDto.setSongNameExist(true);
+            shortCurrentTeamInfoDto.setSongName(currentTeam.getSongName());
+        }
+        else{
+            shortCurrentTeamInfoDto.setSongNameExist(false);
+        }
+        shortCurrentTeamInfoDto.setTeamProfileUrl(currentTeam.getProfileUrl());
+        if(currentTeam.getTeamLeaderId()==userId){
+            shortCurrentTeamInfoDto.setTeamLeader(true);
+        }
+        else{
+            shortCurrentTeamInfoDto.setTeamLeader(false);
+        }
+        List<ShortActiveTeamInfoDto> shortActiveTeamInfoDtoList = new ArrayList<>();
+        List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(userId).get());
+        for(TeamUser teamUser : teamUserList){
+            Team team = teamUser.getTeam();
+            if(!team.getIsFinished()){
+                ShortActiveTeamInfoDto shortActiveTeamInfoDto = new ShortActiveTeamInfoDto();
+                shortActiveTeamInfoDto.setTeamId(team.getTeamId());
+                if(team.getSongName()!=null){
+                    shortActiveTeamInfoDto.setSongNameExist(true);
+                    shortActiveTeamInfoDto.setSongName(team.getSongName());
+                }
+                else{
+                    shortActiveTeamInfoDto.setSongNameExist(false);
+                }
+                shortActiveTeamInfoDto.setTeamProfileUrl(team.getProfileUrl());
+                shortActiveTeamInfoDtoList.add(shortActiveTeamInfoDto);
+            }
+        }
+        shortCurrentTeamInfoDto.setActiveTeams(shortActiveTeamInfoDtoList);
+
+        Response<ShortCurrentTeamInfoDto> responseBody = new Response<>(true, shortCurrentTeamInfoDto, null);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+    }
+
     //팀 링크 생성
     public ResponseEntity<Response<TeamLinkDto>> getTeamLink(Long id){
         UUID uuid = UUID.randomUUID();
@@ -147,9 +241,17 @@ public class TeamService {
         Response<TeamIdDto> responseBody = new Response<>();
 
         //이미 존재하는 회원인지 확인
-        Optional<TeamUser> existUser = teamUserRepository.findByUser(userRepository.findByUserId(Long.parseLong(id)).get());
+        List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(Long.parseLong(id)).get());
+        Long linkTeamId = invitation.getTeam().getTeamId();
+        boolean isAlreadyExist = false;
+        for(TeamUser teamUser : teamUserList){
+            if(teamUser.getTeam().getTeamId()==linkTeamId){
+                isAlreadyExist = true;
+                break;
+            }
+        }
 
-        if(invitation.getIsValid() && existUser.isEmpty()){
+        if(invitation.getIsValid() && !isAlreadyExist){
             //팀원 추가
             TeamUser newTeamUser = new TeamUser();
             newTeamUser.setUser(userRepository.findByUserId(Long.parseLong(id)).get());
@@ -174,13 +276,18 @@ public class TeamService {
     }
 
     //활성화 된 팀목록
-    public ResponseEntity<Response<TeamInfoDto>>getActiveTeams() { //아직 미구현
-        HttpHeaders responseHeaders = new HttpHeaders();
-        Response<TeamInfoDto> responseBody = new Response<>();
-        TeamInfoDto teamInfoDto = new TeamInfoDto();
-        responseBody.setSuccess(true);
-        responseBody.setData(teamInfoDto);
-        responseBody.setError(null);
-        return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
-    }
+//    public ResponseEntity<Response<TeamInfoDto>>getActiveTeams(Long id) {
+//        List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(id).get());
+//        LongTeamInfoDto longTeamInfoDto = new LongTeamInfoDto();
+//        for(TeamUser teamUser : teamUserList){
+//            Team team = teamUser.getTeam();
+//
+//        }
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        Response<LongTeamInfoDto> responseBody = new Response<>();
+//        responseBody.setSuccess(true);
+//        responseBody.setData(longTeamInfoDto);
+//        responseBody.setError(null);
+//        return new ResponseEntity<Response<TeamInfoDto>>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+//    }
 }
