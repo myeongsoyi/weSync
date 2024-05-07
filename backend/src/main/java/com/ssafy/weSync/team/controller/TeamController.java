@@ -2,10 +2,8 @@ package com.ssafy.weSync.team.controller;
 
 import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.team.dto.request.CreateTeamInfoDto;
-import com.ssafy.weSync.team.dto.response.TeamIdDto;
-import com.ssafy.weSync.team.dto.response.TeamInfoDto;
-import com.ssafy.weSync.team.dto.response.TeamLinkDto;
-import com.ssafy.weSync.team.dto.response.TeamUserDto;
+import com.ssafy.weSync.team.dto.request.EditTeamInfoDto;
+import com.ssafy.weSync.team.dto.response.*;
 import com.ssafy.weSync.team.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +25,18 @@ public class TeamController {
         return teamService.createTeam(createTeamInfoDto);
     }
 
+    //팀 정보 변경
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<TeamIdDto>> editTeam(@ModelAttribute EditTeamInfoDto editTeamInfoDto, @PathVariable Long id) throws IOException {
+        return teamService.editTeam(editTeamInfoDto, id);
+    }
+
+    //현재 속한 팀 이름, 곡 이름, 프로필 사진, 팀장 여부, 진행중인 팀 이름, 곡 이름, 프로필 사진 조회
+    @GetMapping("/info")
+    public ResponseEntity<Response<ShortCurrentTeamInfoDto>> activeTeamsInfo(@RequestParam(required = true) Long teamId, @RequestParam(required = true) Long userId) {
+        return teamService.getActiveTeamsShort(teamId, userId);
+    }
+
     //팀 초대 링크 생성
     @GetMapping("/{id}")
     public ResponseEntity<Response<TeamLinkDto>> getTeamLink(@PathVariable Long id) {
@@ -45,10 +55,16 @@ public class TeamController {
         return teamService.redirectToTeam(UUID, id);
     }
 
-    //진행중인 팀목록 조회
-    @GetMapping("/active")
-    public ResponseEntity<Response<TeamInfoDto>> getActiveTeams() {
-        return teamService.getActiveTeams();
-    }
+//    //진행중인 팀목록 조회
+//    @GetMapping("/active/{id}")
+//    public ResponseEntity<Response<TeamInfoDto>> getActiveTeams(@PathVariable Long id) {
+//        return teamService.getActiveTeams(id);
+//    }
+//
+//    //전체 팀목록 조회
+//    @GetMapping("/total")
+//    public ResponseEntity<Response<TeamInfoDto>> getAllTeams(@PathVariable Long id) {
+//        return teamService.getAllTeams(id);
+//    }
 
 }
