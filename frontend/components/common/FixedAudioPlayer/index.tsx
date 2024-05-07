@@ -51,6 +51,7 @@ export default function FixedAudioPlayer() {
             autoPlay={playing}
             // header={playing.toString()}
             onPause={stopTrack}
+            volume={0.3}
             preload="auto"
             ref={audioRef}
             // onPlay={() => console.log('Playing with ID:', currentId)}

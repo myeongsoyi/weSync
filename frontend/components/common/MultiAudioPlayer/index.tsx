@@ -6,6 +6,7 @@ import { useSingleAudioStore } from '@/store/singleAudioStore';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import { Button } from 'antd';
+import { DeleteTwoTone } from '@ant-design/icons';
 
 interface ITrack {
   id: number;
@@ -17,17 +18,16 @@ interface ITrack {
 
 export default function MultiAudioPlayer() {
   const [longestTrack, setLongestTrack] = useState<ITrack>();
-  const [volume, setVolume] = useState<number>(0.25);
+  const [volume, setVolume] = useState<number>(0.3);
 
   const { tracks, isPlaying, toggleTrack, setIsPlaying } = useMultiAudioStore();
   // const { currentId, playing, togglePlayPause, setCurrentTrack } =
-  const { playing } =
-    useSingleAudioStore((state) => ({
-      currentId: state.currentId,
-      playing: state.playing,
-      togglePlayPause: state.togglePlayPause,
-      setCurrentTrack: state.setCurrentTrack,
-    }));
+  const { playing } = useSingleAudioStore((state) => ({
+    currentId: state.currentId,
+    playing: state.playing,
+    togglePlayPause: state.togglePlayPause,
+    setCurrentTrack: state.setCurrentTrack,
+  }));
   const playersRef = useRef<{ [key: number]: HTMLAudioElement }>({});
 
   useEffect(() => {
@@ -58,8 +58,9 @@ export default function MultiAudioPlayer() {
       });
       if (!playersRef.current[track.id]) {
         audio.load();
-        audio.volume = track.volume;
-        audio.currentTime = 1;
+        console.log(volume);
+        audio.volume = volume;
+        audio.currentTime = 0;
         playersRef.current[track.id] = audio;
       }
     });
@@ -68,9 +69,15 @@ export default function MultiAudioPlayer() {
   const handlePlayPause = (isPlaying: boolean) => {
     setIsPlaying(isPlaying);
     Object.values(playersRef.current).forEach((audio) => {
-      if (isPlaying && tracks.find((track) => track.id.toString() === audio.id)){
+      if (
+        isPlaying &&
+        tracks.find((track) => track.url === audio.src.split('3000').pop()) &&
+        longestTrack?.url !== audio.src.split('3000').pop()
+      ) {
+        console.log('play', audio.src.split('3000').pop(), longestTrack?.url);
         audio.play();
       } else {
+        console.log('pause');
         audio.pause();
       }
     });
@@ -86,6 +93,7 @@ export default function MultiAudioPlayer() {
   const handleSeek = (time: number) => {
     Object.values(playersRef.current).forEach((audio) => {
       audio.currentTime = time;
+      if (longestTrack?.url !== audio.src.split('3000').pop())
       audio.play();
     });
   };
@@ -99,7 +107,8 @@ export default function MultiAudioPlayer() {
           disabled={isPlaying}
           style={{ marginRight: '8px' }}
         >
-          {track.name}
+          <span>{track.name}</span>
+          <DeleteTwoTone />
         </Button>
       ))}
     </>
@@ -107,6 +116,12 @@ export default function MultiAudioPlayer() {
 
   return (
     <>
+      <div>
+        <p>
+          {tracks.toString()}
+          {longestTrack?.name}
+        </p>
+      </div>
       {longestTrack &&
         tracks.length > 0 &&
         playing === false && ( // Added parentheses here

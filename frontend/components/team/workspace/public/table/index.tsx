@@ -39,18 +39,14 @@ interface ISong {
 }
 
 export default function PublicListRecord({ records }: IParams) {
-  const {
-    tracks,
-    toggleTrack,
-    isPlaying
-  } = useMultiAudioStore();
+  const { tracks, toggleTrack, isPlaying } = useMultiAudioStore();
   const { currentId, playing, togglePlayPause, setCurrentTrack, stopTrack } =
     useSingleAudioStore();
   const { Column } = Table;
   // const { Column, ColumnGroup } = Table;
   // console.log(records);
   function togglePlay(song: ISong) {
-    setCurrentTrack('', 0)
+    setCurrentTrack('', 0);
     if (currentId !== song.id) {
       setCurrentTrack(song.url, song.id);
     } else {
@@ -62,6 +58,14 @@ export default function PublicListRecord({ records }: IParams) {
   //   console.log(tracks);
   // }, [tracks]);
 
+  // 포지션 필터링 임시 함수
+  const positionFilters = Array.from(
+    new Set(records.map((record) => record.position.name)),
+  ).map((position) => ({
+    text: position,
+    value: position,
+  }));
+
   return (
     <>
       <Table dataSource={records} pagination={false} rowKey="id">
@@ -72,7 +76,10 @@ export default function PublicListRecord({ records }: IParams) {
           render={(song: ISong) => (
             <div className="flex items-center">
               <Checkbox
-                onChange={() => [toggleTrack(song.id, song.url, song.name), stopTrack()]}
+                onChange={() => [
+                  toggleTrack(song.id, song.url, song.name),
+                  stopTrack(),
+                ]}
                 checked={tracks.some((t) => t.id === song.id)}
                 style={{ marginRight: '8px' }}
                 disabled={isPlaying}
@@ -103,12 +110,21 @@ export default function PublicListRecord({ records }: IParams) {
           title="이름"
           dataIndex="singer"
           key="이름"
+          sorter={(a: { singer: string }, b: { singer: string }) =>
+            a.singer.localeCompare(b.singer)
+          }
           render={(singer) => <p className="whitespace-nowrap">{singer}</p>}
         />
         <Column
           title="포지션"
           dataIndex="position"
           key="포지션"
+          sorter={(
+            a: { position: { name: string } },
+            b: { position: { name: string } },
+          ) => a.position.name.localeCompare(b.position.name)}
+          filters={positionFilters}
+          onFilter={(value, record) => record.position.name === value}
           render={(position) => (
             <>
               <Tag
@@ -128,6 +144,7 @@ export default function PublicListRecord({ records }: IParams) {
           title="길이"
           dataIndex="runTime"
           key="runTime"
+          sorter={(a: { runTime: number }, b: { runTime: number }) => a.runTime - b.runTime}
           render={(runTime) => {
             const minutes = Math.floor(runTime / 60);
             const seconds = runTime % 60;

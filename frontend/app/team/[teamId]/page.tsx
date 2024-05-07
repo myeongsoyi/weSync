@@ -13,8 +13,6 @@ export default function TeamPage({ params: { teamId } }: IParams) {
   const router = useRouter();
 
   useEffect(() => {
-    // 라우터가 준비되었는지 확인
-    console.log('Redirecting...');
     if (router) {
       router.replace(`/team/${teamId}/information`);
     }
