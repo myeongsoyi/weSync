@@ -58,9 +58,9 @@ export default function PublicListRecord({ records }: IParams) {
     }
   }
 
-  useEffect(() => {
-    console.log(tracks);
-  }, [tracks]);
+  // useEffect(() => {
+  //   console.log(tracks);
+  // }, [tracks]);
 
   return (
     <>

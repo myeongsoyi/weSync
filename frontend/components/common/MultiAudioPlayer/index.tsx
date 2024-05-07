@@ -68,7 +68,7 @@ export default function MultiAudioPlayer() {
   const handlePlayPause = (isPlaying: boolean) => {
     setIsPlaying(isPlaying);
     Object.values(playersRef.current).forEach((audio) => {
-      if (isPlaying) {
+      if (isPlaying && tracks.find((track) => track.id.toString() === audio.id)){
         audio.play();
       } else {
         audio.pause();
@@ -86,6 +86,7 @@ export default function MultiAudioPlayer() {
   const handleSeek = (time: number) => {
     Object.values(playersRef.current).forEach((audio) => {
       audio.currentTime = time;
+      audio.play();
     });
   };
 
