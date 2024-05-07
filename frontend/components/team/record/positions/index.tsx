@@ -14,6 +14,7 @@ export default function RecordPositions({ teamId }: IParams) {
   const [isMute, setIsMute] = useState(false);
   const [volume, setVolume] = useState(30);
   const [savedVolume, setSavedVolume] = useState(30);
+  console.log('teamId:', teamId);
 
   function changeVolume(value: number) {
     setVolume(value);
@@ -28,6 +29,7 @@ export default function RecordPositions({ teamId }: IParams) {
     }
     setIsMute(!isMute);
   }
+
 
   return (
     <div className={styles.section}>
