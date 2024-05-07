@@ -58,7 +58,7 @@ export default function MultiAudioPlayer() {
       });
       if (!playersRef.current[track.id]) {
         audio.load();
-        console.log(volume);
+        // console.log(volume);
         audio.volume = volume;
         audio.currentTime = 0;
         playersRef.current[track.id] = audio;
@@ -74,10 +74,10 @@ export default function MultiAudioPlayer() {
         tracks.find((track) => track.url === audio.src.split('3000').pop()) &&
         longestTrack?.url !== audio.src.split('3000').pop()
       ) {
-        console.log('play', audio.src.split('3000').pop(), longestTrack?.url);
+        // console.log('play', audio.src.split('3000').pop(), longestTrack?.url);
         audio.play();
       } else {
-        console.log('pause');
+        // console.log('pause');
         audio.pause();
       }
     });
@@ -108,7 +108,7 @@ export default function MultiAudioPlayer() {
           style={{ marginRight: '8px' }}
         >
           <span>{track.name}</span>
-          <DeleteTwoTone />
+          <DeleteTwoTone twoToneColor={'#FF1616'} style={{ opacity: isPlaying ? 0.4 : 1 }}/>
         </Button>
       ))}
     </>
@@ -116,12 +116,12 @@ export default function MultiAudioPlayer() {
 
   return (
     <>
-      <div>
+      {/* <div>
         <p>
           {tracks.toString()}
           {longestTrack?.name}
         </p>
-      </div>
+      </div> */}
       {longestTrack &&
         tracks.length > 0 &&
         playing === false && ( // Added parentheses here
