@@ -23,4 +23,9 @@ public class Position extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "color_id")
+    private Color color;
+
 }
