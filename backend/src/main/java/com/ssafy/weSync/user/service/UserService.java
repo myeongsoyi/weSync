@@ -45,7 +45,7 @@ public class UserService {
         MultiValueMap<String, String> tokenBody = new LinkedMultiValueMap<>();
         tokenBody.add("grant_type", "authorization_code");
         tokenBody.add("client_id", kakaoClientId);
-        tokenBody.add("redirect_uri", "http://localhost:3000/home"); //추후 프론트 리다이랙트 주소로 변경
+        tokenBody.add("redirect_uri", "http://localhost:3000"); //추후 프론트 리다이랙트 주소로 변경
         tokenBody.add("code", authorizationCode);
 
         HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(tokenBody, tokenHeaders);

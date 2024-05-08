@@ -2,6 +2,7 @@ package com.ssafy.weSync.s3.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,11 @@ public class S3Service {
             return Optional.of(convertFile);
         }
         return Optional.empty();
+    }
+
+    public void deleteS3Object(String Key) { // 객체 키
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, Key));
+        log.info("{} 파일이 삭제되었습니다.", Key);
     }
 
 }
