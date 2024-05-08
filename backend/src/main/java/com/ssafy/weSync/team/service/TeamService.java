@@ -2,6 +2,7 @@ package com.ssafy.weSync.team.service;
 
 import com.ssafy.weSync.global.ApiResponse.ErrorResponse;
 import com.ssafy.weSync.global.ApiResponse.Response;
+import com.ssafy.weSync.s3.service.S3Service;
 import com.ssafy.weSync.team.dto.response.TeamIdDto;
 import com.ssafy.weSync.team.dto.response.TeamLinkDto;
 import com.ssafy.weSync.team.entity.Invitation;
@@ -64,4 +65,5 @@ public class TeamService {
             return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(400));
         }
     }
+
 }
