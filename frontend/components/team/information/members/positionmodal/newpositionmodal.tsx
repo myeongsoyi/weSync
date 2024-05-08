@@ -44,26 +44,12 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
   const [selectedColor, setSelectedColor] = useState<string>('분홍');
 
   const handleSubmit = async () => {
-    try {
-      const response = await fetch('/api/addNewPosition', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          position: positionName,
-          color: colors[selectedColor],
-        }),
-      });
-      if (!response.ok) throw new Error('Network response was not ok.');
-      message.success('새 포지션 등록 성공');
-      onSuccess(positionName, colors[selectedColor]);
-      setPositionName('');
-      setSelectedColor('분홍');
-      onCancel(); // 성공 후 모달 닫기
-    } catch (error) {
-      message.error('새 포지션 등록 실패');
-    }
+    // 
+    onSuccess(positionName, colors[selectedColor]);
+    message.success('새 포지션 등록 성공');
+    setPositionName('');
+    setSelectedColor('분홍');
+    onCancel();
   };
 
   return (
