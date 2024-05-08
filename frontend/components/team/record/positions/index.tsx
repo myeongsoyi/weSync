@@ -1,21 +1,66 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
 import styles from './index.module.scss';
-import { getTeamRecordPositions, IRecord } from '@/services/team/record';
-import PositionBox from './positionBox';
-import PositionAdd from './positionAdd';
+import { EditOutlined } from '@ant-design/icons';
+import { Button, Slider } from 'antd';
 
 interface IParams {
   teamId: string;
 }
 
-export default async function RecordPositions({ teamId }: IParams) {
-  const positions = await getTeamRecordPositions();
+export default function RecordPositions({ teamId }: IParams) {
+  const [isMute, setIsMute] = useState(false);
+  const [volume, setVolume] = useState(30);
+  const [savedVolume, setSavedVolume] = useState(30);
+  console.log('teamId:', teamId);
+
+  function changeVolume(value: number) {
+    setVolume(value);
+  }
+
+  function clickMute() {
+    if (isMute) {
+      setVolume(savedVolume);
+    } else {
+      setSavedVolume(volume);
+      setVolume(0);
+    }
+    setIsMute(!isMute);
+  }
+
 
   return (
     <div className={styles.section}>
-      {positions.map((position: IRecord) => (
-        <PositionBox key={position.id} position={position} teamId={teamId} />
-      ))}
-      <PositionAdd />
+      <div className={styles.controller}>
+        {!isMute ? (
+          <Button onClick={clickMute} type="text" style={{ padding: '1px' }}>
+            <Image
+              src={'/images/volume_on.png'}
+              alt="볼륨온"
+              width={25}
+              height={25}
+            />
+          </Button>
+        ) : (
+          <Button onClick={clickMute} type="text" style={{ padding: '1px' }}>
+            <Image
+              src={'/images/volume_mute.png'}
+              alt="볼륨오프"
+              width={25}
+              height={25}
+            />
+          </Button>
+        )}
+        <div>
+          <p>
+            <EditOutlined /> 포지션 할당
+          </p>
+          <Slider defaultValue={30} value={volume} onChange={changeVolume}></Slider>
+        </div>
+      </div>
+      <p>{volume}</p>
     </div>
   );
 }

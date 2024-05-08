@@ -5,10 +5,11 @@ interface IParams {
 }
 
 export default function RecordScore({teamId} :IParams) {
+  console.log('teamId:', teamId);
   
     return (
-      <div className={styles.section}>
-        <p className='hidden'>{teamId}</p>
+        <div className={styles.section}>
+        Score Image
       </div>
     );
   }
