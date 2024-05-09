@@ -17,8 +17,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<Response<LoginDto>> kakaoCallback(@RequestParam("code") String authorizationCode){
-        return userService.kakaoCallback(authorizationCode);
+    public ResponseEntity<Response<LoginDto>> kakaoCallback(@RequestParam("code") String authorizationCode, HttpServletRequest request){
+        return userService.kakaoCallback(authorizationCode, request);
     }
 
     @DeleteMapping("")
