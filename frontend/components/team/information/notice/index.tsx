@@ -20,7 +20,7 @@ export default async function TeamNotices({teamId} :IParams) {
         <span className="text-3xl font-bold">NOTICE</span>
       </div>
       <NoticeList notices={notices} />
-      <div className="flex ustify-between items-center px-2">
+      <div className="flex justify-between items-center px-2">
         <div style={{ width: 48, marginLeft: '0.75rem' }} />
         <Pagination
           defaultCurrent={1}
@@ -29,12 +29,6 @@ export default async function TeamNotices({teamId} :IParams) {
           style={{ flex: 1, textAlign: 'center' }}
         />
         <Tooltip placement="top" title={'글 작성하기'} arrow={true}>
-          {/* <Button
-            className="mr-3"
-            type="text"
-            icon={<EditFilled style={{ fontSize: 24 }} />}
-            style={{ width: 48 }}
-          /> */}
           <NoticeWrite/>
         </Tooltip>
       </div>
