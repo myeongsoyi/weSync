@@ -3,25 +3,18 @@ package com.ssafy.weSync.team.service;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.ssafy.weSync.global.ApiResponse.ErrorResponse;
 import com.ssafy.weSync.global.ApiResponse.Response;
-import com.ssafy.weSync.team.dto.request.CreateTeamInfoDto;
-import com.ssafy.weSync.team.dto.request.CustomPositionDto;
-import com.ssafy.weSync.team.dto.request.EditTeamInfoDto;
-import com.ssafy.weSync.team.dto.request.ScorePositionDto;
+import com.ssafy.weSync.team.dto.request.*;
 import com.ssafy.weSync.team.dto.response.*;
 import com.ssafy.weSync.team.entity.*;
 import com.ssafy.weSync.team.repository.*;
 import com.ssafy.weSync.s3.service.S3Service;
-import com.ssafy.weSync.user.entity.User;
 import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -33,17 +26,14 @@ public class TeamService {
     private final TeamUserRepository teamUserRepository;
     private final AmazonS3Client amazonS3Client;
     private  final UserRepository userRepository;
-
     private final ColorRepository colorRepository;
-
     private final PositionRepository positionRepository;
-
     private final ScoreRepository scoreRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    private static final String[] DefaultPositionName = {"소프라노","메조소프라노", "알토", "바리톤", "테너", "베이스", "퍼커션"};
+    private static final String[] DefaultPositionName = {"소프라노","메조소프라노", "알토", "바리톤", "테너", "베이스", "퍼커션"}; // 디폴트 포지션 이름
     private static final Long[] DefaultColorId = {1L,1L,1L,1L,1L,1L,1L}; // 디폴트 포지션별 colorId
 
     public TeamService(TeamRepository teamRepository, InvitationRepository invitationRepository, TeamUserRepository teamUserRepository, AmazonS3Client amazonS3Client, UserRepository userRepository, ColorRepository colorRepository, PositionRepository positionRepository, ScoreRepository scoreRepository) {
@@ -535,13 +525,62 @@ public class TeamService {
         return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
     }
 
-    //팀의 맴버들 이름, 방장여부, 프로필 조회 - 구현중
-    public ResponseEntity<Response<List<MemberInfoDto>>> getTeamMembersInfo(Long id){
-        List<MemberInfoDto> memberInfoDtoList = new ArrayList<>();
+    //팀원 teamUserId, 이름, 리더 여부, 프로필, 포지션 존재 여부, 포지션 이름, 색깔 이름, 색깔 코드 조회
+    public ResponseEntity<Response<List<LongMemberInfoDto>>> getTeamMembersInfo(Long id){
+        Team team = teamRepository.findByTeamId(id).get();
+        List<TeamUser> teamUserList = team.getTeamUsers();
+        teamUserList.sort(Comparator.comparing(TeamUser::getTeamUserId));
+        List<LongMemberInfoDto> memberInfoDtoList = new ArrayList<>();
+        for(TeamUser member : teamUserList){
+            if(member.getIsBanned()){
+                continue;
+            }
+            LongMemberInfoDto memberInfoDto = new LongMemberInfoDto();
+            if(team.getTeamLeaderId() == member.getUser().getUserId()){
+                memberInfoDto.setLeader(true);
+            }
+            else{
+                memberInfoDto.setLeader(false);
+            }
+            memberInfoDto.setTeamUserId(member.getTeamUserId());
+            memberInfoDto.setNickName(member.getUser().getNickname());
+            if(team.getTeamLeaderId()==member.getUser().getUserId()){
+                memberInfoDto.setLeader(true);
+            }
+            else{
+                memberInfoDto.setLeader(false);
+            }
+            memberInfoDto.setUserProfileUrl(member.getUser().getImgUrl());
+            if(member.getPosition()!=null){
+                memberInfoDto.setPositionExist(true);
+                memberInfoDto.setPositionName(member.getPosition().getPositionName());
+                memberInfoDto.setColorName(member.getPosition().getColor().getColorName());
+                memberInfoDto.setColorCode(member.getPosition().getColor().getColorCode());
+            }
+            else{
+                memberInfoDto.setPositionExist(false);
+            }
+            memberInfoDtoList.add(memberInfoDto);
+        }
         HttpHeaders responseHeaders = new HttpHeaders();
-        Response<List<MemberInfoDto>> responseBody = new Response<>();
+        Response<List<LongMemberInfoDto>> responseBody = new Response<>();
         responseBody.setSuccess(true);
         responseBody.setData(memberInfoDtoList);
+        responseBody.setError(null);
+        return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+    }
+
+    //팀원 포지션 설정, 변경
+    public ResponseEntity<Response<TeamUserPositionDto>> teamUserPositionMapping(TeamUserPositionDto teamUserPositionDto) {
+        TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserPositionDto.getTeamUserId()).get();
+        teamUser.setPosition(positionRepository.findByPositionId(teamUserPositionDto.getPositionId()).get());
+        teamUserRepository.save(teamUser);
+
+        //응답
+        HttpHeaders responseHeaders = new HttpHeaders();
+        Response<TeamUserPositionDto> responseBody = new Response<>();
+        responseBody.setSuccess(true);
+        responseBody.setData(teamUserPositionDto);
         responseBody.setError(null);
         return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
     }
