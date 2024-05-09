@@ -15,7 +15,7 @@ export default function KakaoOauth() {
   // console.log('code',code);
 
   const doLogin = async () => {
-    const isLocal = process.env.NODE_ENV === "development";
+    // const isLocal = process.env.NODE_ENV === "development";
 
     // const obj = isLocal
     //   ? {

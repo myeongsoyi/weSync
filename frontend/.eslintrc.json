@@ -21,6 +21,7 @@
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",
-        "no-useless-escape": "off"
+        "no-useless-escape": "off",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }
