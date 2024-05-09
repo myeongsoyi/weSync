@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File
 
-rScore = APIRouter(prefix="/api/score")
+rScore = APIRouter(prefix="/py-api/score")
 
 @rScore.post('/', tags = ['score'])
 async def upload_score(file: bytes = File()):
