@@ -34,6 +34,26 @@ interface IParams {
   }[];
 }
 
+interface IRecord {
+    id: number;
+    song: {
+      id: number;
+      name: string;
+      url: string;
+    };
+    singer: string;
+    position: {
+      name: string;
+      color: string;
+    };
+    title: string;
+    runTime: number;
+    dateTime: {
+      date: string;
+      time: string;
+    };
+}
+
 interface ISong {
   id: number;
   name: string;
@@ -84,7 +104,7 @@ export default function PublicListRecord({ records }: IParams) {
     title=""
     dataIndex="song"
     key="song"
-    render={(song: ISong, record: any) => (  // record 매개변수 추가
+    render={(song: ISong, record: IRecord) => (  // record 매개변수 추가
       <div className="flex items-center">
         <Checkbox
           onChange={() => [
