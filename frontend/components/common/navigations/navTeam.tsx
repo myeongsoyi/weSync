@@ -2,12 +2,17 @@
 
 import React, { useState } from 'react';
 import { Layout, Button, Avatar, Menu, Dropdown, message, Popover } from 'antd';
-import { UserOutlined, SettingFilled } from '@ant-design/icons';
+import {
+  UserOutlined,
+  SettingFilled,
+  CaretDownOutlined,
+} from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MenuInfo } from 'rc-menu/lib/interface';
 import TeamModify from '@/components/team/information/teaminfomodal/modifymodal';
+import type { MenuProps } from 'antd';
+import styles from '@/components/team/information/members/memberList/index.module.scss';
 
 interface Team {
   id: number;
@@ -33,9 +38,7 @@ export default function TeamPage() {
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
-  const handleMenuClick = async (e: MenuInfo) => {
-    const { key } = e;
-
+  async function handleMenuClick(key: string) {
     if (key === 'leave-team') {
       // 팀 떠나기에 대한 간단한 확인
       Swal.fire({
@@ -69,7 +72,7 @@ export default function TeamPage() {
         icon: 'warning',
         iconColor: 'red',
         customClass: {
-          popup: 'swal2-warnpop',
+          popup: styles.borderRed,
         },
         input: 'text',
         inputLabel: '삭제된 정보는 복구되지 않습니다.',
@@ -94,37 +97,68 @@ export default function TeamPage() {
         }
       });
     }
-  };
-
-  const settingsMenu = (
-    <Menu onClick={handleMenuClick} style={{ textAlign: 'center' }}>
-      <Menu.Item key="create-invite-link" style={{ fontWeight: 'bold' }}>
-        초대 링크 생성
-      </Menu.Item>
-      <Menu.Item
-        key="set-position"
-        disabled={positions.length === 0}
-        style={{ fontWeight: 'bold' }}
-      >
-        내 포지션 설정
-      </Menu.Item>
-      <Menu.Item
-        key="edit-team-info"
-        style={{ fontWeight: 'bold', color: 'blue' }}
-      >
-        팀 정보 변경
-      </Menu.Item>
-      <Menu.Item key="leave-team" style={{ fontWeight: 'bold', color: 'red' }}>
-        팀 나가기
-      </Menu.Item>
-      <Menu.Item
-        key="delete-team"
-        style={{ color: 'white', fontWeight: 'bold', backgroundColor: 'red' }}
-      >
-        팀 삭제
-      </Menu.Item>
-    </Menu>
-  );
+  }
+  const items: MenuProps['items'] = [
+    {
+      label: (
+        <p
+          style={{ fontWeight: 'bold', textAlign: 'center' }}
+          onClick={() => handleMenuClick('create-invite-link')}
+        >
+          초대 링크 생성
+        </p>
+      ),
+      key: 'create-invite-link',
+    },
+    {
+      label: (
+        <p
+          style={{ fontWeight: 'bold', textAlign: 'center' }}
+          onClick={() => handleMenuClick('set-position')}
+        >
+          내 포지션 설정
+        </p>
+      ),
+      key: 'set-position',
+    },
+    {
+      label: (
+        <p
+          style={{ fontWeight: 'bold', textAlign: 'center', color: 'blue' }}
+          onClick={() => handleMenuClick('edit-team-info')}
+        >
+          팀 정보 변경
+        </p>
+      ),
+      key: 'edit-team-info',
+    },
+    {
+      label: (
+        <p
+          style={{ fontWeight: 'bold', color: 'red', textAlign: 'center' }}
+          onClick={() => handleMenuClick('leave-team')}
+        >
+          팀 나가기
+        </p>
+      ),
+      key: 'leave-team',
+    },
+    {
+      label: (
+        <p
+          style={{
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+          onClick={() => handleMenuClick('delete-team')}
+        >
+          팀 삭제
+        </p>
+      ),
+      key: 'delete-team',
+      style: { backgroundColor: 'red', color: 'white' },
+    },
+  ];
 
   const content = (
     <div>
@@ -143,10 +177,26 @@ export default function TeamPage() {
     </div>
   );
 
-  // 간단한 알림
   const handleAlert = () => {
-    Swal.fire('로그아웃', '정말로 로그아웃 하시겠습니까?', 'warning');
+    Swal.fire({
+      title: '로그아웃',
+      text: '정말로 로그아웃 하시겠습니까?', 
+      icon: 'warning', 
+      showCancelButton: true, 
+      confirmButtonColor: '#3085d6', 
+      cancelButtonColor: '#d33',
+      confirmButtonText: '예', 
+      cancelButtonText: '아니오',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 확인 버튼을 눌렀을 때 실행될 로직
+        message.success('로그아웃 되었습니다.');
+        // api 로직 추가
+      }
+    });
   };
+  
 
   return (
     <Layout style={{ backgroundColor: '#FFFFFF' }}>
@@ -187,17 +237,21 @@ export default function TeamPage() {
         <div className="flex flex-1 justify-center">
           <div className="flex flex-row">
             <div>
-              <Avatar size={55} icon={<UserOutlined />} />
+              <Avatar
+                size={55}
+                icon={<UserOutlined />}
+                style={{ marginRight: '10px' }}
+              />{' '}
+              {/* 간격 추가 */}
             </div>
             <div className="flex-row">
-              <Link href={`/team/${currentTeamId}/information`}>
-                <p className="text-center text-3xl text-gray-700 font-bold w-40">
-                  ACAROA
-                </p>
-                <p className="text-center text-xs text-gray-500 font-bold w-40">
-                  깊은 밤을 날아서
-                </p>
-              </Link>
+              <p className="text-center text-4xl text-gray-700 font-bold w-40">
+                ACAROA
+              </p>
+              <p className="text-center text-sm text-gray-500 font-bold w-40">
+                깊은 밤을 날아서
+              </p>
+
               <div
                 className="flex justify-center w-40"
                 style={{ whiteSpace: 'nowrap' }}
@@ -214,21 +268,25 @@ export default function TeamPage() {
                     type="text"
                     style={{
                       padding: '0 10px',
-                      fontSize: '12px',
-                      height: '15px',
+                      fontSize: '20px',
+                      color: 'gray',
+                      height: '20px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}
                   >
-                    ▼
+                    <CaretDownOutlined />
                   </Button>
                 </Popover>
               </div>
             </div>
           </div>
-          <Dropdown overlay={settingsMenu} trigger={['click']}>
-            <Button type="text" style={{ padding: '0 10px' }}>
+          <Dropdown menu={{ items }} trigger={['click']}>
+            <Button
+              type="text"
+              style={{ padding: '0 10px 5px', margin: 'auto 0' }}
+            >
               <SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
             </Button>
           </Dropdown>
