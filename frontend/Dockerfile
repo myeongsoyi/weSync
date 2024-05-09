@@ -1,25 +1,25 @@
 FROM node:20.10.0-alpine AS base
 
-Install dependencies only when needed
+# Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 
-#RUN mkdir -p /app
+# RUN mkdir -p /app
 WORKDIR /app
 
-Install dependencies based on the preferred package manager
+# Install dependencies based on the preferred package manager
 COPY package.json yarn.lock tailwind.config.ts postcss.config.mjs next.config.mjs tsconfig.json ./
 RUN yarn install --frozen-lockfile
 RUN rm -rf ./.next/cache
 
-Rebuild the source code only when needed
+# Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 
-Production image, copy all the files and run next
+# Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
