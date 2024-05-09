@@ -126,7 +126,7 @@ export default function CardTeams({ teams }: IParams) {
               hoverable
             >
               <div className="flex mb-1">
-                <Image src="svgs/note.svg" width={15} height={15} alt="음표" />
+                <Image src="svgs/note.svg" width={15} height={15} alt="음표" className='w-auto h-auto' />
                 <p className="flex w-full">
                   <span className="m-auto">{team.song}</span>
                 </p>
