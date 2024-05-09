@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomPositionDto {
-    private Long teamId;
-    private String positionName;
-    private Long colorId;
+public class TeamUserPositionDto {
+    private Long teamUserId;
+    private Long positionId;
 }
