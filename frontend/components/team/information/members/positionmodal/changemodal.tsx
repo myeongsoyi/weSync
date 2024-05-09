@@ -5,6 +5,7 @@ import {
   PlusCircleOutlined,
   FormOutlined,
   DeleteOutlined,
+  CheckOutlined,
 } from '@ant-design/icons';
 import NewPositionModal from './newpositionmodal';
 
@@ -58,8 +59,8 @@ export default function PositionModal({
       {/* 가로 배치를 위한 flex 컨테이너 추가 */}
       <Button
         style={{
-          width: '30px',
-          height: '30px',
+          width: '15px',
+          height: '25px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -67,20 +68,20 @@ export default function PositionModal({
           borderColor: '#1890ff', // 테두리 색상을 흰색으로 설정
         }}
       >
-        <FormOutlined style={{ fontSize: '14px', color: '#1890ff' }} />
+        <FormOutlined style={{ fontSize: '15px', color: '#1890ff' }} />
       </Button>
       <Button
         danger
         onClick={() => handleDelete(name)}
         style={{
-          width: '30px',
-          height: '30px',
+          width: '15px',
+          height: '25px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
-        <DeleteOutlined style={{ fontSize: '14px' }} />
+        <DeleteOutlined style={{ fontSize: '15px' }} />
       </Button>
     </div>
   );
@@ -125,7 +126,11 @@ export default function PositionModal({
       closable={false}
       footer={[
         <div style={{ textAlign: 'center', width: '100%' }}>
-          <Button key="back" onClick={onCancel} style={{ marginRight: 8 }} >
+          <Button
+            key="back"
+            onClick={onCancel}
+            style={{ marginRight: 8, color: 'gray', fontWeight: 'bold' }}
+          >
             취소
           </Button>
           <Button
@@ -133,7 +138,7 @@ export default function PositionModal({
             onClick={handleOk}
             style={{
               backgroundColor: '#FFC500',
-              color: 'black',
+              fontWeight: 'bold',
               border: 'none',
             }}
           >
@@ -163,29 +168,44 @@ export default function PositionModal({
             >
               <Tooltip
                 title={modifyDelete(name)}
-                color="white" // Tooltip 배경색을 흰색으로 설정
+                color="white"
                 arrow={false}
                 overlayInnerStyle={{
                   borderColor: 'lightgray',
                   borderWidth: 3,
                   borderStyle: 'solid',
-                }} // 내부 경계선 스타일
+                }}
                 placement="right"
               >
                 <Tag
                   style={{
                     cursor: 'pointer',
-                    padding:
-                      selectedPosition === name ? '12px 12px' : '4px 4px',
-                    fontSize: selectedPosition === name ? '35px' : '25px',
+                    padding: selectedPosition === name ? '4px 8px' : '1px 5px',
+                    fontSize: `calc(15px * ${selectedPosition === name ? '1.5' : '1'})`,
                     fontWeight: selectedPosition === name ? 'bold' : 'normal',
-                    borderWidth: selectedPosition === name ? '3px' : '1px',
-                    margin:
-                      selectedPosition === name ? '15px auto' : '0px auto',
+                    borderWidth: `calc(1px * ${selectedPosition === name ? '3' : '1'})`,
+                    margin: `calc(0px + ${selectedPosition === name ? '8px' : '0px'}) auto`,
                     borderColor: color,
                     color: color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative', // 위치 조정을 위해 relative 설정
                   }}
+                  className={selectedPosition === name ? 'selectedTag' : ''}
                 >
+                  {selectedPosition === name && (
+                    <CheckOutlined
+                      style={{
+                        position: 'absolute',
+                        left: '-30px', // 체크 아이콘 위치 조정
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        fontSize: '20px',
+                        color: 'green', // 체크 아이콘 색상
+                      }}
+                    />
+                  )}
                   {name}
                 </Tag>
               </Tooltip>
@@ -197,13 +217,14 @@ export default function PositionModal({
         <Button
           type="link"
           onClick={() => setNewPositionVisible(true)}
-          style={{ marginTop: 10, color: 'gray' }}
+          style={{ margin: 10, color: 'gray' }}
         >
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              fontSize: '17px',
             }}
           >
             <PlusCircleOutlined style={{ marginRight: 8 }} />

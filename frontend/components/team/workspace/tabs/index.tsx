@@ -7,10 +7,10 @@ import MultiAudioPlayer from '@/components/common/MultiAudioPlayer';
 
 export default function WorkSpaceTabs() {
   const label: React.ReactNode[] = [
-    <div className="w-max text-center" key={'public-tab'}>
-      <span>PUBLIC</span>
+    <div className="w-max text-center" key={'public-tab'} style={{letterSpacing:4}}>
+      <span>TEAM</span>
     </div>,
-    <div className="w-max text-center" key={'private-tab'}>
+    <div className="w-max text-center" key={'private-tab'} style={{letterSpacing:4}}>
       <span>PRIVATE</span>
     </div>,
   ];
