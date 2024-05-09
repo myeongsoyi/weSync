@@ -178,6 +178,7 @@ export default function TeamPage() {
                 alt="로고"
                 width={130}
                 height={100}
+                className='h-auto'
               />
             </span>
           </Link>
@@ -228,7 +229,7 @@ export default function TeamPage() {
             </div>
           </div>
           <Dropdown overlay={settingsMenu} trigger={['click']}>
-            <Button type="text" style={{ padding: '0 10px' }}>
+            <Button type="text" style={{ padding: '0 10px', margin: 'auto 0' }}>
               <SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
             </Button>
           </Dropdown>
