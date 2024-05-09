@@ -111,7 +111,7 @@ export default function CardTeams({ teams }: IParams) {
           </div>
         </Card>
         {teams.map((team, i) => (
-          <Link href={`/team/${team.id}`} key={i}>
+          <Link href={`/team/${team.id}/information`} key={i}>
             <Card
               style={{
                 //   width: '32%',

@@ -8,6 +8,8 @@ import {
   CheckOutlined,
 } from '@ant-design/icons';
 import NewPositionModal from './newpositionmodal';
+import { useTeamPositionStore } from '@/store/teamPositionStore';
+import { stat } from 'fs';
 
 interface Position {
   name: string;
@@ -30,9 +32,17 @@ export default function PositionModal({
   onOk: () => void;
   onCancel: () => void;
 }) {
-  const [positions, setPositions] = useState<Position[]>(initialPositions);
+  // const [positions, setPositions] = useState<Position[]>(initialPositions);
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   const [newPositionVisible, setNewPositionVisible] = useState<boolean>(false);
+
+  // 차후 팀 ID 받아오도록 수정해야함.
+  const { positions, getPositions, addPosition, deletePosition } = useTeamPositionStore(state => ({
+    positions: state.positions,
+    getPositions: state.getPositions,
+    addPosition: state.addPosition,
+    deletePosition: state.deletePosition,
+    }));
 
   const handlePositionSelect = (position: string): void => {
     setSelectedPosition(position);
@@ -47,7 +57,7 @@ export default function PositionModal({
       okType: 'danger',
       cancelText: '아니요',
       onOk() {
-        setPositions(positions.filter((pos) => pos.name !== positionName));
+        deletePosition(positionName);
         message.success(`${positionName}이(가) 삭제되었습니다.`);
       },
     });
@@ -236,7 +246,7 @@ export default function PositionModal({
         open={newPositionVisible}
         onCancel={() => setNewPositionVisible(false)}
         onSuccess={(newPosition: string, newColor: string = 'blue') => {
-          setPositions([...positions, { name: newPosition, color: newColor }]);
+          addPosition(newPosition, newColor);
           setNewPositionVisible(false);
         }}
       />
