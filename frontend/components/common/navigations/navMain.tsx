@@ -30,7 +30,7 @@ export default function HomePage() {
           <Button type="primary">Welcome</Button>
         </Link>
         <Link href="/" style={{width:'auto', height:'auto'}}>
-        <Image src={"/svgs/logo.svg"} alt="로고" width={200} height={150} priority />
+        <Image src={"/svgs/logo.svg"} alt="로고" width={200} height={150} priority className='h-auto' />
         </Link>
         {/* <Menu
           // theme="dark"
