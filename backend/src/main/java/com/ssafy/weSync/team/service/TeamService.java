@@ -18,12 +18,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @Transactional
@@ -408,18 +407,142 @@ public class TeamService {
     }
 
     //활성화 된 팀목록
-//    public ResponseEntity<Response<TeamInfoDto>>getActiveTeams(Long id) {
-//        List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(id).get());
-//        LongTeamInfoDto longTeamInfoDto = new LongTeamInfoDto();
-//        for(TeamUser teamUser : teamUserList){
-//            Team team = teamUser.getTeam();
-//
-//        }
-//        HttpHeaders responseHeaders = new HttpHeaders();
-//        Response<LongTeamInfoDto> responseBody = new Response<>();
-//        responseBody.setSuccess(true);
-//        responseBody.setData(longTeamInfoDto);
-//        responseBody.setError(null);
-//        return new ResponseEntity<Response<TeamInfoDto>>(responseBody,responseHeaders,HttpStatus.valueOf(200));
-//    }
+    public ResponseEntity<Response<List<LongTeamInfoDto>>>getActiveTeams(Long id) {
+        List<TeamUser> teamUserList = teamUserRepository.findByUserOrderByCreatedAtDesc(userRepository.findByUserId(id).get());
+        List<LongTeamInfoDto> longTeamInfoDtoList = new ArrayList<>();
+        for(TeamUser teamUser : teamUserList){
+            Team team = teamUser.getTeam();
+            if(team.getIsFinished()){
+                continue;
+            }
+            LongTeamInfoDto longTeamInfoDto = new LongTeamInfoDto();
+            longTeamInfoDto.setTeamName(team.getTeamName());
+            if(team.getSongName()!=null){
+                longTeamInfoDto.setSongNameExist(true);
+                longTeamInfoDto.setSongName(team.getSongName());
+            }
+            else{
+                longTeamInfoDto.setSongNameExist(false);
+            }
+            if(teamUser.getPosition()!=null){
+                longTeamInfoDto.setMyPositionExist(true);
+                longTeamInfoDto.setMyPosition(teamUser.getPosition().getPositionName());
+                longTeamInfoDto.setPositionColor(teamUser.getPosition().getColor().getColorName());
+                longTeamInfoDto.setPositionCode(teamUser.getPosition().getColor().getColorCode());
+            }
+            else{
+                longTeamInfoDto.setMyPositionExist(false);
+            }
+            longTeamInfoDto.setTeamProfileUrl(team.getProfileUrl());
+            if(team.getTeamLeaderId()==id){
+                longTeamInfoDto.setIsLeader(true);
+            }
+            else{
+                longTeamInfoDto.setIsLeader(false);
+            }
+            longTeamInfoDto.setIsFinished(team.getIsFinished());
+            longTeamInfoDto.setCreatedAt(team.getCreatedAt());
+
+            List<TeamUser> memberList = new ArrayList<>(team.getTeamUsers());
+            memberList.sort(Comparator.comparing(TeamUser::getTeamUserId));
+            List<MemberInfoDto> memberInfoDtoList = new ArrayList<>();
+            for(TeamUser member : memberList){
+                if(member.getIsBanned()){
+                    continue;
+                }
+                MemberInfoDto memberInfoDto = new MemberInfoDto();
+                if(team.getTeamLeaderId() == member.getUser().getUserId()){
+                    memberInfoDto.setLeader(true);
+                }
+                else{
+                    memberInfoDto.setLeader(false);
+                }
+                memberInfoDto.setNickName(member.getUser().getNickname());
+                memberInfoDto.setUserProfileUrl(member.getUser().getImgUrl());
+                memberInfoDtoList.add(memberInfoDto);
+            }
+            longTeamInfoDto.setMember(memberInfoDtoList);
+            longTeamInfoDtoList.add(longTeamInfoDto);
+        }
+        HttpHeaders responseHeaders = new HttpHeaders();
+        Response<List<LongTeamInfoDto>> responseBody = new Response<>();
+        responseBody.setSuccess(true);
+        responseBody.setData(longTeamInfoDtoList);
+        responseBody.setError(null);
+        return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+    }
+
+    //전체 팀목록
+    public ResponseEntity<Response<List<LongTeamInfoDto>>>getAllTeams(Long id) {
+        List<TeamUser> teamUserList = teamUserRepository.findByUserOrderByCreatedAtDesc(userRepository.findByUserId(id).get());
+        List<LongTeamInfoDto> longTeamInfoDtoList = new ArrayList<>();
+        for(TeamUser teamUser : teamUserList){
+            Team team = teamUser.getTeam();
+            LongTeamInfoDto longTeamInfoDto = new LongTeamInfoDto();
+            longTeamInfoDto.setTeamName(team.getTeamName());
+            if(team.getSongName()!=null){
+                longTeamInfoDto.setSongNameExist(true);
+                longTeamInfoDto.setSongName(team.getSongName());
+            }
+            else{
+                longTeamInfoDto.setSongNameExist(false);
+            }
+            if(teamUser.getPosition()!=null){
+                longTeamInfoDto.setMyPositionExist(true);
+                longTeamInfoDto.setMyPosition(teamUser.getPosition().getPositionName());
+                longTeamInfoDto.setPositionColor(teamUser.getPosition().getColor().getColorName());
+                longTeamInfoDto.setPositionCode(teamUser.getPosition().getColor().getColorCode());
+            }
+            else{
+                longTeamInfoDto.setMyPositionExist(false);
+            }
+            longTeamInfoDto.setTeamProfileUrl(team.getProfileUrl());
+            if(team.getTeamLeaderId()==id){
+                longTeamInfoDto.setIsLeader(true);
+            }
+            else{
+                longTeamInfoDto.setIsLeader(false);
+            }
+            longTeamInfoDto.setIsFinished(team.getIsFinished());
+            longTeamInfoDto.setCreatedAt(team.getCreatedAt());
+
+            List<TeamUser> memberList = new ArrayList<>(team.getTeamUsers());
+            memberList.sort(Comparator.comparing(TeamUser::getTeamUserId));
+            List<MemberInfoDto> memberInfoDtoList = new ArrayList<>();
+            for(TeamUser member : memberList){
+                if(member.getIsBanned()){
+                    continue;
+                }
+                MemberInfoDto memberInfoDto = new MemberInfoDto();
+                if(team.getTeamLeaderId() == member.getUser().getUserId()){
+                    memberInfoDto.setLeader(true);
+                }
+                else{
+                    memberInfoDto.setLeader(false);
+                }
+                memberInfoDto.setNickName(member.getUser().getNickname());
+                memberInfoDto.setUserProfileUrl(member.getUser().getImgUrl());
+                memberInfoDtoList.add(memberInfoDto);
+            }
+            longTeamInfoDto.setMember(memberInfoDtoList);
+            longTeamInfoDtoList.add(longTeamInfoDto);
+        }
+        HttpHeaders responseHeaders = new HttpHeaders();
+        Response<List<LongTeamInfoDto>> responseBody = new Response<>();
+        responseBody.setSuccess(true);
+        responseBody.setData(longTeamInfoDtoList);
+        responseBody.setError(null);
+        return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+    }
+
+    //팀의 맴버들 이름, 방장여부, 프로필 조회 - 구현중
+    public ResponseEntity<Response<List<MemberInfoDto>>> getTeamMembersInfo(Long id){
+        List<MemberInfoDto> memberInfoDtoList = new ArrayList<>();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        Response<List<MemberInfoDto>> responseBody = new Response<>();
+        responseBody.setSuccess(true);
+        responseBody.setData(memberInfoDtoList);
+        responseBody.setError(null);
+        return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+    }
 }
