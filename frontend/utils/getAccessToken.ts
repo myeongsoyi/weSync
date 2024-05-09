@@ -24,7 +24,7 @@ export const isLogin = async () => {
     if (res.status !== 200) {
       LocalStorage.removeItem("refreshToken");
       LocalStorage.removeItem("memberId");
-      LocalStorage.removeItem("memberInfoCompleted");
+      // LocalStorage.removeItem("memberInfoCompleted");
       return null;
     }
     setItemWithExpireTime("accessToken", obj.data.accessToken, obj.data.accessTokenExpireTime);
