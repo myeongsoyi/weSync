@@ -44,7 +44,11 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
   const [selectedColor, setSelectedColor] = useState<string>('분홍');
 
   const handleSubmit = async () => {
-    // 
+    if (!positionName.trim()) {
+      message.error('포지션 이름을 입력해주세요.');
+      return;
+    }
+  
     onSuccess(positionName, colors[selectedColor]);
     message.success('새 포지션 등록 성공');
     setPositionName('');
