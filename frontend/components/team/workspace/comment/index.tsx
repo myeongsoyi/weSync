@@ -23,7 +23,6 @@ const initialComments: IComment[] = [
 export default function CommentModal({
   open,
   onClose,
-  songId,
   songTitle,
 }: ICommentModalProps) {
   const [comments, setComments] = useState<IComment[]>([]);
@@ -82,6 +81,7 @@ export default function CommentModal({
     comment.author === currentUser
       ? [
           <Button
+            key={1}
             icon={<FormOutlined style={{ color: '#1890ff' }} />}
             onClick={() => handleEditComment(comment.id)}
             style={{
@@ -89,6 +89,7 @@ export default function CommentModal({
             }}
           />,
           <Popconfirm
+            key={2}
             title="정말 삭제하시겠습니까?"
             onConfirm={() => handleDeleteComment(comment.id)}
           >
@@ -150,7 +151,7 @@ export default function CommentModal({
                     style={{
                       backgroundColor: '#FFC500',
                       borderColor: '#FFC500',
-                      fontWeight: 'bold'
+                      fontWeight: 'bold',
                     }}
                   >
                     수정

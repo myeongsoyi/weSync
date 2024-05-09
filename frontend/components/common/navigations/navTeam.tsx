@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Layout, Button, Avatar, Menu, Dropdown, message, Popover } from 'antd';
+import { Layout, Button, Avatar, Dropdown, message, Popover } from 'antd';
 import {
   UserOutlined,
   SettingFilled,
@@ -32,7 +32,6 @@ export default function TeamPage() {
   const { Header } = Layout;
 
   const [open, setOpen] = useState(false);
-  const [positions] = useState([]);
   const [currentTeamId] = useState<number>(1); // 초기 팀 ID 설정
 
   const handleOpenChange = (newOpen: boolean) => {
