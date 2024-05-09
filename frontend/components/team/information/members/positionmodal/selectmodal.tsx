@@ -123,7 +123,7 @@ export default function PositionModal({
       onCancel={onCancel}
       width={400}
       closable={false}
-      footer={[
+      footer={
         <div style={{ textAlign: 'center', width: '100%' }}>
           <Button key="back" onClick={onCancel} style={{ marginRight: 8 }} >
             취소
@@ -139,8 +139,8 @@ export default function PositionModal({
           >
             확인
           </Button>
-        </div>,
-      ]}
+        </div>
+      }
     >
       <div
         style={{

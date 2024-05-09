@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import styles from './index.module.scss';
-import { Button, Dropdown, Space } from 'antd';
+import { Button, Dropdown } from 'antd';
 import {
   PauseCircleFilled,
   PlayCircleFilled,
