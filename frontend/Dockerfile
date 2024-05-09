@@ -6,8 +6,7 @@ WORKDIR /usr/src/app
 
 # 3. 애플리케이션 의존성 파일 복사
 # package.json 및 package-lock.json (또는 yarn.lock) 포함
-COPY package*.json ./
-COPY yarn.lock ./
+COPY package.json yarn.lock tailwind.config.ts postcss.config.js next.config.mjs tsconfig.json .env ./
 
 # 4. 애플리케이션 의존성 설치
 RUN yarn install --frozen-lockfile
