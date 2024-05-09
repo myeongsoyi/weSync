@@ -59,17 +59,17 @@ export default function CardTeams({ teams }: IParams) {
   //   const teams = await getMainTeams();
 
   useEffect(() => {
-    if (width < 720) {
-      // 너비가 720px 미만일 때
-      setMemNum(3); // 멤버 수를 3명으로 설정
-    } else if (width < 840) {
-      // 너비가 840px 미만일 때
+    if (width < 920) {
+      // 너비가 920px 미만일 때
       setMemNum(4); // 멤버 수를 4명으로 설정
+    // } else if (width < 840) {
+    //   // 너비가 840px 미만일 때
+    //   setMemNum(4); // 멤버 수를 4명으로 설정
     } else {
       // 일반 데스크탑 화면일 때
       setMemNum(5); // 멤버 수를 5명으로 설정
     }
-  }, [width]); // 너비가 변경될 때마다 실행ya
+  }, [width]); // 너비가 변경될 때마다 실행
 
   // console.log(teams);
   // const teams: {
@@ -90,10 +90,10 @@ export default function CardTeams({ teams }: IParams) {
 
   return (
     <>
-      <div className="flex flex-wrap gap-2 mt-4 ">
+      <div className="grid grid-cols-3 gap-4 mt-4 ">
         <Card
           style={{
-            width: '32%',
+            // width: '32%',
             // marginTop: 16,
             textAlign: 'center',
             borderRadius: '10px',
@@ -111,7 +111,7 @@ export default function CardTeams({ teams }: IParams) {
           </div>
         </Card>
         {teams.map((team, i) => (
-          <Link href={`/team/${team.id}`} key={i} style={{ width: '32%' }}>
+          <Link href={`/team/${team.id}`} key={i}>
             <Card
               style={{
                 //   width: '32%',
