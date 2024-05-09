@@ -9,19 +9,18 @@ import {
 } from '@ant-design/icons';
 import NewPositionModal from './newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
-import { stat } from 'fs';
 
 interface Position {
   name: string;
   color: string;
 }
 
-const initialPositions: Position[] = [
-  { name: '소프라노', color: '#f50' },
-  { name: '알토', color: '#2db7f5' },
-  { name: '바리톤', color: '#87d068' },
-  { name: '테너', color: '#108ee9' },
-];
+// const initialPositions: Position[] = [
+//   { name: '소프라노', color: '#f50' },
+//   { name: '알토', color: '#2db7f5' },
+//   { name: '바리톤', color: '#87d068' },
+//   { name: '테너', color: '#108ee9' },
+// ];
 
 export default function PositionModal({
   open,
@@ -37,9 +36,9 @@ export default function PositionModal({
   const [newPositionVisible, setNewPositionVisible] = useState<boolean>(false);
 
   // 차후 팀 ID 받아오도록 수정해야함.
-  const { positions, getPositions, addPosition, deletePosition } = useTeamPositionStore(state => ({
+  const { positions, addPosition, deletePosition } = useTeamPositionStore(state => ({
     positions: state.positions,
-    getPositions: state.getPositions,
+    // getPositions: state.getPositions,
     addPosition: state.addPosition,
     deletePosition: state.deletePosition,
     }));
