@@ -1,23 +1,41 @@
-# 1. Node.js 이미지를 기반으로 설정
-FROM node:20.10.0
+FROM node:20.10.0-alpine AS base
 
-# 2. 앱 디렉토리 생성
-WORKDIR /usr/src/app
+Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 
-# 3. 애플리케이션 의존성 파일 복사
-# package.json 및 package-lock.json (또는 yarn.lock) 포함
+#RUN mkdir -p /app
+WORKDIR /app
+
+Install dependencies based on the preferred package manager
 COPY package.json yarn.lock tailwind.config.ts postcss.config.mjs next.config.mjs tsconfig.json ./
-
-# 4. 애플리케이션 의존성 설치
 RUN yarn install --frozen-lockfile
-RUN yarn global add serve
+RUN rm -rf ./.next/cache
 
-# 5. 애플리케이션 소스 복사
+Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# 6. Next.js 애플리케이션 빌드
 RUN yarn build
 
-# 7. 애플리케이션 실행
+Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
-CMD ["node", ".next/standalone/server.js"]
+
+ENV PORT 3000
+
+CMD ["node", "server.js"]
