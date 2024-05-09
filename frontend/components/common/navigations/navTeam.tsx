@@ -228,6 +228,7 @@ export default function TeamPage() {
                 alt="로고"
                 width={130}
                 height={100}
+                className='h-auto'
               />
             </span>
           </Link>

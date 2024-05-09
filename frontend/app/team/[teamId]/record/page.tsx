@@ -1,5 +1,6 @@
 import RecordPositions from "@/components/team/record/positions";
 import RecordScore from "@/components/team/record/score";
+import RecordAudioController from "@/components/common/RecordAudioPlayer";
 
 
 interface IParams {
@@ -16,10 +17,12 @@ export async function generateMetadata({ params: { teamId } }: IParams) {
 }
 
 export default function TeamRecordPage({ params: { teamId } }: IParams) {
+
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row mb-24">
       <RecordPositions teamId={teamId} />
       <RecordScore teamId={teamId}/>
+      <RecordAudioController />
     </div>
   );
 }

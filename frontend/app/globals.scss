@@ -57,6 +57,11 @@ html, body {
     padding: 0;
 }
 
+.loading {
+  display: flex;
+  min-height: min(100vh - 14vh, 100vh - 100px);
+}
+
 .swal2-height-auto {
     height: 100% !important;  /* 또는 원하는 높이 값으로 설정 */
 }
