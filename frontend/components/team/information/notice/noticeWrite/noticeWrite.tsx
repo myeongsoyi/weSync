@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { EditFilled } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import Swal from 'sweetalert2';
 
 export default function NoticeWrite() {
@@ -24,7 +24,7 @@ export default function NoticeWrite() {
       if (result.isConfirmed) {
         Swal.fire('등록됨', '글이 등록되었습니다', 'success');
       } else {
-        Swal.fire('취소됨', '글 작성이 취소되었습니다.', 'error');
+        message.error('글 작성이 취소되었습니다.');
       }
     });
   };
