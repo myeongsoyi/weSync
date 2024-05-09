@@ -14,9 +14,10 @@ export default function Footer() {
             alt="로고"
             width={150}
             height={100}
-            className="m-auto"
+            className="m-auto h-auto"
             onClick={() => alert('자율 프로젝트 A310')}
             style={{ cursor: 'pointer' }}
+            priority
           />
         </div>
       </div>
