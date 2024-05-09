@@ -1,10 +1,10 @@
 'use client';
 import React, { useState } from 'react';
 import { Avatar, List, Menu, Dropdown, message } from 'antd';
-import Item from 'antd/es/list/Item';
 import { Meta } from 'antd/es/list/Item';
 import Swal from 'sweetalert2';
-import PositionModal from '../positionmodal/selectmodal';
+import PositionModal from '../positionmodal/changemodal';
+import styles from './index.module.scss'
 
 interface IParams {
   members: {
@@ -16,30 +16,25 @@ interface IParams {
 }
 
 export default function TeamMemberList({ members }: IParams) {
-
   const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleMenuClick = async (
-    memberId: number,
-    action: string,
-    memberName: string,
-  ) => {
+  const handleMenuClick = async (memberId: number, action: string, memberName: string) => {
     if (action === 'remove_member') {
-      // Show confirmation modal
       const result = await Swal.fire({
         title: `${memberName}님을 \n정말로 강퇴하시겠습니까?`,
         icon: 'warning',
         iconColor: 'red',
-        customClass: {
-          popup: 'swal2-warnpop',
-        },
         showDenyButton: true,
         confirmButtonText: '예',
         denyButtonText: '아니오',
         confirmButtonColor: 'red',
         denyButtonColor: 'grey',
+        customClass: {
+          popup: styles.borderRed
+        }
       });
+      
 
       if (result.isConfirmed) {
         try {
@@ -61,29 +56,11 @@ export default function TeamMemberList({ members }: IParams) {
   const handleModalOk = () => {
     setModalVisible(false);
     console.log('Position change confirmed for member ID:', selectedMemberId);
-    // ++포지션 변경 API 호출 로직 추가
   };
 
   const handleModalCancel = () => {
     setModalVisible(false);
   };
-
-  const getMenu = (id: number, name: string) => (
-    <Menu onClick={({ key }) => handleMenuClick(id, key, name)}>
-      <Menu.Item
-        key="change_position"
-        style={{ fontWeight: 'bold', textAlign: 'center' }}
-      >
-        포지션 변경
-      </Menu.Item>
-      <Menu.Item
-        key="remove_member"
-        style={{ fontWeight: 'bold', color: 'red', textAlign: 'center' }}
-      >
-        멤버 강퇴
-      </Menu.Item>
-    </Menu>
-  );
 
   return (
     <div className="overflow-auto">
@@ -92,21 +69,39 @@ export default function TeamMemberList({ members }: IParams) {
         itemLayout="horizontal"
         dataSource={members}
         renderItem={({ id, name, profileImg }) => (
-          <Item>
+          <List.Item>
             <Meta
               avatar={<Avatar src={'/' + profileImg} alt={name} size={36} />}
               title={
-                <Dropdown overlay={getMenu(id, name)} trigger={['click']}>
+                <Dropdown
+                  trigger={['click']}
+                  menu={{
+                    items: [
+                      {
+                        key: 'change_position',
+                        label: '포지션 변경',
+                        onClick: () => handleMenuClick(id, 'change_position', name),
+                        style: { textAlign: 'center', fontWeight: 'bold' }
+                      },
+                      {
+                        key: 'remove_member',
+                        label: '멤버 강퇴',
+                        onClick: () => handleMenuClick(id, 'remove_member', name),
+                        style: { textAlign: 'center', color: 'red', fontWeight: 'bold' }
+                      }
+                    ]
+                  }}
+                >
                   <a onClick={(e) => e.preventDefault()}>{name}</a>
                 </Dropdown>
               }
               description="Position"
             />
             <div>Position Details</div>
-          </Item>
+          </List.Item>
         )}
       />
-            <PositionModal
+      <PositionModal
         open={modalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}

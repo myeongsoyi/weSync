@@ -7,7 +7,6 @@ export default async function TeamWorkspacePrivate() {
 
   return (
     <div className={styles.article}>
-      <h1 className={styles.title}>My Records</h1>
       <div className={styles.table}>
         <Table records={records}/>
       </div>
