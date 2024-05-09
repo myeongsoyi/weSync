@@ -1,7 +1,6 @@
 package com.ssafy.weSync.global.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,8 +22,8 @@ public abstract class BaseTime {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "deleted_by")

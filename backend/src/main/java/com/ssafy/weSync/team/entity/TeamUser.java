@@ -5,7 +5,6 @@ import com.ssafy.weSync.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -27,7 +26,7 @@ public class TeamUser extends BaseTime {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToOne(optional = true)
+    @OneToOne()
     @JoinColumn(name = "position_id")
     private Position position;
 
