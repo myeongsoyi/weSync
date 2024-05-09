@@ -34,7 +34,21 @@ public class UserService {
         restTemplate = builder.build();
     }
 
-    public ResponseEntity<Response<LoginDto>> kakaoCallback(String authorizationCode){
+    public ResponseEntity<Response<LoginDto>> kakaoCallback(String authorizationCode, HttpServletRequest request){
+
+        String origin = request.getHeader("Origin");
+        String redirectUri;
+
+        System.out.println(origin);
+
+        if ("https://wesync.co.kr".equals(origin)) {
+            redirectUri = "https://wesync.co.kr";
+        } else if ("http://localhost:3000".equals(origin)) {
+            redirectUri = "http://localhost:3000";
+        } else {
+            // 기본값 설정
+            redirectUri = "https://wesync.co.kr";
+        }
 
         //토큰 받기
         String tokenUrl = "https://kauth.kakao.com/oauth/token";
@@ -45,7 +59,7 @@ public class UserService {
         MultiValueMap<String, String> tokenBody = new LinkedMultiValueMap<>();
         tokenBody.add("grant_type", "authorization_code");
         tokenBody.add("client_id", kakaoClientId);
-        tokenBody.add("redirect_uri", "https://wesync.co.kr"); //추후 프론트 리다이랙트 주소로 변경
+        tokenBody.add("redirect_uri", redirectUri);
         tokenBody.add("code", authorizationCode);
 
         HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(tokenBody, tokenHeaders);
