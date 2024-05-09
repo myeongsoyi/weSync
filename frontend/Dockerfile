@@ -6,11 +6,10 @@ WORKDIR /usr/src/app
 
 # 3. 애플리케이션 의존성 파일 복사
 # package.json 및 package-lock.json (또는 yarn.lock) 포함
-COPY package.json yarn.lock tailwind.config.ts postcss.config.mjs next.config.mjs tsconfig.json ./
+COPY package.json yarn.lock  ./
 
 # 4. 애플리케이션 의존성 설치
 RUN yarn install --frozen-lockfile
-RUN yarn global add serve
 
 # 5. 애플리케이션 소스 복사
 COPY . .
@@ -20,4 +19,4 @@ RUN yarn build
 
 # 7. 애플리케이션 실행
 EXPOSE 3000
-CMD [ "yarn", "start" ]
+CMD ["node", ".next/standalone/server.js"]
