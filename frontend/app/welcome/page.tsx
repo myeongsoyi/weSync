@@ -1,8 +1,9 @@
-import Link from 'next/link';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { Carousel } from 'antd';
 import React from 'react';
+import KakaoLoginBtn from '@/components/common/kakaoLoginBtn';
+import { isLogin } from "@/utils/getAccessToken";
 
 const contentStyle: React.CSSProperties = {
   height: '400px',
@@ -12,10 +13,14 @@ const contentStyle: React.CSSProperties = {
   background: '#364d79',
 };
 
-export default function welcome() {
+
+
+export default async function welcome() {
+  const canLogin = await isLogin()
+
   return (
     <div>
-      <div className="content">
+      <div className="welcome">
         <div
           style={{
             padding: 12,
@@ -27,21 +32,15 @@ export default function welcome() {
                 className={styles.logo}
                 src={'/svgs/logo.svg'}
                 alt="로고"
-                width={100}
-                height={100}
+                width={1000}
+                height={1000}
               />
             </div>
+            {canLogin === null && 
             <div className="flex justify-center">
-              <Link href={'/'}>
-                <Image
-                  className={styles.kakao}
-                  src={'/svgs/kakao.png'}
-                  alt="카톡로그인"
-                  width={150}
-                  height={100}
-                />
-              </Link>
-            </div>
+              <KakaoLoginBtn/>
+            </div>}
+            <p>{canLogin?.toString()}</p>
             <div>
               <Carousel autoplay autoplaySpeed={3000} speed={500}>
                 <div>
