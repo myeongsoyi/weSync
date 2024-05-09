@@ -4,6 +4,7 @@ import com.ssafy.weSync.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity

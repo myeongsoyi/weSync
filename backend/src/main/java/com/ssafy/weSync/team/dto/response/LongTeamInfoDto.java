@@ -17,11 +17,11 @@ public class LongTeamInfoDto {
     private String songName;
     private boolean isMyPositionExist;
     private String myPosition;
-    private Color positionColor;
+    private String positionColor;
     private String positionCode;
     private String teamProfileUrl;
     private Boolean isLeader;
     private Boolean isFinished;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
     private List<MemberInfoDto> member;
 }

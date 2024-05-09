@@ -82,16 +82,22 @@ public class TeamController {
         return teamService.addCustomPosition(customPositionDto);
     }
 
-//    //진행중인 팀목록 조회
-//    @GetMapping("/active/{id}")
-//    public ResponseEntity<Response<TeamInfoDto>> getActiveTeams(@PathVariable Long id) {
-//        return teamService.getActiveTeams(id);
-//    }
-//
-//    //전체 팀목록 조회
-//    @GetMapping("/total")
-//    public ResponseEntity<Response<TeamInfoDto>> getAllTeams(@PathVariable Long id) {
-//        return teamService.getAllTeams(id);
-//    }
+    //진행중인 팀목록 조회
+    @GetMapping("/active/{id}")
+    public ResponseEntity<Response<List<LongTeamInfoDto>>> getActiveTeams(@PathVariable Long id) {
+        return teamService.getActiveTeams(id);
+    }
+
+    //전체 팀목록 조회
+    @GetMapping("/total/{id}")
+    public ResponseEntity<Response<List<LongTeamInfoDto>>> getAllTeams(@PathVariable Long id) {
+        return teamService.getAllTeams(id);
+    }
+
+    //팀의 맴버들 이름, 방장여부, 프로필 조회 - 구현중
+    @GetMapping("/members/{id}")
+    public ResponseEntity<Response<List<MemberInfoDto>>> getTeamMembersInfo(@PathVariable Long id) {
+        return teamService.getTeamMembersInfo(id);
+    }
 
 }
