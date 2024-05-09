@@ -1,12 +1,15 @@
 .recorder {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0rem;
     justify-content: center;
     align-items: center;
-    width: 50%;
+    width: 30%;
     height: 100%;
-    min-width: rem(300);
+    min-width: rem(200);
     min-height: rem(60);
-    translate: 50%;
+    padding: 0 rem(20);
+    translate: 35vw;
     margin: 'auto';
     background-color: $color-text2;
     border-top-left-radius : 12px;
@@ -16,11 +19,20 @@
 
 .record__item {
     display: grid;
-    gap: rem(8);
     border-bottom: 2px solid $color-gray;
     .record__button {
         display: flex;
         justify-content: space-around;
         align-items: center;
+        margin: rem(4) 0;
     }
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: rem(20);
+    font-weight: bold;
+    color: $color-white;
 }
