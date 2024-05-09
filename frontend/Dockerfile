@@ -11,6 +11,7 @@ COPY yarn.lock ./
 
 # 4. 애플리케이션 의존성 설치
 RUN yarn install --frozen-lockfile
+RUN yarn global add serve
 
 # 5. 애플리케이션 소스 복사
 COPY . .
