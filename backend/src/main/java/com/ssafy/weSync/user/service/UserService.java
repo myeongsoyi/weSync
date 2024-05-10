@@ -44,7 +44,7 @@ public class UserService {
         if ("https://wesync.co.kr".equals(origin)) {
             redirectUri = "https://wesync.co.kr";
         } else if ("http://localhost:3000".equals(origin)) {
-            redirectUri = "http://localhost:3000";
+            redirectUri = "http://localhost:3000/oauth/kakao";
         } else {
             // 기본값 설정
             redirectUri = "https://wesync.co.kr";
