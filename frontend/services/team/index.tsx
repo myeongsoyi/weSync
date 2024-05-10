@@ -3,7 +3,7 @@ export async function getTeamNotices(teamId: string) {
         {
             id: 1,
             date: '2021-03-01',
-            detail: '1번 연습해오기. 안해올 시 벌금 000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+            detail: '1번 연습해오기.  안 해오면 벌금 10000원',
             pinned: true,
         },
         {

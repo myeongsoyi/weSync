@@ -34,7 +34,7 @@ export default function InnerNavigation() {
         className={pathname === 'workspace' ? styles.yes : styles.no}
         prefetch
       >
-        <span className={styles.title}>WORKSPACE</span>
+        <span className={styles.title}>WORKPLACE</span>
       </Link>
     </div>
   );

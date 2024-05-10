@@ -27,7 +27,7 @@ export default async function MainTeams() {
     <div className={styles.outer}>
       <div className="flex gap-1 my-4">
         <Link href="/my-teams">
-          <h2 className="font-extrabold">ALL TEAMS</h2>
+        <h1 className="font-extrabold pl-3 ">ALL TEAMS</h1>
         </Link>
       </div>
       <CardTeams teams={teams} />
