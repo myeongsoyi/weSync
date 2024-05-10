@@ -13,6 +13,7 @@ import Image from 'next/image';
 import TeamModify from '@/components/team/information/teaminfomodal/modifymodal';
 import type { MenuProps } from 'antd';
 import styles from '@/components/team/information/members/memberList/index.module.scss';
+import LoginComponent from '@/components/common/login';
 
 interface Team {
   id: number;
@@ -179,12 +180,12 @@ export default function TeamPage() {
   const handleAlert = () => {
     Swal.fire({
       title: '로그아웃',
-      text: '정말로 로그아웃 하시겠습니까?', 
-      icon: 'warning', 
-      showCancelButton: true, 
-      confirmButtonColor: '#3085d6', 
+      text: '정말로 로그아웃 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: '예', 
+      confirmButtonText: '예',
       cancelButtonText: '아니오',
       reverseButtons: true,
     }).then((result) => {
@@ -195,16 +196,15 @@ export default function TeamPage() {
       }
     });
   };
-  
 
   return (
     <Layout style={{ backgroundColor: '#FFFFFF' }}>
       <Header
-        className="flex"
+        // className="flex"
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           background: '#FFFFFF',
           height: '12vh',
           minHeight: '90px',
@@ -227,7 +227,7 @@ export default function TeamPage() {
                 alt="로고"
                 width={130}
                 height={100}
-                className='h-auto'
+                className="h-auto"
               />
             </span>
           </Link>
@@ -293,22 +293,8 @@ export default function TeamPage() {
         </div>
 
         {/* end */}
-        <div className="flex flex-1 justify-end items-center">
-          <div className="flex flex-row items-center">
-            <div className="mr-1">
-              <Avatar size={40} icon={<UserOutlined />} />
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-center text-base text-gray-700 font-bold mt-2">
-                이승연님
-              </p>
-              <Button type="text" size="small" onClick={handleAlert}>
-                <p className="text-xs text-cente atext-amber-500 font-bold text-yellow-500">
-                  로그아웃
-                </p>
-              </Button>
-            </div>
-          </div>
+        <div className="flex flex-1 justify-end">
+          <LoginComponent />
         </div>
       </Header>
     </Layout>

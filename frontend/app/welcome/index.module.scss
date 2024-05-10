@@ -1,12 +1,12 @@
 .logo {
-    height : 20vh;
-    width : 25vw;
-    min-width: rem(250);
-    margin-bottom: 3vh;
+    width: 25vw;
+    min-width: rem(300);
+    margin: 3vh auto;
 }
 
 .kakao {
     margin-top: 1vh;
-    margin-bottom : 5vh;
+    margin-bottom: 5vh;
+    display: flex;
+    justify-content: center;
 }
-

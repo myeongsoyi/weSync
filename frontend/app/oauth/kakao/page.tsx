@@ -12,7 +12,6 @@ export default function KakaoOauth() {
   const searchParams = useSearchParams();
 
   const code = searchParams.get("code") ?? "";
-  // console.log('code',code);
 
   const doLogin = async () => {
     // const isLocal = process.env.NODE_ENV === "development";
@@ -29,12 +28,14 @@ export default function KakaoOauth() {
     //   : await kakaoLoginAPI(code);
 
     const obj = await kakaoLoginAPI(code);
-
+    
     if (obj) {
       setItemWithExpireTime("accessToken", obj.accessToken, obj.accessTokenExpireTime);
       setItemWithExpireTime("refreshToken", obj.refreshToken, obj.refreshTokenExpireTime);
       LocalStorage.setItem("grantType", obj.grantType);
-      LocalStorage.setItem("memberId", obj.memberId);
+      LocalStorage.setItem("memberId", obj.id);
+      LocalStorage.setItem("profileImg", obj.img);
+      LocalStorage.setItem("nickname", obj.nickname);
 
       // if (obj.memberInfoCompleted && obj.kidInfoCompleted) {
       //   router.replace("/");

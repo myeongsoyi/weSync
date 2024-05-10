@@ -3,7 +3,7 @@ import { APIProps } from "@/types/api";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 // 환경이 local 인지 development 인지 확인
-const isLocal = process.env.NODE_ENV === "development" || false;
+// const isLocal = process.env.NODE_ENV === "development" || false;
 /**
  * Fetch API를 쉽게 부를 수 있도록 도와줍니다.
  * header에 Authorization이 기본으로 추가되어있습니다.
