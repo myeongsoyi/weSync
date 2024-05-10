@@ -1,10 +1,58 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './index.module.scss';
+import { deleteUser } from '@/services/logout';
+import { useRouter } from 'next/navigation';
 
 export default function Footer() {
+  const router = useRouter();
+  const [clickCount, setClickCount] = useState(0);
+  const clickThreshold = 5;
+  const clickTimeout = 800; // 클릭 간격 (밀리초)
+  let clickTimer: string | number | NodeJS.Timeout | null | undefined = null;
+
+  useEffect(() => {
+    return () => {
+      if (clickTimer) {
+        clearTimeout(clickTimer); // 컴포넌트 언마운트 시 타이머 정리
+      }
+    };
+  }, []);
+
+  const handleIconClick = () => {
+    if (clickCount === 0) {
+      // 타이머 설정
+      clickTimer = setTimeout(() => {
+        setClickCount(0); // 클릭 카운트 리셋
+      }, clickTimeout);
+    }
+
+    setClickCount((prevCount) => {
+      const updatedCount = prevCount + 1;
+      if (updatedCount === clickThreshold) {
+        deleteUserRequest(); // deleteUser 요청 처리
+        return 0; // 클릭 카운트 리셋
+      }
+      return updatedCount;
+    });
+    console.log('clickCount:', clickCount);
+  };
+
+  const deleteUserRequest = () => {
+    if (window.confirm('정말로 회원 탈퇴를 진행하시겠습니까?')) {
+      deleteUser()
+        .then(() => {
+          router.push('/welcome');
+          console.log('User deleted successfully.');
+        })
+        .catch((error) => {
+          console.error('Failed to delete user:', error);
+        });
+    }
+  };
+
   return (
     <footer className="flex justify-center items-center py-auto px-6 bg-sky-700 text-white overflow-x-hidden">
       <div className="flex-1 flex justify-center">
@@ -27,7 +75,7 @@ export default function Footer() {
         </p>
       </div>
       <div className="flex-1 flex justify-center">
-        <div className={styles.icon}>
+        <div className={styles.icon} onClick={handleIconClick}>
           <Image
             src={'/images/wesync_icon.png'}
             alt="아이콘"

@@ -1,7 +1,9 @@
 'use client';
 
-import { Avatar, Button } from 'antd';
+import { Avatar, Button, message } from 'antd';
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+
 import LocalStorage from '@/utils/localStorage';
 import { getLogout } from '@/services/logout';
 
@@ -49,6 +51,40 @@ export default function loginData(props: { canLogin: boolean }) {
     }
   };
 
+  const handleLogout = () => {
+    Swal.fire({
+      title: '로그아웃',
+      text: '정말로 로그아웃 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '예',
+      cancelButtonText: '아니오',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // 확인 버튼을 눌렀을 때 실행될 로직
+        try {
+          const logOut = await getLogout();
+          // console.log(logOut);
+          if (logOut.success) {
+            message.success('로그아웃 되었습니다.');
+            localStorage.clear();
+          } else {
+            message.success('로그아웃에 실패했습니다.');
+            console.error('로그아웃 실패');
+          }
+        } catch (err) {
+          message.success('로그아웃에 실패했습니다.');
+          console.error('로그아웃 실패', err);
+        }
+        // 로그아웃 후 이동
+        window.location.href = '/welcome';
+      }
+    });
+  };
+
   return (
     <div className="flex flex-row items-center">
       <div className="mr-1">
@@ -61,7 +97,7 @@ export default function loginData(props: { canLogin: boolean }) {
         <p className="text-center text-lg text-gray-700 font-bold mt-2">
           {nickname} <span className='text-base text-black font-bold'>님</span>
         </p>
-        <Button type="text" size="small" onClick={clickLogOut}>
+        <Button type="text" size="small" onClick={handleLogout}>
           <p className="text-base text-center text-amber-500 font-bold">
             로그아웃
           </p>

@@ -177,26 +177,6 @@ export default function TeamPage() {
     </div>
   );
 
-  // const handleAlert = () => {
-  //   Swal.fire({
-  //     title: '로그아웃',
-  //     text: '정말로 로그아웃 하시겠습니까?',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: '예',
-  //     cancelButtonText: '아니오',
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       // 확인 버튼을 눌렀을 때 실행될 로직
-  //       message.success('로그아웃 되었습니다.');
-  //       // api 로직 추가
-  //     }
-  //   });
-  // };
-
   return (
     <Layout style={{ backgroundColor: '#FFFFFF' }}>
       <Header
