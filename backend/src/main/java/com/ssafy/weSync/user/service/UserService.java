@@ -2,6 +2,7 @@ package com.ssafy.weSync.user.service;
 
 import com.ssafy.weSync.global.ApiResponse.ErrorResponse;
 import com.ssafy.weSync.global.ApiResponse.Response;
+import com.ssafy.weSync.global.ApiResponse.ResponseFactory;
 import com.ssafy.weSync.user.dto.LoginDto;
 import com.ssafy.weSync.user.entity.User;
 import com.ssafy.weSync.user.repository.UserRepository;
@@ -34,20 +35,17 @@ public class UserService {
         restTemplate = builder.build();
     }
 
+    //로그인, 회원가입
     public ResponseEntity<Response<LoginDto>> kakaoCallback(String authorizationCode, HttpServletRequest request){
 
         String origin = request.getHeader("Origin");
         String redirectUri;
 
-        System.out.println(origin);
-
-        if ("https://wesync.co.kr".equals(origin)) {
-            redirectUri = "https://wesync.co.kr";
-        } else if ("http://localhost:3000".equals(origin)) {
+        if ("http://localhost:3000".equals(origin)) {
             redirectUri = "http://localhost:3000/oauth/kakao";
         } else {
             // 기본값 설정
-            redirectUri = "https://wesync.co.kr";
+            redirectUri = "https://wesync.co.kr/oauth/kakao";
         }
 
         //토큰 받기
@@ -65,116 +63,92 @@ public class UserService {
         HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(tokenBody, tokenHeaders);
         ResponseEntity<String> tokenResponse = restTemplate.postForEntity(tokenUrl, tokenRequest, String.class);
 
-        if (tokenResponse.getStatusCode() == HttpStatus.OK) {
-            String tokenResponseBody = tokenResponse.getBody();
-            JSONObject tokenJsonObject = new JSONObject(tokenResponseBody);
-
-            String accessToken = tokenJsonObject.getString("access_token");
-            String refreshToken = tokenJsonObject.getString("refresh_token");
-            String idToken = tokenJsonObject.getString("id_token");
-            Integer expires_in = tokenJsonObject.getInt("expires_in");
-            Integer refresh_token_expires_in = tokenJsonObject.getInt("refresh_token_expires_in");
-
-            //idToken 디코딩
-            String payloadBase64 = idToken.split("\\.")[1];
-            byte[] decodedBytes = Base64.getUrlDecoder().decode(payloadBase64);
-            String decodedHeader = new String(decodedBytes);
-            JSONObject payloadJsonObject = new JSONObject(decodedHeader);
-
-            String nickname = payloadJsonObject.getString("nickname");
-            Long kakaoId = Long.parseLong(payloadJsonObject.getString("sub"));
-            String img = payloadJsonObject.getString("picture");
-
-            Long userId;
-
-            Optional<User> user = userRepository.findByKakaoIdAndIsActiveTrue(kakaoId);
-
-            //신규회원
-            if(user.isEmpty()){
-                User newUser = new User();
-                newUser.setKakaoId(kakaoId);
-                newUser.setNickname(nickname);
-                newUser.setImgUrl(img);
-                newUser.setIsActive(true);
-                userRepository.save(newUser);
-                User savedUser = userRepository.save(newUser);
-                userId = savedUser.getUserId();
-            }
-            //기존회원
-            else{
-                userId = user.get().getUserId();
-
-            }
-
-            LoginDto responseUser = new LoginDto(userId, nickname, img, "bearer", accessToken, expires_in, refreshToken, refresh_token_expires_in);
-            Response<LoginDto> responseBody = new Response<>(true,responseUser,null);
-
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
-
-        } else {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            ErrorResponse responseError = new ErrorResponse("400", "카카오 API 호출이 실패했습니다.");
-            Response<LoginDto> responseBody = new Response<>(false,null,responseError);
-            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(400));
+        if (tokenResponse.getStatusCode() != HttpStatus.OK){
+            return ResponseFactory.fail("에러(로그인, 회원가입): 카카오 api 오류가 발생했습니다");
         }
 
+        String tokenResponseBody = tokenResponse.getBody();
+        JSONObject tokenJsonObject = new JSONObject(tokenResponseBody);
+
+        String accessToken = tokenJsonObject.getString("access_token");
+        String refreshToken = tokenJsonObject.getString("refresh_token");
+        String idToken = tokenJsonObject.getString("id_token");
+        Integer expires_in = tokenJsonObject.getInt("expires_in");
+        Integer refresh_token_expires_in = tokenJsonObject.getInt("refresh_token_expires_in");
+
+        //idToken 디코딩
+        String payloadBase64 = idToken.split("\\.")[1];
+        byte[] decodedBytes = Base64.getUrlDecoder().decode(payloadBase64);
+        String decodedHeader = new String(decodedBytes);
+        JSONObject payloadJsonObject = new JSONObject(decodedHeader);
+
+        String nickname = payloadJsonObject.getString("nickname");
+        Long kakaoId = Long.parseLong(payloadJsonObject.getString("sub"));
+        String img = payloadJsonObject.getString("picture");
+
+        Long userId;
+
+        Optional<User> user = userRepository.findByKakaoIdAndIsActiveTrue(kakaoId);
+
+        //신규회원
+        if(user.isEmpty()){
+            User newUser = new User();
+            newUser.setKakaoId(kakaoId);
+            newUser.setNickname(nickname);
+            newUser.setImgUrl(img);
+            newUser.setIsActive(true);
+            userRepository.save(newUser);
+            User savedUser = userRepository.save(newUser);
+            userId = savedUser.getUserId();
+        }
+        //기존회원
+        else{
+            userId = user.get().getUserId();
+        }
+
+        LoginDto responseUser = new LoginDto(userId, nickname, img, "bearer", accessToken, expires_in, refreshToken, refresh_token_expires_in);
+
+        return ResponseFactory.success(responseUser);
     }
 
+    //회원탈퇴
     public ResponseEntity<Response<LoginDto>> deleteUser(HttpServletRequest request){
 
         String accessToken = request.getHeader("Authorization");
-
         ResponseEntity<String> kakaoResponse = logoutFromKakao(accessToken);
 
-        long userId;
-        Response<LoginDto> responseBody = new Response<>();
-
-        if(kakaoResponse.getStatusCode() == HttpStatus.OK){
+        if (kakaoResponse.getStatusCode() == HttpStatus.OK) {
             String kakaoResponseBody = kakaoResponse.getBody();
             JSONObject kakaoJsonObject = new JSONObject(kakaoResponseBody);
             long kakaoId = kakaoJsonObject.getLong("id");
             Optional<User> user = userRepository.findByKakaoIdAndIsActiveTrue(kakaoId);
+            System.out.println(user.isEmpty());
+            if(user.isEmpty()){
+                return ResponseFactory.fail("에러(회원탈퇴): 존재하지 않는 회원입니다");
+            }
             user.get().setIsActive(false);
 
-            responseBody.setSuccess(true);
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+            return ResponseFactory.success(null);
 
-        }
-        else{
-            HttpHeaders responseHeaders = new HttpHeaders();
-            ErrorResponse responseError = new ErrorResponse("400", "카카오 API 호출이 실패했습니다.");
-            responseBody.setSuccess(false);
-            responseBody.setError(responseError);
-            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(400));
+        } else {
+            return ResponseFactory.fail("에러(회원탈퇴): 카카오 api 오류가 발생했습니다");
         }
     }
 
+    //로그아웃
     public ResponseEntity<Response<LoginDto>> logout(HttpServletRequest request){
         String accessToken = request.getHeader("Authorization");
         ResponseEntity<String> kakaoResponse = logoutFromKakao(accessToken);
-        Response<LoginDto> responseBody = new Response<>();
 
         if(kakaoResponse.getStatusCode() == HttpStatus.OK){
-            responseBody.setSuccess(true);
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(200));
+            return ResponseFactory.success(null);
         }
         else{
-            HttpHeaders responseHeaders = new HttpHeaders();
-            ErrorResponse responseError = new ErrorResponse("400", "카카오 API 호출이 실패했습니다.");
-            responseBody.setSuccess(false);
-            responseBody.setError(responseError);
-            return new ResponseEntity<>(responseBody,responseHeaders,HttpStatus.valueOf(400));
+            return  ResponseFactory.fail("에러(로그아웃): 카카오 api 오류가 발생했습니다");
         }
     }
 
-    //카카오 로그아웃
+    //카카오에 로그아웃 요청
     public ResponseEntity<String> logoutFromKakao(String accessToken) {
 
         String logoutUrl = "https://kapi.kakao.com/v1/user/logout";
