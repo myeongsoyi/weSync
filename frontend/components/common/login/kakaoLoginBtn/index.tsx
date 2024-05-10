@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import styles from './index.module.scss';
+// import styles from './index.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
 
