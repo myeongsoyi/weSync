@@ -1,9 +1,11 @@
 import LocalStorage from "./localStorage";
 
-export const setItemWithExpireTime = (key: string, value: string, expire: string) => {
+export const setItemWithExpireTime = (key: string, value: string, expire: number) => {
+  const now = new Date();               // 현재 시간을 가져옵니다.
+  const expireTime = new Date(now.getTime() + expire * 1000);
   const obj = {
     value: value,
-    expire: new Date(expire),
+    expire: new Date(expireTime),
   };
 
   const objString = JSON.stringify(obj);
@@ -13,7 +15,7 @@ export const setItemWithExpireTime = (key: string, value: string, expire: string
 
 export const getItemWithExpireTime = (key: string) => {
   const objString = LocalStorage.getItem(key);
-
+  
   if (!objString) return null;
 
   const obj = JSON.parse(objString);
