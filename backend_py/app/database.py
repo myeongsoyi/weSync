@@ -3,8 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import enum
 
-# DATABASE_URL = "mysql+pymysql://root:deer4@localhost:3306/wesync"
-DATABASE_URL = "mysql+pymysql://root:weSyncAdmin@k10a310.p.ssafy.io:3306/we_sync"
+DATABASE_URL = "mysql+pymysql://root:deer4@localhost:3306/wesync"
+# DATABASE_URL = "mysql+pymysql://root:weSyncAdmin@k10a310.p.ssafy.io:3306/we_sync"
 
 engine = create_engine( DATABASE_URL)
 
