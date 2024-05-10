@@ -190,7 +190,7 @@ export default function TeamPage() {
     }).then((result) => {
       if (result.isConfirmed) {
         // 확인 버튼을 눌렀을 때 실행될 로직
-        message.success('로그아웃 되었습니다.');
+        Swal.fire({title: '로그아웃 되었습니다', icon: 'success'})
         // api 로직 추가
       }
     });
@@ -225,7 +225,7 @@ export default function TeamPage() {
               <Image
                 src={'/svgs/logo.svg'}
                 alt="로고"
-                width={130}
+                width={170}
                 height={100}
                 className='h-auto'
               />
@@ -295,15 +295,15 @@ export default function TeamPage() {
         {/* end */}
         <div className="flex flex-1 justify-end items-center">
           <div className="flex flex-row items-center">
-            <div className="mr-1">
-              <Avatar size={40} icon={<UserOutlined />} />
+            <div className="mr-1 pr-1">
+              <Avatar size={50} icon={<UserOutlined/>}/>
             </div>
             <div className="flex flex-col items-center">
-              <p className="text-center text-base text-gray-700 font-bold mt-2">
-                이승연님
+              <p className="text-center text-lg text-gray-700 font-bold mt-2">
+                이승연 님
               </p>
               <Button type="text" size="small" onClick={handleAlert}>
-                <p className="text-xs text-cente atext-amber-500 font-bold text-yellow-500">
+                <p className="text-sm text-center atext-amber-500 font-bold text-yellow-500">
                   로그아웃
                 </p>
               </Button>
