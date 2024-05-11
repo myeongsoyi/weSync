@@ -23,33 +23,33 @@ export default function loginData(props: { canLogin: boolean }) {
     setNickname(nickname);
   }, []);
 
-  const clickLogOut = async () => {
-    if (window.confirm('로그아웃 하시겠습니까?')) {
-      // const logOut = await getLogout();
-      // console.log(logOut);
-      // if (logOut.success) {
-      //   console.log("로그아웃 성공");
-      //   window.location.href = "/welcome";
-      // } else {
-      //   console.error("로그아웃 실패");
-      // }
-      try {
-        const logOut = await getLogout();
-        console.log(logOut);
-        if (logOut.success) {
-          localStorage.clear();
-          console.log('로그아웃 성공');
-          window.location.href = '/welcome';
-        } else {
-          console.error('로그아웃 실패');
-        }
-      } catch (err) {
-        console.error('로그아웃 실패');
-      }
-    } else {
-      console.log('로그아웃 취소');
-    }
-  };
+  // const clickLogOut = async () => {
+  //   if (window.confirm('로그아웃 하시겠습니까?')) {
+  //     // const logOut = await getLogout();
+  //     // console.log(logOut);
+  //     // if (logOut.success) {
+  //     //   console.log("로그아웃 성공");
+  //     //   window.location.href = "/welcome";
+  //     // } else {
+  //     //   console.error("로그아웃 실패");
+  //     // }
+  //     try {
+  //       const logOut = await getLogout();
+  //       console.log(logOut);
+  //       if (logOut.success) {
+  //         localStorage.clear();
+  //         console.log('로그아웃 성공');
+  //         window.location.href = '/welcome';
+  //       } else {
+  //         console.error('로그아웃 실패');
+  //       }
+  //     } catch (err) {
+  //       console.error('로그아웃 실패');
+  //     }
+  //   } else {
+  //     console.log('로그아웃 취소');
+  //   }
+  // };
 
   const handleLogout = () => {
     Swal.fire({
