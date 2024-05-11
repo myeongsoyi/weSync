@@ -9,11 +9,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "wesync.co.kr",
+        hostname: "**",
       },
       {
         protocol: "http",
-        hostname: "wesync.co.kr",
+        hostname: "**",
       },
     ],
   },
