@@ -7,11 +7,11 @@ import { deleteUser } from '@/services/logout';
 import { useRouter } from 'next/navigation';
 
 export default function Footer() {
-  const router = useRouter();
   const [clickCount, setClickCount] = useState(0);
+  const [clickTimer, setClickTimer] = useState<number | undefined>(undefined);
+  const router = useRouter();
   const clickThreshold = 5;
   const clickTimeout = 800; // 클릭 간격 (밀리초)
-  let clickTimer: string | number | NodeJS.Timeout | null | undefined = null;
 
   useEffect(() => {
     return () => {
@@ -21,27 +21,25 @@ export default function Footer() {
     };
   }, []);
 
-  const handleIconClick = () => {
-    if (clickCount === 0) {
-      // 타이머 설정
-      clickTimer = setTimeout(() => {
-        setClickCount(0); // 클릭 카운트 리셋
-      }, clickTimeout);
-    }
-
+  const handleIconClick = async () => {
+    clearTimeout(clickTimer);  // 기존 타이머를 클리어합니다.
+    setClickTimer(window.setTimeout(() => {
+      setClickCount(0); // 클릭 카운트 리셋
+    }, clickTimeout));
+    
+    console.log('Icon clicked', clickCount + 1, 'times.');
     setClickCount((prevCount) => {
       const updatedCount = prevCount + 1;
-      if (updatedCount === clickThreshold) {
-        deleteUserRequest(); // deleteUser 요청 처리
-        return 0; // 클릭 카운트 리셋
-      }
       return updatedCount;
     });
-    console.log('clickCount:', clickCount);
-  };
 
-  const deleteUserRequest = () => {
-    if (window.confirm('정말로 회원 탈퇴를 진행하시겠습니까?')) {
+    if (clickCount + 1 === clickThreshold) {
+      deleteUserRequest(); // deleteUser 요청 처리
+    }
+  };
+  
+  const deleteUserRequest = async () => {
+    if (clickCount + 1 === clickThreshold && window.confirm('정말로 회원 탈퇴를 진행하시겠습니까?')) {
       deleteUser()
         .then(() => {
           router.push('/welcome');
@@ -52,6 +50,7 @@ export default function Footer() {
         });
     }
   };
+  
 
   return (
     <footer className="flex justify-center items-center py-auto px-6 bg-sky-700 text-white overflow-x-hidden">
