@@ -32,8 +32,8 @@ public class TeamController {
 
     //현재 속한 팀 이름, 곡 이름, 프로필 사진, 팀장 여부, 진행중인 팀 이름, 곡 이름, 프로필 사진 조회
     @GetMapping("/info")
-    public ResponseEntity<Response<ShortCurrentTeamInfoDto>> activeTeamsInfo(@RequestParam() Long teamId, @RequestParam() Long userId) {
-        return teamService.getActiveTeamsShort(teamId, userId);
+    public ResponseEntity<Response<ShortCurrentTeamInfoDto>> activeTeamsInfo(@RequestParam() Long teamId) {
+        return teamService.getActiveTeamsShort(teamId);
     }
 
     //팀 초대 링크 생성
@@ -50,8 +50,8 @@ public class TeamController {
 
     //초대된 팀으로 이동
     @GetMapping("/invite/{UUID}")
-    public ResponseEntity<Response<TeamIdDto>> redirectToTeam(@PathVariable String UUID, @RequestParam() String id) {
-        return teamService.redirectToTeam(UUID, id);
+    public ResponseEntity<Response<TeamIdDto>> redirectToTeam(@PathVariable String UUID) {
+        return teamService.redirectToTeam(UUID);
     }
 
     //악보별 포지션 할당
@@ -79,15 +79,15 @@ public class TeamController {
     }
 
     //진행중인 팀목록 조회
-    @GetMapping("/active/{id}")
-    public ResponseEntity<Response<List<LongTeamInfoDto>>> getActiveTeams(@PathVariable Long id) {
-        return teamService.getActiveTeams(id);
+    @GetMapping("/active")
+    public ResponseEntity<Response<List<LongTeamInfoDto>>> getActiveTeams() {
+        return teamService.getActiveTeams();
     }
 
     //전체 팀목록 조회
-    @GetMapping("/total/{id}")
-    public ResponseEntity<Response<List<LongTeamInfoDto>>> getAllTeams(@PathVariable Long id) {
-        return teamService.getAllTeams(id);
+    @GetMapping("/total")
+    public ResponseEntity<Response<List<LongTeamInfoDto>>> getAllTeams() {
+        return teamService.getAllTeams();
     }
 
     //팀원 teamUserId, 이름, 리더 여부, 프로필, 포지션 존재 여부, 포지션 이름, 색깔 이름, 색깔 코드 조회
