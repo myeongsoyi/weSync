@@ -11,10 +11,7 @@ import { Group } from 'antd/es/avatar';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MyTotalTeams } from '@/types/myTeams';
-
-interface IParams {
-  teams: MyTotalTeams;
-}
+import { getMyTeams } from '@/services/my-teams';
 
 function useViewportWidth() {
   const [width, setWidth] = useState(0); // 초기 너비 설정
@@ -39,7 +36,7 @@ function useViewportWidth() {
   return width;
 }
 
-export default function CardTeams({ teams }: IParams) {
+export default function CardTeams() {
   const [memNum, setMemNum] = useState(5); // 너비에 따른 멤버 수 상태 변수
   const [success, setSuccess] = useState<MyTotalTeams["success"]>(true); // 성공 상태 변수
   const [data, setData] = useState<MyTotalTeams["data"]>([]); // 데이터 상태 변수
@@ -48,10 +45,14 @@ export default function CardTeams({ teams }: IParams) {
   //   const teams = await getMainTeams();
 
   useEffect(() => {
+    const fetchMainTeams = async () => {
+      const teams = await getMyTeams();
     setSuccess(teams.success); // 성공 상태 변수 업데이트
     setData(teams.data); // 데이터 상태 변수 업데이트
     setError(teams.error); // 에러 상태 변수 업데이트
-  }, [teams]); // 팀 데이터가 변경될 때마다 실행
+    }
+    fetchMainTeams();
+  }, []);
 
   useEffect(() => {
     if (width < 920) {
@@ -68,7 +69,7 @@ export default function CardTeams({ teams }: IParams) {
 
   const router = useRouter();
   if (!success) {
-    console.log(teams)
+    // api 요청 실패 시
     return <div><p>{error?.errorMessage}</p></div>;
   }
   return (
@@ -82,6 +83,7 @@ export default function CardTeams({ teams }: IParams) {
             borderRadius: '10px',
             border: '3px solid #FFC500',
             // marginTop: '16px',
+            minHeight: '240px',
           }}
           className="flex justify-center items-center cursor-pointer"
           hoverable
