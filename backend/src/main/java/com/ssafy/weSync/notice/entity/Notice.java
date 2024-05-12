@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -16,8 +18,8 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor // 파라미터가 없는 디폴트 생성자를 생성
 @AllArgsConstructor // 모든 필드 값을 파라미터로 받는 생성자를 생성
 @Builder(toBuilder = true)
-@SQLDelete(sql = "UPDATE notice SET deleted_at = NOW() WHERE notice_id=?")
-@Where(clause = "deleted_at is null")
+@SQLDelete(sql = "UPDATE notice SET is_deleted = true WHERE notice_id=?")
+@Where(clause = "is_deleted = false")
 @Table(name = "notice")
 public class Notice extends BaseTime {
     @Id
