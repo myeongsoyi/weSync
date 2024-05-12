@@ -3,11 +3,11 @@ package com.ssafy.weSync.team.entity;
 import com.ssafy.weSync.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "position")
@@ -24,8 +24,7 @@ public class Position extends BaseTime {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id")
     private Color color;
-
 }

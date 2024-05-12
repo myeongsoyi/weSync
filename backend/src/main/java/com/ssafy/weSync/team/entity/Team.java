@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "TEAM")
 public class Team extends BaseTime {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
@@ -59,10 +58,8 @@ public class Team extends BaseTime {
     @Column(name = "invitation")
     private List<Invitation> invitations;
 
-
     //공지
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "team_position")
     private List<Notice> notices;
-
 }

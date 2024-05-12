@@ -1,6 +1,5 @@
 package com.ssafy.weSync.team.dto.response;
 
-import com.ssafy.weSync.team.entity.Color;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +16,11 @@ public class LongTeamInfoDto {
     private String songName;
     private boolean isMyPositionExist;
     private String myPosition;
-    private Color positionColor;
+    private String positionColor;
     private String positionCode;
     private String teamProfileUrl;
     private Boolean isLeader;
     private Boolean isFinished;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
     private List<MemberInfoDto> member;
 }
