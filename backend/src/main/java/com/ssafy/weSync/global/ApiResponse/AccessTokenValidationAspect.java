@@ -1,10 +1,15 @@
 package com.ssafy.weSync.global.ApiResponse;
 
 import com.ssafy.weSync.token.dto.TokenDto;
+import com.ssafy.weSync.user.entity.User;
+import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -16,8 +21,14 @@ public class AccessTokenValidationAspect {
 
     private final HttpServletRequest request;
 
-    public AccessTokenValidationAspect(HttpServletRequest request) {
+    private final UserRepository userRepository;
+
+    @Getter
+    private Long userId;
+
+    public AccessTokenValidationAspect(HttpServletRequest request, UserRepository userRepository) {
         this.request = request;
+        this.userRepository = userRepository;
     }
 
     //로그인, access 토큰 갱신하는 경우를 제외하고 토큰 검증
@@ -36,7 +47,10 @@ public class AccessTokenValidationAspect {
         RestTemplate restTemplate = new RestTemplate();
         try {
             ResponseEntity<String> kakaoResponse = restTemplate.exchange(kakaoUrl, HttpMethod.GET, requestEntity, String.class);
-
+            JSONObject tokenJsonObject = new JSONObject(kakaoResponse.getBody());
+            Long kakaoId = tokenJsonObject.getLong("id");
+            User user = userRepository.findByKakaoIdAndIsActiveTrue(kakaoId).get();
+            userId = user.getUserId();
             if (kakaoResponse.getStatusCode() != HttpStatus.OK) {
 
                 Response<TokenDto> responseBody = new Response<>();
