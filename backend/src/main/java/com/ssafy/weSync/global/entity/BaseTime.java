@@ -22,7 +22,7 @@ public abstract class BaseTime {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "deleted_by")
