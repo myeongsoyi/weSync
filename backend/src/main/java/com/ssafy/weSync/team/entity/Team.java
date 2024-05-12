@@ -1,6 +1,7 @@
 package com.ssafy.weSync.team.entity;
 
 import com.ssafy.weSync.global.entity.BaseTime;
+import com.ssafy.weSync.notice.entity.Notice;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,15 +1,23 @@
-package com.ssafy.weSync.team.entity;
+package com.ssafy.weSync.notice.entity;
 
 import com.ssafy.weSync.global.entity.BaseTime;
+import com.ssafy.weSync.team.entity.Team;
+import com.ssafy.weSync.team.entity.TeamUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor // 파라미터가 없는 디폴트 생성자를 생성
+@AllArgsConstructor // 모든 필드 값을 파라미터로 받는 생성자를 생성
+@Builder(toBuilder = true)
+@SQLDelete(sql = "UPDATE notice SET deleted_at = NOW() WHERE notice_id=?")
+@Where(clause = "deleted_at is null")
 @Table(name = "notice")
 public class Notice extends BaseTime {
     @Id
