@@ -32,9 +32,9 @@ public class AccessTokenValidationAspect {
     }
 
     //로그인, access 토큰 갱신하는 경우를 제외하고 토큰 검증
-        @Around("execution(* com.ssafy.weSync.*.controller.*.*(..)) && " +
-                "!execution(* com.ssafy.weSync.user.controller.UserController.kakaoCallback(..)) &&" +
-                "!execution(* com.ssafy.weSync.token.controller.TokenController.updateAccessToken(..))")
+//        @Around("execution(* com.ssafy.weSync.*.controller.*.*(..)) && " +
+//                "!execution(* com.ssafy.weSync.user.controller.UserController.kakaoCallback(..)) &&" +
+//                "!execution(* com.ssafy.weSync.token.controller.TokenController.updateAccessToken(..))")
     public Object AccessTokenValidation(ProceedingJoinPoint pjp) throws Throwable {
         String accessToken = request.getHeader("Authorization");
 

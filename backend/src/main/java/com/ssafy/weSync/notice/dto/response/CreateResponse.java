@@ -8,5 +8,12 @@ import java.time.LocalDateTime;
 @Builder
 public class CreateResponse {
     private Long noticeId;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
+
+    public static CreateResponse toDto(Long noticeId, LocalDateTime createdAt) {
+        return CreateResponse.builder()
+                .noticeId(noticeId)
+                .createdAt(createdAt)
+                .build();
+    }
 }
