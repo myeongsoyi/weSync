@@ -30,14 +30,19 @@ public class NoticeService {
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
 
-    public CreateResponse createNotice(CreateRequest createRequset, Long teamId, Long teamUserId) {
+    public CreateResponse createNotice(CreateRequest createRequest, Long teamId, Long teamUserId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
         TeamUser teamUser = teamUserRepository.findById(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
 
-        createRequset.setTeam(team);
-        createRequset.setTeamUser(teamUser);
+        // 권한체크
+        if (teamUserId != team.getTeamLeaderId()){
+            throw new GlobalException(CustomError.NO_TEAM_LEADER);
+        }
 
-        Long noticeId = noticeRepository.save(createRequset.toEntity()).getNoticeId();
+        createRequest.setTeam(team);
+        createRequest.setTeamUser(teamUser);
+
+        Long noticeId = noticeRepository.save(createRequest.toEntity()).getNoticeId();
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
         LocalDateTime createdTime = notice.getCreatedAt();
 
