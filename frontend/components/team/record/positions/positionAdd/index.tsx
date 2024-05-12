@@ -65,14 +65,14 @@ export default function PositionAdd() {
           >
             {!position.isMute ? (
               <Image
-                src={'/images/volume_on.png'}
+                src={'/svgs/volume_on.svg'}
                 alt="볼륨온"
                 width={50}
                 height={50}
               />
             ) : (
               <Image
-                src={'/images/volume_mute.png'}
+                src={'/svgs/volume_mute.svg'}
                 alt="볼륨오프"
                 width={50}
                 height={50}
