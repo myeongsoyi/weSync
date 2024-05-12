@@ -10,6 +10,8 @@ export async function getMainTeams() {
   return response;
 }
 
+
+
 // export async function getMainTeams() {
 //   const teams = [
 //     {

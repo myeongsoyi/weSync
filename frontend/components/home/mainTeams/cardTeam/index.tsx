@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getMainTeams } from '@/services/home';
 import TeamCreate from '../../../team/information/teaminfomodal/createmodal';
 import { MainActiveTeams } from '@/types/homeMain';
 import { CrownFilled, PlusCircleOutlined } from '@ant-design/icons';
@@ -10,9 +11,9 @@ import { Group } from 'antd/es/avatar';
 import Image from 'next/image';
 import Link from 'next/link';
 
-interface IParams {
-  teams: MainActiveTeams;
-}
+// interface IParams {
+//   teams: MainActiveTeams;
+// }
 
 function useViewportWidth() {
   const [width, setWidth] = useState(0); // 초기 너비 설정
@@ -37,7 +38,7 @@ function useViewportWidth() {
   return width;
 }
 
-export default function CardTeams({ teams }: IParams) {
+export default function CardTeams() {
   const [memNum, setMemNum] = useState(5); // 너비에 따른 멤버 수 상태 변수
   const width = useViewportWidth(); // 너비 상태 변수
   const [success, setSuccess] = useState<MainActiveTeams["success"]>(true); // 성공 상태 변수
@@ -45,10 +46,14 @@ export default function CardTeams({ teams }: IParams) {
   const [error, setError] = useState<MainActiveTeams["error"]>(null); // 에러 상태 변수
 
   useEffect(() => {
+    const fetchMainTeams = async () => {
+      const teams = await getMainTeams();
     setSuccess(teams.success); // 성공 상태 변수 업데이트
     setData(teams.data); // 데이터 상태 변수 업데이트
     setError(teams.error); // 에러 상태 변수 업데이트
-  }, [teams]); // 팀 데이터가 변경될 때마다 실행
+    }
+    fetchMainTeams();
+  }, []);
 
   useEffect(() => {
     if (width < 920) {
@@ -64,7 +69,7 @@ export default function CardTeams({ teams }: IParams) {
   }, [width]); // 너비가 변경될 때마다 실행
 
   if (!success) {
-    console.log(teams)
+    // api 요청 실패했을 경우...
     return <div><p>{error?.errorMessage}</p></div>;
   }
 
@@ -78,6 +83,7 @@ export default function CardTeams({ teams }: IParams) {
             textAlign: 'center',
             borderRadius: '10px',
             border: '3px solid #FFC500',
+            minHeight: '240px',
           }}
           className="flex justify-center text-center cursor-pointer"
           hoverable

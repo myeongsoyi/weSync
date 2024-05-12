@@ -24,7 +24,6 @@ const APIModule = async ({ action, method, data }: APIProps) => {
   // } else {
   accessToken = await getAccessToken();
   // }
-
   const res = await fetch(`${baseURL}${action}`, {
     method: method,
     headers: {
