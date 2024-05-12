@@ -76,7 +76,7 @@ export default function Footer() {
       <div className="flex-1 flex justify-center">
         <div className={styles.icon} onClick={handleIconClick}>
           <Image
-            src={'/images/wesync_icon.png'}
+            src={'/svgs/wesync_icon.svg'}
             alt="아이콘"
             height={67}
             width={67}

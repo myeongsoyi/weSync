@@ -115,7 +115,8 @@ export default function MultiAudioPlayer() {
   );
 
   return (
-    <>
+    <div
+    >
       {/* <div>
         <p>
           {tracks.toString()}
@@ -133,6 +134,7 @@ export default function MultiAudioPlayer() {
               width: '100%',
               height: 'fit-content',
               minHeight: '100px',
+              zIndex: 2000,
             }}
           >
             {tracks.map((track) => (
@@ -153,13 +155,13 @@ export default function MultiAudioPlayer() {
                 header={headerTracks}
                 style={
                   track.id === longestTrack?.id
-                    ? { height: '100%', display: 'block' }
+                    ? { height: '100%', display: 'block', zIndex: 2000}
                     : { height: '100%', display: 'none' }
                 }
               />
             ))}
           </div>
         )}
-    </>
+    </div>
   );
 }
