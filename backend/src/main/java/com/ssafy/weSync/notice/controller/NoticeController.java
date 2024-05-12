@@ -3,10 +3,13 @@ package com.ssafy.weSync.notice.controller;
 import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.notice.dto.request.CreateRequest;
 import com.ssafy.weSync.notice.dto.response.CreateResponse;
+import com.ssafy.weSync.notice.dto.response.GetAllResponse;
 import com.ssafy.weSync.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor // final이나 @NonNull으로 선언된 필드만을 파라미터로 받는 생성자를 생성
 @RestController
@@ -24,4 +27,10 @@ public class NoticeController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{teamId}")
+    public ResponseEntity<Response<List<GetAllResponse>>> getAllNotices(@PathVariable Long teamId){
+        List<GetAllResponse> getAllResponses = noticeService.getAllNotices(teamId);
+        Response<List<GetAllResponse>> response = new Response<>(true, getAllResponses, null);
+        return ResponseEntity.ok(response);
+    }
 }
