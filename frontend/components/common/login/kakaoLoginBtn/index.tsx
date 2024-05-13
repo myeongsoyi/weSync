@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 // import styles from './index.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Button } from 'antd';
 
 declare global {
   interface Window {
@@ -42,13 +43,17 @@ export default function KakaoLoginBtn() {
       href={`${KAKAO_AUTH_URI}`}
       prefetch={false}
     >
+      <Button style={{height: '100%', backgroundColor: 'fee500', display: 'flex'}}>
       <Image
       className='p-1 h-auto'
-        src={'/svgs/kakao.png'}
+        src={'/svgs/kakao.svg'}
         alt="카톡로그인"
-        width={180}
-        height={100}
+        width={35}
+        height={35}
+        style={{display: 'inline-block', height: 'auto'}}
       />
+      <span className='font-bold text-yellow-950 m-auto px-4 text-base'>카카오 로그인</span>
+      </Button>
     </Link>
     </div>
   );
