@@ -69,18 +69,20 @@ export default function loginData(props: { canLogin: boolean }) {
           const logOut = await getLogout();
           // console.log(logOut);
           if (logOut.success) {
-            message.success('로그아웃 되었습니다.');
             localStorage.clear();
+            Swal.fire({
+              title: '로그아웃 되었습니다.',
+              confirmButtonText: '확인',
+            willClose: () => {
+              window.location.href = '/welcome';
+            }}
+            );
           } else {
-            message.success('로그아웃에 실패했습니다.');
-            console.error('로그아웃 실패');
+            Swal.fire('로그아웃에 실패했습니다.');
           }
         } catch (err) {
-          message.success('로그아웃에 실패했습니다.');
-          console.error('로그아웃 실패', err);
+          Swal.fire('로그아웃에 실패했습니다.');
         }
-        // 로그아웃 후 이동
-        window.location.href = '/welcome';
       }
     });
   };

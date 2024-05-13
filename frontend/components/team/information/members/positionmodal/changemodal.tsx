@@ -131,7 +131,7 @@ export default function PositionModal({
       open={open}
       onOk={handleOk}
       onCancel={onCancel}
-      width={400}
+      width={450}
       closable={false}
       footer={
         <div style={{ textAlign: 'center', width: '100%' }}>

@@ -1,9 +1,14 @@
 // 사용하는 라이브러리 및 컴포넌트 import
 import { useState, useEffect } from 'react';
 import styles from './index.module.scss';
-import { Button, Dropdown } from 'antd';
-import { PauseCircleFilled, PlayCircleFilled, UnorderedListOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Tooltip } from 'antd';
+import {
+  PauseCircleFilled,
+  UnorderedListOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
+import Image from 'next/image';
 
 interface AudioBlobUrl {
   blob: Blob;
@@ -13,7 +18,9 @@ interface AudioBlobUrl {
 
 export default function RecordAudioController() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
+    null,
+  );
   const [recordings, setRecordings] = useState<AudioBlobUrl[]>([]);
   const [items, setItems] = useState<MenuProps['items']>([]);
   const [recordingTime, setRecordingTime] = useState<number>(0);
@@ -46,11 +53,22 @@ export default function RecordAudioController() {
     const newItems = recordings.map((recording, index) => ({
       key: index,
       label: (
-        <div className={styles.record__item}>
+        <div
+          className={styles.record__item}
+          onClick={(e) => e.stopPropagation()}
+        >
           <audio src={recording.url} controls />
           <div className={styles.record__button}>
-            <span>{recording.timestamp}</span>
-            <Button type='text' onClick={() => uploadAudio(recording.blob)}><UploadOutlined style={{ fontSize: 24, margin: 'auto' }}/></Button>
+            <span className={styles.record__timestamp}>
+              {recording.timestamp}
+            </span>
+            <Tooltip title="My Space에 업로드" placement="top">
+              <Button type="text" onClick={() => uploadAudio(recording.blob)}>
+                <UploadOutlined
+                  style={{ fontSize: 20, fontWeight: 'bold', margin: 'auto' }}
+                />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       ),
@@ -95,29 +113,53 @@ export default function RecordAudioController() {
   };
 
   return (
-    <div className={styles.recorder}>
-      <span className={styles.timer}>{isRecording ? formatTime(recordingTime) : '--:--'}</span>
-      <Button
-        type="text"
-        onClick={isRecording ? stopRecording : startRecording}
-        style={{ height: 'auto', width: 'auto' }}
-      >
-        {isRecording ? (
-          <PauseCircleFilled style={{ fontSize: 35, color: 'orange' }} />
-        ) : (
-          <PlayCircleFilled style={{ fontSize: 35, color: 'lightgray' }} />
-        )}
-      </Button>
-      <Dropdown
-        menu={{ items }}
-        trigger={['click']}
-        placement="topLeft"
-        disabled={recordings.length === 0}
-      >
-        <Button style={{ display: 'flex', width: 'auto', backgroundColor: 'lightgray', margin: 'auto' }}>
-          <UnorderedListOutlined style={{ fontSize: 20, margin: 'auto' }} />
+    <div className={styles.container}>
+      <div className={styles.recorder}>
+        <span className={styles.timer}>
+          {isRecording ? formatTime(recordingTime) : '--:--'}
+        </span>
+        <Button
+          type="text"
+          onClick={isRecording ? stopRecording : startRecording}
+          className={styles.customButton}
+        >
+          {isRecording ? (
+            <div className={styles.buttonIconContainer}>
+              <PauseCircleFilled style={{ fontSize: 43, color: '#EBEBED' }} />
+            </div>
+          ) : (
+            <div className={styles.buttonIconContainer}>
+              <Image
+                alt="녹음정지"
+                src={'/svgs/recordbutton.svg'}
+                width={800}
+                height={800}
+                style={{ width: 50, height: 50 }}
+              />
+            </div>
+          )}
         </Button>
-      </Dropdown>
+        <Dropdown
+          overlayClassName={`recordmodal ${styles.dropdownMenu}`}
+           menu={{ items }}
+          trigger={['click']}
+          placement="topLeft"
+          disabled={recordings.length === 0}
+        >
+          <Button
+            style={{
+              display: 'flex',
+              width: 'auto',
+              color: 'white',
+              backgroundColor: '#656565',
+              // borderColor: '#656565',
+              margin: 'auto',
+            }}
+          >
+            <UnorderedListOutlined style={{ fontSize: 20, margin: 'auto' }} />
+          </Button>
+        </Dropdown>
+      </div>
     </div>
   );
 }
