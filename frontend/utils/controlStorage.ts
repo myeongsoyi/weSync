@@ -24,6 +24,5 @@ export const getItemWithExpireTime = (key: string) => {
     LocalStorage.removeItem(key);
     return null;
   }
-
   return obj.value;
 };

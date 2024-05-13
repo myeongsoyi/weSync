@@ -10,7 +10,7 @@ export default function RecordScore({teamId} :IParams) {
     return (
       <div className={styles.section}>
         <p className='hidden'>{teamId}</p>
-        <Image className='p-20 m-auto' src={'/images/score.png'} alt="record_score" width={600} height={600} />
+        <Image className='p-20 m-auto' src={'/svgs/score.svg'} alt="record_score" width={600} height={600} />
       </div>
     );
   }

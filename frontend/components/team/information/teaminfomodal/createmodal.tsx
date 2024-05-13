@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 export default async function TeamCreate() {
-    const defaultImageUrl = "public/images/wesync_icon.jpg";
+    const defaultImageUrl = "public/svgs/wesync_icon.svg";
     const { value: formValues } = await Swal.fire({
       title: '팀 생성하기',
       html: `

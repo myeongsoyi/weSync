@@ -9,7 +9,7 @@ interface IParams {
 export default async function TeamMembers({teamId} :IParams) {
 
     const teams = await getMainTeams();
-    const team = teams.filter((team) => team.id.toString() === teamId);
+    const team = teams.filter((team: any) => team.id.toString() === teamId);
     const members = team[0].members;
 
   return (
