@@ -14,6 +14,8 @@ import TeamModify from '@/components/team/information/teaminfomodal/modifymodal'
 import type { MenuProps } from 'antd';
 import styles from '@/components/team/information/members/memberList/index.module.scss';
 import LoginComponent from '@/components/common/login';
+import { usePathname } from 'next/navigation';
+import { getTeamInviteLink } from '@/services/team';
 
 interface Team {
   id: number;
@@ -31,7 +33,8 @@ const teams: Team[] = [
 
 export default function TeamPage() {
   const { Header } = Layout;
-
+  const pathname = usePathname();
+  const teamId = pathname.split('/')[2];
   const [open, setOpen] = useState(false);
   const [currentTeamId] = useState<number>(1); // 초기 팀 ID 설정
 
@@ -56,6 +59,47 @@ export default function TeamPage() {
           message.success('팀에서 나왔습니다.');
         }
       });
+    } else if (key === 'create-invite-link') {
+      // 초대 링크 생성
+      const response = await getTeamInviteLink(teamId);
+      if (response.success) {
+        Swal.fire({
+          title: '초대 링크 생성',
+          html: `
+      <textarea id="inviteLink" readonly style="width: 100%; height: 60px; border: none; background: white; text-align: center; overflow-y: hidden; resize: none;">
+${response.data.url}</textarea>
+    `,
+          icon: 'info',
+          confirmButtonColor: 'green',
+          showCancelButton: true,
+          confirmButtonText: '복사하기',
+          cancelButtonText: '닫기',
+          preConfirm: () => {
+            // 입력 필드의 내용을 선택하고 클립보드에 복사
+            const copyText = document.getElementById(
+              'inviteLink',
+            ) as HTMLTextAreaElement;
+            copyText.select();
+            document.execCommand('copy');
+
+            // 성공 메시지를 표시
+            Swal.fire({
+              title: '복사 완료!',
+              text: '초대 링크가 클립보드에 복사되었습니다.',
+              icon: 'success',
+              timer: 4000,
+              timerProgressBar: true,
+            });
+          },
+        });
+      } else {
+        Swal.fire({
+          title: '초대 링크 생성 실패',
+          text: response.error.errorMessage,
+          icon: 'error',
+          confirmButtonColor: 'red',
+        });
+      }
     } else if (key === 'edit-team-info') {
       const currentTeam = teams.find((t) => t.id === currentTeamId);
       if (currentTeam) {

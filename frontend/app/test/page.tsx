@@ -1,10 +1,29 @@
+'use client'
+
 import Image from 'next/image';
 import AlertTest from '@/components/home/alertTest';
 import CssTest from '@/components/home/cssTest';
+import { ChangeEvent, useState } from 'react';
 
 export default function TestComponent() {
+  const [images, setImages] = useState<{ url: string; file: File }[]>([]);
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const uploadedImages = Array.from(event.target.files).map((file) => ({
+        url: URL.createObjectURL(file),
+        file: file, // 파일 자체를 저장
+      }));
+      console.log(uploadedImages);
+      setImages([...images, ...uploadedImages]);
+    }
+  };
+  
   return (
     <div className="loading flex-col justify-center items-center">
+      <input id="swal-input3" onChange={handleImageChange} type="file" accept="image/*"/>
+      {/* {images && (
+        // <p>input3: {images[0].url}</p>
+      )} */}
       <div>
         <Image
           src={'/loading.gif'}
