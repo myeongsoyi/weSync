@@ -1,9 +1,8 @@
 package com.ssafy.weSync.team.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.ssafy.weSync.global.ApiResponse.AccessTokenValidationAspect;
-import com.ssafy.weSync.global.ApiResponse.Response;
-import com.ssafy.weSync.global.ApiResponse.ResponseFactory;
+import com.ssafy.weSync.global.ApiResponse.*;
+import com.ssafy.weSync.global.entity.Expunger;
 import com.ssafy.weSync.team.dto.request.*;
 import com.ssafy.weSync.team.dto.response.*;
 import com.ssafy.weSync.team.entity.*;
@@ -14,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
@@ -39,6 +39,8 @@ public class TeamService {
     private static final String[] DefaultPositionName = {"소프라노","메조소프라노", "알토", "바리톤", "테너", "베이스", "퍼커션"}; // 디폴트 포지션 이름
     private static final Long[] DefaultColorId = {1L,1L,1L,1L,1L,1L,1L}; // 디폴트 포지션별 colorId
 
+    private static final String defaultProfileUrl = "https://we-sync.s3.ap-southeast-2.amazonaws.com/teamProfile/efc7da8d-f082-305e-9775-70509e96f33c%202024-05-13%2015%3A05%3A53.jpg"; //추후 변경
+
     public TeamService(TeamRepository teamRepository, InvitationRepository invitationRepository, TeamUserRepository teamUserRepository, AmazonS3Client amazonS3Client, UserRepository userRepository, ColorRepository colorRepository, PositionRepository positionRepository, ScoreRepository scoreRepository, AccessTokenValidationAspect accessTokenValidationAspect) {
         this.teamRepository = teamRepository;
         this.invitationRepository = invitationRepository;
@@ -55,8 +57,9 @@ public class TeamService {
     public ResponseEntity<Response<TeamIdDto>> createTeam(CreateTeamInfoDto createTeamInfoDto) throws IOException {
 
         if (createTeamInfoDto == null ||
-                createTeamInfoDto.getTeamName() == null) {
-            return ResponseFactory.fail("에러(팀 생성): 입력한 정보가 부족합니다");
+                createTeamInfoDto.getTeamName() == null ||
+                createTeamInfoDto.getTeamName().isEmpty()) {
+            throw new GlobalException(CustomError.INCOMPLETE_INFORMATION);
         }
 
         //팀 등록
@@ -64,19 +67,27 @@ public class TeamService {
         newTeam.setTeamLeaderId(accessTokenValidationAspect.getUserId());
         newTeam.setTeamName(createTeamInfoDto.getTeamName());
         newTeam.setSongName(createTeamInfoDto.getSongName());
-        if(createTeamInfoDto.getTeamProfile()!=null){
+
+        MultipartFile teamProfile = createTeamInfoDto.getTeamProfile();
+
+        if(!Arrays.toString(teamProfile.getBytes()).equals("[]")){
             S3Service s3Service = new S3Service(amazonS3Client, bucket);
             String teamProfileUrl = s3Service.upload(createTeamInfoDto.getTeamProfile(),"teamProfile");
             newTeam.setProfileUrl(teamProfileUrl);
+        }
+        else{
+            newTeam.setProfileUrl(defaultProfileUrl);
         }
         newTeam.setIsFinished(false);
         Long newTeamId = teamRepository.save(newTeam).getTeamId();
 
         //팀원 등록(본인)
         TeamUser newTeamUser = new TeamUser();
-        if(userRepository.findByUserId(accessTokenValidationAspect.getUserId()).isEmpty() ||
-                teamRepository.findByTeamId(newTeamId).isEmpty()){
-            return ResponseFactory.fail("에러(팀 생성): 서버 db 오류");
+        if(userRepository.findByUserId(accessTokenValidationAspect.getUserId()).isEmpty()){
+            throw new GlobalException(CustomError.NO_USER);
+        }
+        else if(teamRepository.findByTeamId(newTeamId).isEmpty()){
+            throw new GlobalException(CustomError.NO_TEAM);
         }
         newTeamUser.setUser(userRepository.findByUserId(accessTokenValidationAspect.getUserId()).get());
         newTeamUser.setTeam(teamRepository.findByTeamId(newTeamId).get());
@@ -94,17 +105,17 @@ public class TeamService {
 
         if (editTeamInfoDto == null ||
                 editTeamInfoDto.getTeamName() == null ||
-                editTeamInfoDto.getIsFinished() == null ||
-                editTeamInfoDto.getTeamProfile() == null) {
-            return ResponseFactory.fail("에러(팀 정보 수정): 입력한 정보가 부족합니다");
+                !editTeamInfoDto.getTeamName().isEmpty() ||
+                editTeamInfoDto.getIsFinished() == null) {
+            throw new GlobalException(CustomError.INCOMPLETE_INFORMATION);
         }
         else {
+
             S3Service s3Service = new S3Service(amazonS3Client, bucket);
-            String editTeamProfileUrl = s3Service.upload(editTeamInfoDto.getTeamProfile(),"teamProfile");
 
             //팀 등록
             if(teamRepository.findByTeamId(id).isEmpty()){
-                return ResponseFactory.fail("에러(팀 정보 수정): 조회한 팀은 존재하지 않습니다");
+                throw new GlobalException(CustomError.NO_TEAM);
             }
             Team editTeam = teamRepository.findByTeamId(id).get();
             editTeam.setTeamName(editTeamInfoDto.getTeamName());
@@ -112,7 +123,7 @@ public class TeamService {
             String beforeUrl = editTeam.getProfileUrl();
 
             //이전 프로필 S3 데이터 삭제
-            if(beforeUrl!=null){
+            if(!Objects.equals(beforeUrl, defaultProfileUrl)){
                 int startIndex = beforeUrl.indexOf("teamProfile/");
                 String beforeParsingKey = beforeUrl.substring(startIndex);
                 String parsing = beforeParsingKey.replaceAll("%20", " ");
@@ -121,7 +132,17 @@ public class TeamService {
                 System.out.println(parsedKey);
             }
 
-            editTeam.setProfileUrl(editTeamProfileUrl);
+            //새 프로필 S3 등록
+            MultipartFile teamProfile = editTeamInfoDto.getTeamProfile();
+
+            if(!Arrays.toString(teamProfile.getBytes()).equals("[]")){
+                String teamProfileUrl = s3Service.upload(editTeamInfoDto.getTeamProfile(),"teamProfile");
+                editTeam.setProfileUrl(teamProfileUrl);
+            }
+            else{
+                editTeam.setProfileUrl(defaultProfileUrl);
+            }
+
             editTeam.setIsFinished(editTeamInfoDto.getIsFinished());
             teamRepository.save(editTeam);
 
@@ -137,7 +158,7 @@ public class TeamService {
         Long userId = accessTokenValidationAspect.getUserId();
         if(teamRepository.findByTeamId(teamId).isEmpty() ||
                 teamRepository.findByTeamId(teamId).get().isDeleted()){
-            return ResponseFactory.fail("에러(getActiveTeamsShort): 조회한 팀은 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_TEAM);
         }
         Team currentTeam = teamRepository.findByTeamId(teamId).get();
 
@@ -154,9 +175,10 @@ public class TeamService {
         }
         shortCurrentTeamInfoDto.setTeamProfileUrl(currentTeam.getProfileUrl());
         shortCurrentTeamInfoDto.setTeamLeader(Objects.equals(currentTeam.getTeamLeaderId(), userId));
+        shortCurrentTeamInfoDto.setFinished(currentTeam.getIsFinished());
         List<ShortActiveTeamInfoDto> shortActiveTeamInfoDtoList = new ArrayList<>();
         if(userRepository.findByUserId(userId).isEmpty()){
-            return ResponseFactory.fail("에러(getActiveTeamsShort): 조회한 유저는 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_USER);
         }
         List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(userId).get());
         for(TeamUser teamUser : teamUserList){
@@ -173,6 +195,7 @@ public class TeamService {
                     shortActiveTeamInfoDto.setSongNameExist(false);
                 }
                 shortActiveTeamInfoDto.setTeamProfileUrl(team.getProfileUrl());
+                shortActiveTeamInfoDto.setFinished(team.getIsFinished());
                 shortActiveTeamInfoDtoList.add(shortActiveTeamInfoDto);
             }
         }
@@ -184,13 +207,13 @@ public class TeamService {
     //팀 링크 생성
     public ResponseEntity<Response<TeamLinkDto>> getTeamLink(Long id){
         UUID uuid = UUID.randomUUID();
-        String randomLink = "http://localhost:8080/api/team/invite/" + uuid;
+        String randomLink = "https://wesync.co.kr/api/team/invite/" + uuid;
 
         //팀 링크 등록
         Invitation newInvitation = new Invitation();
         newInvitation.setLink(randomLink);
         if(teamRepository.findByTeamId(id).isEmpty()){
-            return ResponseFactory.fail("에러(팀 링크 생성): 조회한 팀이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_TEAM);
         }
         newInvitation.setTeam(teamRepository.findByTeamId(id).get());
         newInvitation.setIsValid(true);
@@ -215,18 +238,18 @@ public class TeamService {
             return ResponseFactory.success(teamUserDto);
         }
         else{
-            return ResponseFactory.fail("에러(팀 링크 생성): 강퇴할 대상이 존재하지 않습니다.");
+            throw new GlobalException(CustomError.NO_TEAMUSER);
         }
     }
 
     //팀 링크 접속
     public ResponseEntity<Response<TeamIdDto>>redirectToTeam(String UUID){
         Long id = accessTokenValidationAspect.getUserId();
-        String link = "http://localhost:8080/api/team/invite/" + UUID;
+        String link = "https://wesync.co.kr/api/team/invite/" + UUID;
 
         if(invitationRepository.findByLink(link).isEmpty() ||
                 !invitationRepository.findByLink(link).get().getIsValid()){
-            return ResponseFactory.fail("에러(팀 링크 접속): 헤딩 링크로 접속가능한 팀이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_TEAM);
         }
 
         Invitation invitation = invitationRepository.findByLink(link).get();
@@ -238,17 +261,17 @@ public class TeamService {
                 .anyMatch(teamUser -> Objects.equals(teamUser.getTeam().getTeamId(), linkTeamId));
 
         if(isAlreadyExist){
-            return ResponseFactory.fail("에러(팀 링크 접속): 이미 속해있는 회원입니다");
+            throw new GlobalException(CustomError.DUPLICATE_USER);
         }
 
         //팀원 추가
         TeamUser newTeamUser = new TeamUser();
         if(userRepository.findByUserId(id).isEmpty()){
-            return ResponseFactory.fail("에러(팀 링크 접속): 입력한 id에 해당하는 유저가 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_USER);
         }
         if(teamRepository.findByTeamId(invitation.getTeam().getTeamId()).isEmpty() ||
                 teamRepository.findByTeamId(invitation.getTeam().getTeamId()).get().isDeleted()){
-            return ResponseFactory.fail("에러(팀 링크 접속): 헤딩 링크로 접속가능한 팀이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_TEAM);
         }
         newTeamUser.setUser(userRepository.findByUserId(id).get());
         newTeamUser.setTeam(teamRepository.findByTeamId(invitation.getTeam().getTeamId()).get());
@@ -263,9 +286,11 @@ public class TeamService {
     //악보별 포지션 할당
     public ResponseEntity<Response<ScorePositionDto>> scorePositionMapping(ScorePositionDto scorePositionDto){
 
-        if(scoreRepository.findByScoreId(scorePositionDto.getScoreId()).isEmpty() ||
-                positionRepository.findByPositionId(scorePositionDto.getPositionId()).isEmpty()){
-            return ResponseFactory.fail("에러(악보별 포지션 할당): 입력한 값에 해당하는 악보나 포지션이 존재하지 않습니다");
+        if(scoreRepository.findByScoreId(scorePositionDto.getScoreId()).isEmpty()){
+            throw new GlobalException(CustomError.NO_SCORE);
+        }
+        else if(positionRepository.findByPositionId(scorePositionDto.getPositionId()).isEmpty()){
+            throw new GlobalException(CustomError.NO_POSITION);
         }
 
         Score score = scoreRepository.findByScoreId(scorePositionDto.getScoreId()).get();
@@ -296,7 +321,7 @@ public class TeamService {
     public ResponseEntity<Response<List<PositionDto>>> getPositionList(Long id){
         List<PositionDto> positionData = new ArrayList<>();
         if(teamRepository.findByTeamId(id).isEmpty()){
-            return ResponseFactory.fail("에러(포지션 조회): 입력한 id에 해당하는 팀이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_TEAM);
         }
         List<Position> positionList = positionRepository.findByTeam(teamRepository.findByTeamId(id).get());
 
@@ -305,7 +330,7 @@ public class TeamService {
             for(int defaultIdx = 0; defaultIdx<7; defaultIdx++){
                 Position position = new Position();
                 if(colorRepository.findByColorId(DefaultColorId[defaultIdx]).isEmpty()){
-                    return ResponseFactory.fail("에러(포지션 조회): 서버 db 오류");
+                    throw new GlobalException(CustomError.POSITION_COLOR_NOT_FOUND);
                 }
                 position.setColor(colorRepository.findByColorId(DefaultColorId[defaultIdx]).get());
                 position.setPositionName(DefaultPositionName[defaultIdx]);
@@ -331,7 +356,7 @@ public class TeamService {
     //커스텀 포지션 생성
     public ResponseEntity<Response<CustomPositionDto>> addCustomPosition(CustomPositionDto customPositionDto){
         if(teamRepository.findByTeamId(customPositionDto.getTeamId()).isEmpty()){
-            return ResponseFactory.fail("에러(커스텀 포지션 생성): 입력한 id에 해당하는 팀이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_TEAM);
         }
         List<Position> positionList = positionRepository.findByTeam(teamRepository.findByTeamId(customPositionDto.getTeamId()).get());
         String newPositionName = customPositionDto.getPositionName();
@@ -349,14 +374,14 @@ public class TeamService {
             }
         }
         if(isDuplicate){
-            return  ResponseFactory.fail("에러(커스텀 포지션 생성): 포지션 이름이 중복됩니다");
+            throw new GlobalException(CustomError.DUPLICATE_POSITION);
         }
             //등록
             Position newPosition = new Position();
             newPosition.setPositionName(customPositionDto.getPositionName());
             newPosition.setTeam(teamRepository.findByTeamId(customPositionDto.getTeamId()).get());
             if(colorRepository.findByColorId(customPositionDto.getColorId()).isEmpty()){
-                return ResponseFactory.fail("에러(커스텀 포지션 생성): 서버 db 오류");
+                throw new GlobalException(CustomError.POSITION_COLOR_NOT_FOUND);
             }
             newPosition.setColor(colorRepository.findByColorId(customPositionDto.getColorId()).get());
             positionRepository.save(newPosition);
@@ -374,6 +399,7 @@ public class TeamService {
                 continue;
             }
             LongTeamInfoDto longTeamInfoDto = new LongTeamInfoDto();
+            longTeamInfoDto.setTeamId(team.getTeamId());
             longTeamInfoDto.setTeamName(team.getTeamName());
             if(team.getSongName()!=null){
                 longTeamInfoDto.setSongNameExist(true);
@@ -419,7 +445,7 @@ public class TeamService {
     public ResponseEntity<Response<List<LongTeamInfoDto>>>getActiveTeams() {
         Long id = accessTokenValidationAspect.getUserId();
         if (userRepository.findByUserId(id).isEmpty()) {
-            return ResponseFactory.fail("에러(활성화 된 팀목록): 입력한 id에 해당하는 회원이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_USER);
         }
         List<TeamUser> teamUserList = teamUserRepository.findByUserOrderByCreatedAtDesc(userRepository.findByUserId(id).get());
         List<LongTeamInfoDto> longTeamInfoDtoList = extractTeamInfo(teamUserList, id, true);
@@ -430,7 +456,7 @@ public class TeamService {
     public ResponseEntity<Response<List<LongTeamInfoDto>>>getAllTeams() {
         Long id = accessTokenValidationAspect.getUserId();
         if(userRepository.findByUserId(id).isEmpty()){
-            return ResponseFactory.fail("에러(전체 팀목록): 입력한 id에 해당하는 회원이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_USER);
         }
         List<TeamUser> teamUserList = teamUserRepository.findByUserOrderByCreatedAtDesc(userRepository.findByUserId(id).get());
         List<LongTeamInfoDto> longTeamInfoDtoList = extractTeamInfo(teamUserList, id, false);
@@ -440,7 +466,7 @@ public class TeamService {
     //팀원 teamUserId, 이름, 리더 여부, 프로필, 포지션 존재 여부, 포지션 이름, 색깔 이름, 색깔 코드 조회
     public ResponseEntity<Response<List<LongMemberInfoDto>>> getTeamMembersInfo(Long id){
         if(teamRepository.findByTeamId(id).isEmpty()){
-            return ResponseFactory.fail("에러(getTeamMembersInfo): 입력한 id에 해당하는 팀이 존재하지 않습니다");
+            throw new GlobalException(CustomError.NO_TEAM);
         }
         Team team = teamRepository.findByTeamId(id).get();
         List<TeamUser> teamUserList = team.getTeamUsers();
@@ -472,9 +498,11 @@ public class TeamService {
 
     //팀원 포지션 설정, 변경
     public ResponseEntity<Response<TeamUserPositionDto>> teamUserPositionMapping(TeamUserPositionDto teamUserPositionDto) {
-        if(teamUserRepository.findByTeamUserId(teamUserPositionDto.getTeamUserId()).isEmpty() ||
-                positionRepository.findByPositionId(teamUserPositionDto.getPositionId()).isEmpty()){
-            return ResponseFactory.fail("에러(팀원 포지션 설정, 변경): 입력한 id에 해당하는 팀원 혹은 포지션이 존재하지 않습니다");
+        if(teamUserRepository.findByTeamUserId(teamUserPositionDto.getTeamUserId()).isEmpty()){
+            throw new GlobalException(CustomError.NO_TEAMUSER);
+        }
+        else if(positionRepository.findByPositionId(teamUserPositionDto.getPositionId()).isEmpty()){
+            throw new GlobalException(CustomError.NO_POSITION);
         }
         TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserPositionDto.getTeamUserId()).get();
         teamUser.setPosition(positionRepository.findByPositionId(teamUserPositionDto.getPositionId()).get());
@@ -482,5 +510,43 @@ public class TeamService {
 
         //응답
         return ResponseFactory.success(teamUserPositionDto);
+    }
+
+    //팀 삭제
+    public ResponseEntity<Response<TeamIdDto>> deleteTeam(Long id){
+        Optional<Team> deleteTeam = teamRepository.findByTeamId(id);
+
+        if(deleteTeam.isPresent()){
+            deleteTeam.get().setDeleted(true);
+            deleteTeam.get().setDeletedBy(Expunger.normal);
+            deleteTeam.get().setIsFinished(true);
+            teamRepository.save(deleteTeam.get());
+
+            //응답
+            TeamIdDto teamIdDto = new TeamIdDto(id);
+            return ResponseFactory.success(teamIdDto);
+        }
+        else{
+            throw new GlobalException(CustomError.NO_TEAM);
+        }
+    }
+
+    //팀 나가기
+    public ResponseEntity<Response<TeamIdDto>> leaveTeam(Long teamId){
+        Long userId = accessTokenValidationAspect.getUserId();
+        Optional<TeamUser> leaveUser = teamUserRepository.findByUserUserIdAndTeamTeamId(userId, teamId);
+
+        if(leaveUser.isPresent() && !leaveUser.get().getIsBanned()){
+            //나가기
+            leaveUser.get().setIsBanned(true);
+            teamUserRepository.save(leaveUser.get());
+
+            //응답
+            TeamIdDto teamIdDto = new TeamIdDto(teamId);
+            return ResponseFactory.success(teamIdDto);
+        }
+        else{
+            throw new GlobalException(CustomError.NO_TEAM);
+        }
     }
 }
