@@ -43,6 +43,16 @@ export const postCreateTeam = async (formData: FormData) => {
   }
 };
 
+export async function getTeamInviteLink(teamId: string) {
+  const response = await APIModule({
+    action: `/team/${teamId}`,
+    method: 'GET',
+    data: null,
+  });
+
+  return response;
+}
+
 
 export async function getTeamNotices(teamId: string) {
   const notices = [
