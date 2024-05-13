@@ -1,12 +1,13 @@
 package com.ssafy.weSync.notice.dto.response;
 
 import com.ssafy.weSync.notice.entity.Notice;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class GetAllResponse {
     private Long noticeId;

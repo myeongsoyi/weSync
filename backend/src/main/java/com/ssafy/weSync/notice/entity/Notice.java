@@ -40,4 +40,16 @@ public class Notice extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_user_id")
     private TeamUser teamUser;
+
+    public void updateIsFixed() {
+        if (this.isFixed == true) {
+            this.isFixed = false;
+        } else {
+            this.isFixed = true;
+        }
+    }
+
+    public void updateContent(String content){
+        this.content = content;
+    }
 }
