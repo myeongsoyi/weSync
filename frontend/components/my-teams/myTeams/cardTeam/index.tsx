@@ -83,7 +83,7 @@ export default function CardTeams() {
             borderRadius: '10px',
             border: '3px solid #FFC500',
             // marginTop: '16px',
-            minHeight: '240px',
+            minHeight: '230px',
           }}
           className="flex justify-center items-center cursor-pointer"
           hoverable
@@ -97,7 +97,7 @@ export default function CardTeams() {
         {data?.map((team, i) => (
           <div key={i} className={`${styles.cardContainer}`}>
             <Link
-              href={`/team/${team.id}`}
+              href={`/team/${team.id}/information`}
               // style={{ width: '32%' }}
               // className="even:bg-amber-100 odd:bg-amber-50"
             >
@@ -124,14 +124,16 @@ export default function CardTeams() {
                 <div className="flex mb-1">
                   <Image
                     src="svgs/note.svg"
-                    width={15}
-                    height={15}
+                    width={16}
+                    height={16}
                     alt="음표"
+                    className="h-auto"
                   />
                   <p className="flex w-full">
-                    <span className="m-auto">{team.songName}</span>
+                    <span className="m-auto pr-4">{team.songName ?? '미정'}</span>
                   </p>
                 </div>
+                {team.myPosition && (
                 <p>
                   <Tag
                     style={{
@@ -144,11 +146,12 @@ export default function CardTeams() {
                     {team.myPosition}
                   </Tag>
                 </p>
+                )}
                 <Avatar
                   src={team.teamProfileUrl}
                   alt="팀"
                   size={80}
-                  style={{ borderColor: '#FFC500' }}
+                  style={{ borderColor: '#FFC500', marginBottom: '0.5rem'}}
                 />
                 <div className="flex mt-4 justify-center gap-1">
                   <Group>
