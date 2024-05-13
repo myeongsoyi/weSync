@@ -1,10 +1,12 @@
 package com.ssafy.weSync.notice.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CreateResponse {
     private Long noticeId;
