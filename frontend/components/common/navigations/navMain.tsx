@@ -29,7 +29,8 @@ export default function HomePage() {
         }}
       >
         <Link href="/welcome" className="flex flex-1">
-          <Button type="primary" icon={<SmileOutlined />} iconPosition={'end'}>소개페이지</Button>
+          <Button type="primary" icon={<SmileOutlined />} >소개페이지</Button>
+          {/* <Button type="primary" icon={<SmileOutlined />} iconPosition={'end'}>소개페이지</Button> */}
         </Link>
         <Link href="/" style={{width:'auto', height:'auto'}} className="flex flex-1 justify-center">
         <Image src={"/svgs/logo.svg"} alt="로고" width={200} height={150} priority className='h-auto' />
