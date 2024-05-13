@@ -10,24 +10,49 @@ export async function getPositionColors() {
   return response;
 }
 
-export async function postCreateTeam(
-  teamName: string,
-  songName: string,
-  teamProfile: File,
-) {
-  const formData = new FormData();
-  formData.append('teamName', teamName);
-  formData.append('songName', songName);
-  formData.append('teamProfile', teamProfile);
+import { getAccessToken } from "@/utils/getAccessToken";
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
+
+export const postCreateTeam = async (formData: FormData) => {
+  console.log("formData API", formData);
+  formData.forEach((value, key) => {
+    console.warn(`${key}: ${value}`);
+  });
+  try {
+    const accessToken = await getAccessToken();
+    const res = await fetch(`${baseURL}/team`, {
+      method: "POST",
+      headers: {
+        // "content-type": "multipart/form-data", 
+        Authorization: accessToken ?? "",
+      },
+      body: formData,
+    });
+    // console.log("res", res);
+    const obj = await res.json();
+    // console.log("obj", obj);
+    if (obj.success) {
+      return obj;
+    } else {
+      //TODO: error 페이지로 이동
+      throw new Error(obj.error.errorMessage);
+    }
+  } catch (e: any) {
+    //TODO: error 페이지로 이동
+  }
+};
+
+export async function getTeamInviteLink(teamId: string) {
   const response = await APIModule({
-    action: '/team',
-    method: 'POST',
-    data: formData,
+    action: `/team/${teamId}`,
+    method: 'GET',
+    data: null,
   });
 
   return response;
 }
+
 
 export async function getTeamNotices(teamId: string) {
   const notices = [

@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 // import styles from './index.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Button } from 'antd';
+import styles from './index.module.scss';
 
 declare global {
   interface Window {
@@ -25,7 +27,7 @@ export default function KakaoLoginBtn() {
     kakaoSDK.integrity = `sha384-kDljxUXHaJ9xAb2AzRd59KxjrFjzHa5TAoFQ6GbYTCAG0bjM55XohjjDT7tDDC01`;
     kakaoSDK.crossOrigin = 'anonymous';
     document.head.appendChild(kakaoSDK);
-    
+
     const onLoadKakaoAPI = () => {
       if (!window.Kakao.isInitialized()) {
         window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
@@ -37,19 +39,28 @@ export default function KakaoLoginBtn() {
 
   return (
     <div className="w-fit m-auto">
-    <Link
-      className='p-4 w-auto'
-      href={`${KAKAO_AUTH_URI}`}
-      prefetch={false}
-    >
-      <Image
-      className='p-1 h-auto'
-        src={'/svgs/kakao.png'}
-        alt="카톡로그인"
-        width={180}
-        height={100}
-      />
-    </Link>
+      <Link className="m-4 w-auto" href={`${KAKAO_AUTH_URI}`} prefetch={false}>
+        <Button
+          style={{
+            height: '100%',
+            backgroundColor: '#fee500',
+            display: 'flex',
+          }}
+          className={styles.kakao_login}
+        >
+          <Image
+            className="p-1 h-auto"
+            src={'/svgs/kakao.svg'}
+            alt="카톡로그인"
+            width={35}
+            height={35}
+            style={{ display: 'inline-block', height: 'auto' }}
+          />
+          <span className="font-bold text-yellow-950 m-auto px-4 text-base">
+            카카오 로그인
+          </span>
+        </Button>
+      </Link>
     </div>
   );
 }

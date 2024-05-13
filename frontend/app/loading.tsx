@@ -12,7 +12,7 @@ export default function Loading() {
           style={{ margin: 'auto', width: 'auto', height: 'auto'}}
         ></Image>
         <h2 className="text-center mt-10">잠시만</h2>
-        <h2 className="text-center">기다려주세요</h2>
+        <h2 className="text-center mb-10">기다려주세요</h2>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ export default function Footer() {
   const [clickCount, setClickCount] = useState(0);
   const [clickTimer, setClickTimer] = useState<number | undefined>(undefined);
   const router = useRouter();
-  const clickThreshold = 5;
+  const clickThreshold = 7;
   const clickTimeout = 800; // 클릭 간격 (밀리초)
 
   useEffect(() => {

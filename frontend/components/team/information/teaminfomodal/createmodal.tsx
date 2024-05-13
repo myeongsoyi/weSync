@@ -1,9 +1,22 @@
+'use client';
+
 import Swal from 'sweetalert2';
-import { message } from 'antd';
+import { postCreateTeam } from '@/services/team';
 
 export default async function TeamCreate() {
-  const defaultImageUrl = 'public/svgs/wesync_icon.svg';
-  const { value: formValues, isDismissed } = await Swal.fire({
+  // const [images, setImages] = useState<{ url: string; file: File }[]>([]);
+  // const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files) {
+  //     const uploadedImages = Array.from(event.target.files).map((file) => ({
+  //       url: URL.createObjectURL(file),
+  //       file: file, // 파일 자체를 저장
+  //     }));
+  //     console.log(uploadedImages);
+  //     setImages([...images, ...uploadedImages]);
+  //   }
+  // };
+  const defaultImageUrl = '';
+  const { value: formValues } = await Swal.fire({
     title: '팀 생성하기',
     html: `
         <style>
@@ -61,7 +74,6 @@ export default async function TeamCreate() {
       const input3 = document.getElementById('swal-input3') as HTMLInputElement;
       const file =
         input3.files && input3.files.length > 0 ? input3.files[0] : null;
-
       if (!input1.value) {
         Swal.showValidationMessage('팀 이름은 필수값입니다.');
         return false;
@@ -79,7 +91,7 @@ export default async function TeamCreate() {
       }
 
       Swal.resetValidationMessage(); // 파일 형식이 유효하면 경고 메시지 제거
-      return [input1.value, input2.value, file || defaultImageUrl];
+      return [input1.value, input2.value, file || ''];
     },
     didOpen: () => {
       const inputElement = document.getElementById(
@@ -126,13 +138,35 @@ export default async function TeamCreate() {
   });
 
   if (formValues) {
-    Swal.fire({
-      title: `${formValues[0]} 팀이 생성되었습니다!`,
-      icon: 'success',
-      confirmButtonText: '확인',
-    });
-  } else if (isDismissed) {
-    // 취소 버튼 클릭이 감지되었을 때 실행
-    message.error('팀 생성이 취소되었습니다.');
+    const CreateTeam = async () => {
+      const formData = new FormData();
+      formData.append('teamName', formValues[0]);
+      formData.append('songName', formValues[1]);
+      formData.append('teamProfile', formValues[2]);
+      formData.forEach((value, key) => {
+        console.warn(`${key}: ${value}`);
+      });
+      const res = await postCreateTeam(formData);
+      // console.log(res);
+      if (res.success) {
+        Swal.fire({
+          title: `${formValues[0]} 팀이 생성되었습니다!`,
+          icon: 'success',
+          confirmButtonText: '확인',
+          // 확인 버튼 클릭 시 새로고침
+          willClose: () => {
+            location.reload();
+          },
+        });
+      } else {
+        Swal.fire({
+          title: '팀 생성에 실패했습니다.',
+          text: res.error.errorMessage,
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
+      }
+    };
+    CreateTeam();
   }
 }

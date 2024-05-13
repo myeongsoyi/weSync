@@ -83,7 +83,7 @@ export default function CardTeams() {
             textAlign: 'center',
             borderRadius: '10px',
             border: '3px solid #FFC500',
-            minHeight: '240px',
+            minHeight: '230px',
           }}
           className="flex justify-center text-center cursor-pointer"
           hoverable
@@ -111,12 +111,13 @@ export default function CardTeams() {
               title={team.teamName}
               hoverable
             >
-              <div className="flex mb-1">
-                <Image src="svgs/note.svg" width={15} height={15} alt="음표" className='w-auto h-auto' />
+              <div className="flex mb-2 justify-between">
+                <Image src="svgs/note.svg" width={16} height={16} alt="음표" className='h-auto' />
                 <p className="flex w-full">
-                  <span className="m-auto">{team.songName}</span>
+                  <span className="m-auto pr-4">{team.songName ?? '미정'}</span>
                 </p>
               </div>
+              {team.myPosition && (
               <p>
                 <Tag
                   style={{
@@ -129,11 +130,12 @@ export default function CardTeams() {
                   {team.myPosition}
                 </Tag>
               </p>
+              )}
               <Avatar
                 src={team.teamProfileUrl}
                 alt="팀"
                 size={80}
-                style={{ borderColor: '#FFC500' }}
+                style={{ borderColor: '#FFC500', marginBottom : '0.5rem' }}
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
