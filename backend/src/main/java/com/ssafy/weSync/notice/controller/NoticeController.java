@@ -1,4 +1,4 @@
-package com.ssafy.weSync.notice.controller;
+    package com.ssafy.weSync.notice.controller;
 
 import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.notice.dto.request.CreateRequest;
