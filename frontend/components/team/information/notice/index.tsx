@@ -1,7 +1,7 @@
 import styles from './index.module.scss';
 import { getTeamNotices } from '@/services/team';
 import NoticeList from './noticeList';
-import { Pagination, Tooltip } from 'antd';
+import { Pagination } from 'antd';
 import NoticeWrite from './noticeWrite/noticeWrite'; 
 
 interface IParams {
@@ -28,9 +28,7 @@ export default async function TeamNotices({teamId} :IParams) {
           pageSize={5}
           style={{ flex: 1, textAlign: 'center' }}
         />
-        <Tooltip placement="top" title={'글 작성하기'} arrow={true}>
           <NoticeWrite/>
-        </Tooltip>
       </div>
     </div>
   );

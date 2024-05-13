@@ -105,7 +105,7 @@ export default function CardTeams() {
         {data?.map((team, i) => (
           <div key={i} className={`${styles.cardContainer}`}>
             <Link
-              href={`/team/${team.id}/information`}
+              href={`/team/${team.teamId}/information`}
               // style={{ width: '32%' }}
               // className="even:bg-amber-100 odd:bg-amber-50"
             >

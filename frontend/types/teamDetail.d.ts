@@ -23,3 +23,30 @@ export interface CreateTeam {
     errorMessage: string;
   } | null;
 }
+
+export interface TeamDetail {
+  success: boolean;
+  data:
+    | {
+        finished: boolean;
+        teamId: number;
+        teamName: string;
+        songName: string;
+        teamProfileUrl: string;
+        activeTeams: {
+          teamId: number;
+          teamName: string;
+          songName: string;
+          teamProfileUrl: string;
+          songNameExist: boolean;
+        }[];
+        teamLeader: boolean;
+        songNameExist: boolean;
+      }
+    | null;
+  error: {
+    errorCode: string;
+    errorMessage: string;
+  } | null;
+}
+
