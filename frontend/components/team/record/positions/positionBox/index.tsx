@@ -19,7 +19,7 @@ export default function PositionBox({ teamId, position: initialPosition }: IPara
   const [savedVolume, setSavedVolume] = useState(30);
   const [position, setPosition] = useState<IRecord>(initialPosition);
   const [positionModalOpen, setPositionModalOpen] = useState(false);
-
+  console.log(teamId);
   const handlePositionSelect = (selectedPosition: IRecord) => {
     setPosition(selectedPosition);
     closePositionModal();
