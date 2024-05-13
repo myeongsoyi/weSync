@@ -42,8 +42,8 @@ export default function HomePage() {
           minHeight: '90px',
         }}
       >
-        <Link href="/welcome">
-          <Button type="primary">Welcome</Button>
+        <Link href="/welcome" className="flex flex-1">
+          <Button type="primary" >소개페이지</Button>
         </Link>
         <Link href="/" style={{ width: 'auto', height: 'auto' }}>
           <Image
@@ -76,6 +76,9 @@ export default function HomePage() {
               </p>
             </Button>
           </div>
+        </div>
+        <div className="flex flex-1 justify-end">
+          <LoginComponent />
         </div>
       </Header>
     </Layout>

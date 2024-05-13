@@ -1,3 +1,14 @@
+import APIModule from "@/utils/apiModule";
+// export async function getMainTeams() {
+//   const response = await APIModule({
+//     action: `/team/active`,
+//     method: "GET",
+//     data: null,
+//   });
+
+//   return response;
+// }
+
 export async function getMainTeams() {
   const teams = [
     {
