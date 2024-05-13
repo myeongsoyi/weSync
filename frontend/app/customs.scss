@@ -138,15 +138,18 @@
   }
 }
 
-.ant-dropdown-menu-root {
-  background-color: white !important;
-  border: 1px solid gray !important;
-}
+.recordmodal {
+  .ant-dropdown-menu-root {
+    background-color: white !important;
+    border: 1px solid gray !important;
+  }
 
-
-.ant-dropdown-menu-item {
-  cursor: default;
-  padding: 0px !important;
-  & :hover{ background-color: white;}
-  background-color: white;
+  .ant-dropdown-menu-item {
+    cursor: default;
+    padding: 0px !important;
+    & :hover {
+      background-color: white;
+    }
+    background-color: white;
+  }
 }

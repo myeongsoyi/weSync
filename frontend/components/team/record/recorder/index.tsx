@@ -140,8 +140,8 @@ export default function RecordAudioController() {
           )}
         </Button>
         <Dropdown
-          overlayClassName={styles.dropdownMenu}
-          menu={{ items }}
+          overlayClassName={`recordmodal ${styles.dropdownMenu}`}
+           menu={{ items }}
           trigger={['click']}
           placement="topLeft"
           disabled={recordings.length === 0}
