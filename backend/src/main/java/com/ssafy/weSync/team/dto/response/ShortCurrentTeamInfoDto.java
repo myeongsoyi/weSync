@@ -17,4 +17,5 @@ public class ShortCurrentTeamInfoDto {
     private String teamProfileUrl;
     private boolean isTeamLeader;
     private List<ShortActiveTeamInfoDto> activeTeams;
+    private boolean isFinished;
 }

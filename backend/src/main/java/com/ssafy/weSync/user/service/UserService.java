@@ -1,8 +1,6 @@
 package com.ssafy.weSync.user.service;
 
-import com.ssafy.weSync.global.ApiResponse.ErrorResponse;
-import com.ssafy.weSync.global.ApiResponse.Response;
-import com.ssafy.weSync.global.ApiResponse.ResponseFactory;
+import com.ssafy.weSync.global.ApiResponse.*;
 import com.ssafy.weSync.user.dto.LoginDto;
 import com.ssafy.weSync.user.entity.User;
 import com.ssafy.weSync.user.repository.UserRepository;
@@ -64,7 +62,7 @@ public class UserService {
         ResponseEntity<String> tokenResponse = restTemplate.postForEntity(tokenUrl, tokenRequest, String.class);
 
         if (tokenResponse.getStatusCode() != HttpStatus.OK){
-            return ResponseFactory.fail("에러(로그인, 회원가입): 카카오 api 오류가 발생했습니다");
+            throw new GlobalException(CustomError.KAKAO_API_ERROR);
         }
 
         String tokenResponseBody = tokenResponse.getBody();
@@ -124,14 +122,14 @@ public class UserService {
             Optional<User> user = userRepository.findByKakaoIdAndIsActiveTrue(kakaoId);
             System.out.println(user.isEmpty());
             if(user.isEmpty()){
-                return ResponseFactory.fail("에러(회원탈퇴): 존재하지 않는 회원입니다");
+                throw new GlobalException(CustomError.NO_USER);
             }
             user.get().setIsActive(false);
 
             return ResponseFactory.success(null);
 
         } else {
-            return ResponseFactory.fail("에러(회원탈퇴): 카카오 api 오류가 발생했습니다");
+            throw new GlobalException(CustomError.KAKAO_API_ERROR);
         }
     }
 
@@ -144,7 +142,7 @@ public class UserService {
             return ResponseFactory.success(null);
         }
         else{
-            return  ResponseFactory.fail("에러(로그아웃): 카카오 api 오류가 발생했습니다");
+            throw new GlobalException(CustomError.KAKAO_API_ERROR);
         }
     }
 
