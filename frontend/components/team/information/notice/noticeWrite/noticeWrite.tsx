@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { EditFilled } from '@ant-design/icons';
-import { Button, message } from 'antd';
+import { Button, Tooltip, message } from 'antd';
 import Swal from 'sweetalert2';
 
 export default function NoticeWrite() {
@@ -30,13 +30,15 @@ export default function NoticeWrite() {
   };
 
   return (
-    <div className="p-8">
-      <Button
-        onClick={handlePrompt}
-        type="text"
-        icon={<EditFilled style={{ fontSize: 24 }} />}
-        style={{ width: 48 }}
-      />
-    </div>
+    <Tooltip placement="top" title={'글 작성하기'} arrow={true}>
+      <div className="p-8">
+        <Button
+          onClick={handlePrompt}
+          type="text"
+          icon={<EditFilled style={{ fontSize: 24 }} />}
+          style={{ width: 48 }}
+        />
+      </div>
+    </Tooltip>
   );
 }

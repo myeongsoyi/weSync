@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Button, Avatar, Dropdown, message, Popover } from 'antd';
 import {
-  UserOutlined,
   SettingFilled,
   CaretDownOutlined,
 } from '@ant-design/icons';
@@ -15,28 +14,34 @@ import type { MenuProps } from 'antd';
 import styles from '@/components/team/information/members/memberList/index.module.scss';
 import LoginComponent from '@/components/common/login';
 import { usePathname } from 'next/navigation';
-import { getTeamInviteLink } from '@/services/team';
-
-interface Team {
-  id: number;
-  name: string;
-  song: string;
-}
-
-const teams: Team[] = [
-  { id: 1, name: 'Team1', song: 'Song1' },
-  { id: 2, name: 'Bellcanto', song: 'Song2' },
-  { id: 3, name: '안녕', song: 'Song3' },
-  { id: 4, name: 'a', song: 'Song4' },
-  { id: 5, name: 'Team5', song: 'Song5' },
-];
+import { getTeamInviteLink, getTeamDetail, deleteLeaveTeam, deleteRemoveTeam } from '@/services/team';
+import { TeamDetail } from '@/types/teamDetail';
 
 export default function TeamPage() {
-  const { Header } = Layout;
+  const [success, setSuccess] = useState<TeamDetail['success']>(true); // 성공 상태 변수
+  const [teamDetail, setTeamDetail] = useState<TeamDetail['data']>({} as TeamDetail['data']);
+  const [error, setError] = useState<TeamDetail['error']>(null); // 에러 상태 변수
+  const [isLeader, setIsLeader] = useState(false); // 팀장 여부
   const pathname = usePathname();
   const teamId = pathname.split('/')[2];
+  const { Header } = Layout;
   const [open, setOpen] = useState(false);
-  const [currentTeamId] = useState<number>(1); // 초기 팀 ID 설정
+
+  useEffect(() => {
+    const fetchTeamDetail = async () => {
+      const response = await getTeamDetail(teamId.toString());
+      if (response.success) {
+        setSuccess(response.success);
+        setTeamDetail(response.data);
+        setIsLeader(response.data.teamLeader);
+      } else {
+        setSuccess(response.success);
+        setError(response.error);
+      }
+      console.log(response);
+    };
+    fetchTeamDetail();
+  }, []);
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
@@ -53,10 +58,14 @@ export default function TeamPage() {
         cancelButtonColor: '#d33',
         confirmButtonText: '예 ',
         cancelButtonText: '아니오',
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          // 팀 떠나기 로직 처리
-          message.success('팀에서 나왔습니다.');
+          const response = await deleteLeaveTeam(teamId);
+          if (response.success) {
+            message.success('팀에서 나왔습니다.');
+          } else {
+            message.error(response.error.errorMessage);
+          }
         }
       });
     } else if (key === 'create-invite-link') {
@@ -101,12 +110,14 @@ ${response.data.url}</textarea>
         });
       }
     } else if (key === 'edit-team-info') {
-      const currentTeam = teams.find((t) => t.id === currentTeamId);
-      if (currentTeam) {
+      // const currentTeam = teamDetail?.activeTeams.find((t) => t.teamId.toString() === teamId);
+      if (teamDetail) {
         TeamModify(
-          currentTeam.name,
-          currentTeam.song,
-          'path/to/current-team-image.jpg',
+          teamId,
+          teamDetail.teamName,
+          teamDetail.songName,
+          teamDetail.teamProfileUrl,
+          teamDetail.finished,
         );
       }
     } else if (key === 'delete-team') {
@@ -135,10 +146,14 @@ ${response.data.url}</textarea>
         confirmButtonText: '삭제',
         cancelButtonText: '취소',
         reverseButtons: true,
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          // 팀 삭제 로직 처리
-          message.success('팀이 삭제되었습니다.')
+          const response = await deleteRemoveTeam(teamId);
+          if (response.success) {
+            message.success('팀이 삭제되었습니다.');
+          } else {
+            message.error(response.error.errorMessage);
+          }
         }
       });
     }
@@ -166,6 +181,11 @@ ${response.data.url}</textarea>
       ),
       key: 'set-position',
     },
+  ];
+
+  // 팀장일 때만 보이는 메뉴 아이템 추가
+if (isLeader) {
+  items.push(
     {
       label: (
         <p
@@ -203,24 +223,29 @@ ${response.data.url}</textarea>
       key: 'delete-team',
       style: { backgroundColor: '#d33', color: 'white' },
     },
-  ];
+  );
+}
 
   const content = (
     <div>
-      {teams.map((team, index) => (
-        <p key={index} className="flex mt-1 first:mt-0">
-          <Link className="m-auto" href={`/team/${team.id}/information`}>
+      {teamDetail?.activeTeams?.map((team, index) => (
+        <div key={index} className="flex mt-1 first:mt-0">
+          <Link className="m-auto" href={`/team/${team.teamId}/information`}>
             <div className="flex-col min-w-32">
               <p className="text-center  text-gray-800  text-sm font-semibold">
-                {team.name}
+                {team.teamName}
               </p>
-              <p className="text-center text-gray-400 text-xs">{team.song}</p>
+              <p className="text-center text-gray-400 text-xs">{team.songName}</p>
             </div>
           </Link>
-        </p>
+        </div>
       ))}
     </div>
   );
+
+  if (!success) {
+    return <div>{error?.errorMessage}</div>;
+  }
 
   return (
     <Layout style={{ backgroundColor: '#FFFFFF' }}>
@@ -264,17 +289,17 @@ ${response.data.url}</textarea>
             <div>
               <Avatar
                 size={55}
-                icon={<UserOutlined />}
+                src={teamDetail?.teamProfileUrl}
                 style={{ marginRight: '10px' }}
               />{' '}
               {/* 간격 추가 */}
             </div>
             <div className="flex-row">
               <p className="text-center text-4xl text-gray-700 font-bold w-40">
-                ACAROA
+                {teamDetail?.teamName ?? '팀 이름'}
               </p>
               <p className="text-center text-sm text-gray-500 font-bold w-40">
-                깊은 밤을 날아서
+                {teamDetail?.songName ?? '미정'}
               </p>
 
               <div
