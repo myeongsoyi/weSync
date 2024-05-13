@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor // final이나 @NonNull으로 선언된 필드만을 파라미터로 받는 생성자를 생성
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/notices")
 public class NoticeController {
@@ -31,6 +31,13 @@ public class NoticeController {
     public ResponseEntity<Response<List<GetAllResponse>>> getAllNotices(@PathVariable Long teamId){
         List<GetAllResponse> getAllResponses = noticeService.getAllNotices(teamId);
         Response<List<GetAllResponse>> response = new Response<>(true, getAllResponses, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{noticeId}/{teamUserId}")
+    public ResponseEntity<?> deleteNotice(@PathVariable Long noticeId, @PathVariable Long teamUserId) {
+        noticeService.deleteNotice(noticeId, teamUserId);
+        Response<?> response = new Response(true, null, null);
         return ResponseEntity.ok(response);
     }
 }
