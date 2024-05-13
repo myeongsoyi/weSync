@@ -13,7 +13,7 @@ async def upload_score(file: UploadFile = File(...)):
     if(file.content_type != "application/pdf"): # 지원하지 않는 파일 형식
         return CommonResponse(False, None, 400, f"{file.content_type.split('/')[1]} 파일 형식을 지원하지 않습니다.")
     
-    await recognition(file)
+    # await recognition(file)
     
     return CommonResponse(
         True,

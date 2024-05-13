@@ -1,9 +1,11 @@
-import mido
-from mido import MidiFile, MidiTrack, Message, MetaMessage
+from pydub import AudioSegment
+from pydub.generators import Sine
+from mido import  Message
 import scoreRecognition.Enums.note as note
 import scoreRecognition.Enums.tick as tick
+import scoreRecognition.Enums.frequency as frequency
 
-def word2midi(mid, track, words):
+def word2midi(mid, track, words, melody):
 
     time_since_last_event = 0
     velocity = 64
@@ -20,6 +22,14 @@ def word2midi(mid, track, words):
             track.append(Message('note_on', note=getattr(note.notes,note_type[0]).value, velocity=velocity, time=int(time_since_last_event)))
             track.append(Message('note_off', note=getattr(note.notes,note_type[0]).value, velocity=velocity, time=int(mid.ticks_per_beat*getattr(tick.ticks, dur).value)))
             time_since_last_event = 0
+            
+            tone = Sine(getattr(frequency.frequency,note_type[0]).value * 10).to_audio_segment(duration=int(mid.ticks_per_beat*getattr(tick.ticks, dur).value)).fade_in(10).fade_out(100)
+            melody = melody + tone
         if component_type[0] == 'rest':
             time_since_last_event += int(getattr(tick.ticks,component_type[1]).value)
-            print("rest =>",time_since_last_event)
+            
+            rest = AudioSegment.silent(duration=int(getattr(tick.ticks,component_type[1]).value))
+            melody = melody + rest
+        
+    return melody
+
