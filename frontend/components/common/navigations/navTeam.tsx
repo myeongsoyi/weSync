@@ -47,16 +47,16 @@ export default function TeamPage() {
       Swal.fire({
         title: '정말로 팀을 떠나시겠습니까?',
         icon: 'warning',
-        iconColor: 'red',
+        iconColor: '#d33',
         showCancelButton: true,
-        confirmButtonColor: 'red',
-        cancelButtonColor: 'grey',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
         confirmButtonText: '예 ',
         cancelButtonText: '아니오',
       }).then((result) => {
         if (result.isConfirmed) {
           // 팀 떠나기 로직 처리
-          message.success('Team left successfully.');
+          message.success('팀에서 나왔습니다.');
         }
       });
     } else if (key === 'create-invite-link') {
@@ -114,17 +114,17 @@ ${response.data.url}</textarea>
       Swal.fire({
         title: '정말로 팀을 삭제하시겠습니까?',
         icon: 'warning',
-        iconColor: 'red',
+        iconColor: '#d33',
         customClass: {
           popup: styles.borderRed,
         },
         input: 'text',
         inputLabel: '삭제된 정보는 복구되지 않습니다.',
-        inputPlaceholder: '삭제하겠습니다',
+        inputPlaceholder: '삭제하겠습니다.',
         inputValidator: (value) => {
           if (!value) {
-            return '"삭제하겠습니다"를 입력해주세요';
-          } else if (value !== '삭제하겠습니다') {
+            return '"삭제하겠습니다."를 입력해주세요';
+          } else if (value !== '삭제하겠습니다.') {
             return '입력값이 잘못되었습니다';
           }
           return null;
@@ -132,12 +132,13 @@ ${response.data.url}</textarea>
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: 'grey',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소',
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           // 팀 삭제 로직 처리
-          message.success('Team deleted successfully.');
+          message.success('팀이 삭제되었습니다.')
         }
       });
     }
@@ -200,7 +201,7 @@ ${response.data.url}</textarea>
         </p>
       ),
       key: 'delete-team',
-      style: { backgroundColor: 'red', color: 'white' },
+      style: { backgroundColor: '#d33', color: 'white' },
     },
   ];
 
@@ -249,7 +250,7 @@ ${response.data.url}</textarea>
               <Image
                 src={'/svgs/logo.svg'}
                 alt="로고"
-                width={130}
+                width={170}
                 height={100}
                 className="h-auto"
               />

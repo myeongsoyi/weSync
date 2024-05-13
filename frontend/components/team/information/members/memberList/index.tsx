@@ -24,11 +24,11 @@ export default function TeamMemberList({ members }: IParams) {
       const result = await Swal.fire({
         title: `${memberName}님을 \n정말로 강퇴하시겠습니까?`,
         icon: 'warning',
-        iconColor: 'red',
+        iconColor: '#d33',
         showDenyButton: true,
         confirmButtonText: '예',
         denyButtonText: '아니오',
-        confirmButtonColor: 'red',
+        confirmButtonColor: '#d33',
         denyButtonColor: 'grey',
         customClass: {
           popup: styles.borderRed
@@ -42,9 +42,9 @@ export default function TeamMemberList({ members }: IParams) {
             method: 'DELETE',
           });
           if (!response.ok) throw new Error('Network response was not ok.');
-          message.success('멤버가 강퇴되었습니다');
+          message.success('멤버가 강퇴되었습니다.');
         } catch (error) {
-          message.error('Failed to execute action.');
+          message.error('강퇴 실패. 관리자에게 문의하세요.');
         }
       }
     } else if (action === 'change_position') {

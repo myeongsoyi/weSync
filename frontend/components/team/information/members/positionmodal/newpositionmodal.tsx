@@ -7,16 +7,16 @@ interface Colors {
 }
 
 const colors: Colors = {
-  분홍: '#FFC0CB',
-  빨강: '#FF0000',
-  주황: '#FFA500',
-  연두: '#ADFF2F',
-  초록: '#008000',
-  하늘: '#87CEEB',
-  파랑: '#0000FF',
-  남색: '#000080',
-  보라: '#800080',
-  검은색: '#000000',
+  Pink: '#ff59e9',
+  Red: '#FF0000',
+  Orange: '#ff7700',
+  Brown: '#705400',
+  Green: '#007025',
+  Blue: '#0a5cff',
+  Navy: '#000080',
+  Purple: '#8c00ff',
+  Gray: '#878787',
+  Black: '#000000',
 };
 
 interface NewPositionModalProps {
@@ -41,7 +41,7 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
     }
   };
 
-  const [selectedColor, setSelectedColor] = useState<string>('분홍');
+  const [selectedColor, setSelectedColor] = useState<string>('Pink');
 
   const handleSubmit = async () => {
     if (!positionName.trim()) {
@@ -52,7 +52,7 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
     onSuccess(positionName, colors[selectedColor]);
     message.success('새 포지션 등록 성공');
     setPositionName('');
-    setSelectedColor('분홍');
+    setSelectedColor('Pink');
     onCancel();
   };
 
