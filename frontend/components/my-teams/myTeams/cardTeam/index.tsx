@@ -69,6 +69,7 @@ export default function CardTeams() {
   }, [width]); // 너비가 변경될 때마다 실행
 
   const router = useRouter();
+  console.log(router);
   if (!success) {
     // api 요청 실패 시
     return (
