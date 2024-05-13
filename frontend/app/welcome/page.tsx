@@ -30,6 +30,7 @@ export default async function welcome() {
                   alt="로고"
                   width={1000}
                   height={1000}
+                  className='h-auto'
                 />
               </Link>
             </div>

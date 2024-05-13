@@ -9,3 +9,11 @@ export async function getLogout() {
   
     return response;
   }
+
+export async function deleteUser() {
+  const response = await APIModule({
+    action: "/users",
+    method: "DELETE",
+    data: null,
+  });
+}

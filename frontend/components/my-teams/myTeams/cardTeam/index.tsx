@@ -10,27 +10,8 @@ import { Avatar, Badge, Card, Tag, Tooltip } from 'antd';
 import { Group } from 'antd/es/avatar';
 import Image from 'next/image';
 import Link from 'next/link';
-
-interface IParams {
-  teams: {
-    id: number;
-    name: string;
-    song: string;
-    isEnd: boolean;
-    endDate: string;
-    myPosition: {
-      position: string;
-      color: string;
-    };
-    teamImg: string;
-    members: {
-      id: number;
-      name: string;
-      profileImg: string;
-      isLeader: boolean;
-    }[];
-  }[];
-}
+import { MyTotalTeams } from '@/types/myTeams';
+import { getMyTeams } from '@/services/my-teams';
 
 function useViewportWidth() {
   const [width, setWidth] = useState(0); // 초기 너비 설정
@@ -55,10 +36,23 @@ function useViewportWidth() {
   return width;
 }
 
-export default function CardTeams({ teams }: IParams) {
+export default function CardTeams() {
   const [memNum, setMemNum] = useState(5); // 너비에 따른 멤버 수 상태 변수
+  const [success, setSuccess] = useState<MyTotalTeams["success"]>(true); // 성공 상태 변수
+  const [data, setData] = useState<MyTotalTeams["data"]>([]); // 데이터 상태 변수
+  const [error, setError] = useState<MyTotalTeams["error"]>(null); // 에러 상태 변수
   const width = useViewportWidth(); // 너비 상태 변수
   //   const teams = await getMainTeams();
+
+  useEffect(() => {
+    const fetchMainTeams = async () => {
+      const teams = await getMyTeams();
+    setSuccess(teams.success); // 성공 상태 변수 업데이트
+    setData(teams.data); // 데이터 상태 변수 업데이트
+    setError(teams.error); // 에러 상태 변수 업데이트
+    }
+    fetchMainTeams();
+  }, []);
 
   useEffect(() => {
     if (width < 920) {
@@ -74,23 +68,10 @@ export default function CardTeams({ teams }: IParams) {
   }, [width]); // 너비가 변경될 때마다 실행
 
   const router = useRouter();
-  // console.log(teams);
-  // const teams: {
-  //     id: number;
-  //     name: string;
-  //     song: string;
-  //     myPosition: {
-  //         position: string;
-  //         color: string;
-  //     };
-  //     teamImg: string;
-  //     members: {
-  //         id: number;
-  //         name: string;
-  //         profileImg: string;
-  //     }[];
-  // }[]
-
+  if (!success) {
+    // api 요청 실패 시
+    return <div><p>{error?.errorMessage}</p></div>;
+  }
   return (
     <>
       <div className="grid grid-cols-3 gap-4 mt-4">
@@ -102,6 +83,7 @@ export default function CardTeams({ teams }: IParams) {
             borderRadius: '10px',
             border: '3px solid #FFC500',
             // marginTop: '16px',
+            minHeight: '240px',
           }}
           className="flex justify-center items-center cursor-pointer"
           hoverable
@@ -112,17 +94,17 @@ export default function CardTeams({ teams }: IParams) {
             <PlusCircleOutlined style={{ fontSize: '100px', color: 'gold' }} />
           </div>
         </Card>
-        {teams.map((team, i) => (
+        {data?.map((team, i) => (
           <div key={i} className={`${styles.cardContainer}`}>
             <Link
               href={`/team/${team.id}`}
               // style={{ width: '32%' }}
               // className="even:bg-amber-100 odd:bg-amber-50"
             >
-              {team.isEnd && (
+              {team.isFinished && (
                 <div className={styles.isEndOverlay}>
                   <h1>완료</h1>
-                  <h3>{team.endDate}</h3>
+                  <h3>{team.createdAt}</h3>
                 </div>
               )}
               <Card
@@ -135,7 +117,7 @@ export default function CardTeams({ teams }: IParams) {
                   border: '3px solid #FFC500',
                   backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)': 'white'}`,
                 }}
-                title={team.name + 'asdsadasdsadasdas'}
+                title={team.teamName}
                 hoverable
                 className={`${i % 2 === 0 ? 'bg-amber-100' : 'bg-amber-50'} ${styles.card}`}
               >
@@ -147,33 +129,33 @@ export default function CardTeams({ teams }: IParams) {
                     alt="음표"
                   />
                   <p className="flex w-full">
-                    <span className="m-auto">{team.song}</span>
+                    <span className="m-auto">{team.songName}</span>
                   </p>
                 </div>
                 <p>
                   <Tag
                     style={{
-                      border: `1px solid ${team.myPosition.color}`,
-                      color: `${team.myPosition.color}`,
+                      border: `1px solid #${team.positionCode}`,
+                      color: `#${team.positionCode}`,
                       margin: '0.75rem 0',
                     }}
                     bordered={false}
                   >
-                    {team.myPosition.position}
+                    {team.myPosition}
                   </Tag>
                 </p>
                 <Avatar
-                  src={team.teamImg}
+                  src={team.teamProfileUrl}
                   alt="팀"
                   size={80}
                   style={{ borderColor: '#FFC500' }}
                 />
                 <div className="flex mt-4 justify-center gap-1">
                   <Group>
-                    {team.members.slice(0, memNum).map((member, i) => (
+                    {team.member.slice(0, memNum).map((member, i) => (
                       <Badge
                         count={
-                          member.isLeader ? (
+                          member.leader ? (
                             <CrownFilled
                               style={{ color: 'orange', fontSize: '24px' }}
                             />
@@ -186,21 +168,21 @@ export default function CardTeams({ teams }: IParams) {
                       >
                         <Tooltip
                           placement="top"
-                          title={member.name}
+                          title={member.nickName}
                           arrow={true}
                         >
                           <Avatar
-                            src={member.profileImg}
-                            alt={member.name}
+                            src={member.userProfileUrl}
+                            alt={member.nickName}
                             size={36}
                             style={{ borderColor: '#FFC500' }}
                           ></Avatar>
                         </Tooltip>
                       </Badge>
                     ))}
-                    {team.members.length > memNum && (
+                    {team.member.length > memNum && (
                       <Avatar size={36} style={{ borderColor: '#FFC500' }}>
-                        +{team.members.length - memNum}
+                        +{team.member.length - memNum}
                       </Avatar>
                     )}
                   </Group>

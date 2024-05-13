@@ -1,27 +1,9 @@
-import { getMyTeams } from '@/services/my-teams';
 import CardTeams from './cardTeam';
 import styles from './index.module.scss';
 import Link from 'next/link';
 
 
 export default async function MainTeams() {
-  const teams = await getMyTeams();
-
-  // const teams: {
-  //     id: number;
-  //     name: string;
-  //     song: string;
-  //     myPosition: {
-  //         position: string;
-  //         color: string;
-  //     };
-  //     teamImg: string;
-  //     members: {
-  //         id: number;
-  //         name: string;
-  //         profileImg: string;
-  //     }[];
-  // }[]
 
   return (
     <div className={styles.outer}>
@@ -30,7 +12,7 @@ export default async function MainTeams() {
         <h1 className="font-extrabold pl-3 ">ALL TEAMS</h1>
         </Link>
       </div>
-      <CardTeams teams={teams} />
+      <CardTeams />
     </div>
   );
 }
