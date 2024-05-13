@@ -1,5 +1,5 @@
 import styles from './index.module.scss';
-import { getMainTeams } from '@/services/home';
+import { getMainTeams1 } from '@/services/home';
 import MemberList from './memberList'
 
 interface IParams {
@@ -8,7 +8,7 @@ interface IParams {
 
 export default async function TeamMembers({teamId} :IParams) {
 
-    const teams = await getMainTeams();
+    const teams = await getMainTeams1();
     const team = teams.filter((team: any) => team.id.toString() === teamId);
     const members = team[0].members;
 

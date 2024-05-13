@@ -13,7 +13,7 @@ export default async function MainTeams() {
         <PlusOutlined style={{ fontSize: '20px', fontWeight: 500, paddingLeft: '6px'}} />
         </Link>
       </div>
-      <h2 className='pl-3 text-orange-400'>ONGOING</h2>
+      <h2 className='pl-3 text-orange-400'>ON GOING</h2>
       <CardTeams />
     </div>
   );
