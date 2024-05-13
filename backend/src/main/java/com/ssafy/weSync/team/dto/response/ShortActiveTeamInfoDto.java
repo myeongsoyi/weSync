@@ -13,4 +13,5 @@ public class ShortActiveTeamInfoDto {
     private boolean isSongNameExist;
     private String songName;
     private String teamProfileUrl;
+    private boolean isFinished;
 }
