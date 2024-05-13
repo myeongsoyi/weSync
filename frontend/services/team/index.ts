@@ -15,10 +15,10 @@ import { getAccessToken } from "@/utils/getAccessToken";
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const postCreateTeam = async (formData: FormData) => {
-  console.log("formData API", formData);
-  formData.forEach((value, key) => {
-    console.warn(`${key}: ${value}`);
-  });
+  // console.log("formData API", formData);
+  // formData.forEach((value, key) => {
+  //   console.warn(`${key}: ${value}`);
+  // });
   try {
     const accessToken = await getAccessToken();
     const res = await fetch(`${baseURL}/team`, {
@@ -53,6 +53,53 @@ export async function getTeamInviteLink(teamId: string) {
   return response;
 }
 
+export async function getTeamDetail(teamId: string) {
+  const query = `teamId=${teamId}`;
+  const response = await APIModule({
+    action: `/team/info?${query}`,
+    method: 'GET',
+    data: null,
+  });
+
+  return response;
+}
+
+export async function deleteRemoveTeam(teamId: string) {
+  const response = await APIModule({
+    action: `/team/remove/${teamId}`,
+    method: 'DELETE',
+    data: null,
+  });
+
+  return response;
+}
+
+export async function deleteLeaveTeam(teamId: string) {
+  const response = await APIModule({
+    action: `/team/leave/${teamId}`,
+    method: 'DELETE',
+    data: null,
+  });
+
+  return response;
+}
+
+export async function putTeamInfo(teamId: string, teamName: string, songName: string, isFinished: boolean, teamProfile?: File) {
+  const formData = new FormData();
+  formData.append('teamName', teamName);
+  formData.append('songName', songName);
+  formData.append('isFinished', isFinished.toString());
+  if (teamProfile) {
+    formData.append('teamProfile', teamProfile);
+  }
+  const response = await APIModule({
+    action: `/team/${teamId}`,
+    method: 'PUT',
+    data: formData,
+  });
+
+  return response;
+}
 
 export async function getTeamNotices(teamId: string) {
   const notices = [

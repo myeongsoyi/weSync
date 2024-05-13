@@ -1,6 +1,9 @@
-import Swal from 'sweetalert2';
+'use client';
 
+import Swal from 'sweetalert2';
+import { putTeamInfo } from '@/services/team';
 export default async function TeamModify(
+  teamId = '',
   teamName = '',
   teamSong = '',
   teamImage = '',
@@ -93,7 +96,7 @@ export default async function TeamModify(
     <input id="swal-input2" class="swal2-input" type="text" placeholder="곡명을 입력하세요" value="${teamSong}">
     <input id="swal-input3" class="file-input" type="file" accept="image/*">
     <label for="swal-input3" class="file-input-label">프로필 사진 변경</label>
-    <img id="image-preview" class="image-preview" src="${teamImage}" alt="이미지 미리보기">
+    <img id="image-preview" class="image-preview" src="${teamImage}" alt="이미지 미리보기" ></img>
     <span id="file-name" class="file-name">${teamImage ? teamImage.split('/').pop() : '선택된 파일 없음'}</span>
     <div style="font-size: 12px; color: #555; margin-top: 8px;">프로필 이미지는 JPG 또는 PNG 파일만 등록 가능합니다.</div>
     <label class="toggle-switch">
@@ -123,8 +126,9 @@ export default async function TeamModify(
       return {
         teamName: input1.value,
         teamSong: input2.value,
-        teamImage: file || teamImage,
-        practiceCompleted: practiceCompleted.checked,
+        // teamImage: file || teamImage,
+        isFinished: practiceCompleted.checked,
+        teamProfile: file || null,
       };
     },
     didOpen: () => {
@@ -159,10 +163,28 @@ export default async function TeamModify(
   });
 
   if (formValues) {
-    Swal.fire({
-      title: `팀 정보가 수정되었습니다!`,
-      icon: 'success',
-      confirmButtonText: '확인',
-    });
+    const { teamName, teamSong, isFinished, teamProfile } = formValues;
+    const response = await putTeamInfo(
+      teamId,
+      teamName,
+      teamSong,
+      isFinished,
+      teamProfile,
+    );
+    if (!response.success) {
+      Swal.fire({
+        title: '팀 정보 수정 실패',
+        text: response.error.errorMessage,
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
+      return;
+    } else {
+      Swal.fire({
+        title: `팀 정보가 수정되었습니다!`,
+        icon: 'success',
+        confirmButtonText: '확인',
+      });
+    }
   }
 }

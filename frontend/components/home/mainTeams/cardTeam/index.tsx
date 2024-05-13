@@ -97,7 +97,7 @@ export default function CardTeams() {
           </div>
         </Card>
         {data?.map((team, i) => (
-          <Link href={`/team/${team.id}/information`} key={i}>
+          <Link href={`/team/${team.teamId}/information`} key={i}>
             <Card
               style={{
                 //   width: '32%',
