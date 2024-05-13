@@ -38,7 +38,7 @@ public class Record {
     private Status status;
 
     @Column(name = "start_at")
-    private String startAt;
+    private Long startAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "score_id")
