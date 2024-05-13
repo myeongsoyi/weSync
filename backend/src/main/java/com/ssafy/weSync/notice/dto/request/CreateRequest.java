@@ -3,10 +3,11 @@ package com.ssafy.weSync.notice.dto.request;
 import com.ssafy.weSync.notice.entity.Notice;
 import com.ssafy.weSync.team.entity.Team;
 import com.ssafy.weSync.team.entity.TeamUser;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CreateRequest {
     private String content;
