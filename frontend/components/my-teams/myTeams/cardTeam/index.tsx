@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 import { useRouter } from 'next/navigation';
+import TeamCreate from '../../../team/information/teaminfomodal/createmodal';
 // import { getMainTeams } from '@/services/home/mainTeams';
 import { CrownFilled, PlusCircleOutlined } from '@ant-design/icons';
 // import styles from './index.module.scss';
@@ -38,19 +39,19 @@ function useViewportWidth() {
 
 export default function CardTeams() {
   const [memNum, setMemNum] = useState(5); // 너비에 따른 멤버 수 상태 변수
-  const [success, setSuccess] = useState<MyTotalTeams["success"]>(true); // 성공 상태 변수
-  const [data, setData] = useState<MyTotalTeams["data"]>([]); // 데이터 상태 변수
-  const [error, setError] = useState<MyTotalTeams["error"]>(null); // 에러 상태 변수
+  const [success, setSuccess] = useState<MyTotalTeams['success']>(true); // 성공 상태 변수
+  const [data, setData] = useState<MyTotalTeams['data']>([]); // 데이터 상태 변수
+  const [error, setError] = useState<MyTotalTeams['error']>(null); // 에러 상태 변수
   const width = useViewportWidth(); // 너비 상태 변수
   //   const teams = await getMainTeams();
 
   useEffect(() => {
     const fetchMainTeams = async () => {
       const teams = await getMyTeams();
-    setSuccess(teams.success); // 성공 상태 변수 업데이트
-    setData(teams.data); // 데이터 상태 변수 업데이트
-    setError(teams.error); // 에러 상태 변수 업데이트
-    }
+      setSuccess(teams.success); // 성공 상태 변수 업데이트
+      setData(teams.data); // 데이터 상태 변수 업데이트
+      setError(teams.error); // 에러 상태 변수 업데이트
+    };
     fetchMainTeams();
   }, []);
 
@@ -58,9 +59,9 @@ export default function CardTeams() {
     if (width < 920) {
       // 너비가 920px 미만일 때
       setMemNum(4); // 멤버 수를 4명으로 설정
-    // } else if (width < 840) {
-    //   // 너비가 840px 미만일 때
-    //   setMemNum(4); // 멤버 수를 4명으로 설정
+      // } else if (width < 840) {
+      //   // 너비가 840px 미만일 때
+      //   setMemNum(4); // 멤버 수를 4명으로 설정
     } else {
       // 일반 데스크탑 화면일 때
       setMemNum(5); // 멤버 수를 5명으로 설정
@@ -70,7 +71,11 @@ export default function CardTeams() {
   const router = useRouter();
   if (!success) {
     // api 요청 실패 시
-    return <div><p>{error?.errorMessage}</p></div>;
+    return (
+      <div>
+        <p>{error?.errorMessage}</p>
+      </div>
+    );
   }
   return (
     <>
@@ -87,7 +92,9 @@ export default function CardTeams() {
           }}
           className="flex justify-center items-center cursor-pointer"
           hoverable
-          onClick={() => router.push('/create')}
+          onClick={() => {
+            TeamCreate();
+          }}
         >
           <div className="flex flex-col justify-center items-center pb-2">
             <h1 className="mb-4 text-amber-400">CREATE</h1>
@@ -115,7 +122,7 @@ export default function CardTeams() {
                   textAlign: 'center',
                   borderRadius: '10px',
                   border: '3px solid #FFC500',
-                  backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)': 'white'}`,
+                  backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)' : 'white'}`,
                 }}
                 title={team.teamName}
                 hoverable

@@ -1,4 +1,3 @@
-
 // sweet alert
 .swal-confirm-button {
   margin: auto 10px;
@@ -69,7 +68,8 @@
   padding: 0 16px !important;
 }
 
-.ant-tag, .ant-tag-borderless {
+.ant-tag,
+.ant-tag-borderless {
   background-color: white !important;
 }
 
@@ -79,8 +79,6 @@
 //     padding: 5px !important;
 //   }
 // }
-
-
 
 // .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
 //   color: red!important; /* 이 부분을 원하는 색상 코드로 변경 */
@@ -101,44 +99,57 @@
     color: $color-orange;
     font-size: rem(23);
     font-weight: bold; // 활성 탭의 글자를 굵게
-    
   }
 
   // 활성 탭에 대한 추가 스타일
   .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
     font-weight: bold; // 활성 탭의 글자를 굵게
     font-size: rem(30); // 활성 탭의 글자 크기
-    color: $color-orange !important;// 활성 탭의 글자 색상 (필요한 경우 여기서 조정)
+    color: $color-orange !important; // 활성 탭의 글자 색상 (필요한 경우 여기서 조정)
   }
-  
 
   .ant-tabs-nav-wrap {
     width: 100% !important;
   }
-  
+
   .ant-tabs-nav-list {
     width: 100% !important;
-  
   }
-  
+
   /* 탭 너비 설정 */
   .ant-tabs-tab {
-    flex: 1 1 0%!important; /* 각 탭이 동일한 너비를 가지도록 설정 */
+    flex: 1 1 0% !important; /* 각 탭이 동일한 너비를 가지도록 설정 */
     height: rem(55) !important; /* 탭 높이 설정 */
-    padding: 0 !important
+    padding: 0 !important;
   }
-  
+
   .ant-tabs-tab-btn {
     margin: auto !important; /* 탭 내용을 수평 중앙 정렬 */
   }
-  
+
   .ant-tabs-nav-operations {
     display: none !important; /* 탭 우측의 추가 버튼 숨김 */
   }
-  
+
   /* 활성 탭 표시기의 색상 변경 */
   .ant-tabs-ink-bar {
     background-color: $color-orange !important; /* 여기서 색상을 원하는 색상으로 설정하세요 */
     height: rem(4) !important; /* 높이 설정 */
+  }
+}
+
+.recordmodal {
+  .ant-dropdown-menu-root {
+    background-color: white !important;
+    border: 1px solid gray !important;
+  }
+
+  .ant-dropdown-menu-item {
+    cursor: default;
+    padding: 0px !important;
+    & :hover {
+      background-color: white;
+    }
+    background-color: white;
   }
 }
