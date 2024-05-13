@@ -13,4 +13,6 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
     Optional<TeamUser> findByTeamUserId(Long teamUserId);
     List<TeamUser> findByUser(User user);
     List<TeamUser> findByUserOrderByCreatedAtDesc(User user);
+
+    Optional<TeamUser> findByUserUserIdAndTeamTeamId(Long userId, Long teamId);
 }
