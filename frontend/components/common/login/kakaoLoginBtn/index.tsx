@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './index.module.scss';
+// import styles from './index.module.scss';
 import Image from 'next/image';
+import Link from 'next/link';
 
 declare global {
   interface Window {
@@ -17,8 +17,6 @@ declare global {
 
 export default function KakaoLoginBtn() {
   const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_JS_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}&response_type=code`;
-
-  const router = useRouter();
 
   useEffect(() => {
     const kakaoSDK = document.createElement('script');
@@ -38,16 +36,20 @@ export default function KakaoLoginBtn() {
   }, []);
 
   return (
-    <button
-      className={`${styles.kakao}`}
-      onClick={() => router.push(`${KAKAO_AUTH_URI}`)}
+    <div className="w-fit m-auto">
+    <Link
+      className='p-4 w-auto'
+      href={`${KAKAO_AUTH_URI}`}
+      prefetch={false}
     >
       <Image
+      className='p-1 h-auto'
         src={'/svgs/kakao.png'}
         alt="카톡로그인"
-        width={150}
+        width={180}
         height={100}
       />
-    </button>
+    </Link>
+    </div>
   );
 }
