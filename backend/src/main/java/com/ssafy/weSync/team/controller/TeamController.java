@@ -102,4 +102,16 @@ public class TeamController {
         return teamService.teamUserPositionMapping(teamUserPositionDto);
     }
 
+    //팀 삭제
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<Response<TeamIdDto>> deleteTeam(@PathVariable Long id) {
+        return teamService.deleteTeam(id);
+    }
+
+    //팀 나가기
+    @DeleteMapping("/leave/{id}")
+    public ResponseEntity<Response<TeamIdDto>> leaveTeam(@PathVariable Long id) {
+        return teamService.leaveTeam(id);
+    }
+
 }

@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LongTeamInfoDto {
+    private Long teamId;
     private String teamName;
     private boolean isSongNameExist;
     private String songName;
