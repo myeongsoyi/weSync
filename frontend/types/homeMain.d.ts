@@ -2,7 +2,7 @@ export interface MainActiveTeams {
     success: boolean;
     data:
       | {
-          id: number;
+          teamId: number;
           teamName: string;
           songName: string;
           myPosition: string;
