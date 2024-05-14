@@ -19,9 +19,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j // log
-@Transactional
 @Service
+@RequiredArgsConstructor
+@Transactional
+@Slf4j // log
 public class S3Service {
 
     /**
@@ -32,10 +33,10 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public S3Service(AmazonS3Client amazonS3Client, @Value("${cloud.aws.s3.bucket}") String bucket) {
-        this.amazonS3Client = amazonS3Client;
-        this.bucket = bucket;
-    }
+//    public S3Service(AmazonS3Client amazonS3Client, @Value("${cloud.aws.s3.bucket}") String bucket) {
+//        this.amazonS3Client = amazonS3Client;
+//        this.bucket = bucket;
+//    }
 
     /**
      * MultipartFile을 전달받아 File로 전환한 후 S3에 업로드
