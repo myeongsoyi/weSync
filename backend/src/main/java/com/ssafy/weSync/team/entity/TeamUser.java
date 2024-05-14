@@ -36,13 +36,12 @@ public class TeamUser extends BaseTime {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToOne()
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
 
-    @OneToMany(mappedBy = "team_user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Column(name = "record")
-    private List<Record> records = new ArrayList<>();
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Record> records;
 
     @Column(name = "is_banned")
     private Boolean isBanned;
