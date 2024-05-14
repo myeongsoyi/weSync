@@ -1,0 +1,77 @@
+// navMain.module.scss
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FFFFFF !important; /* 상단 바 배경 색을 흰색으로 강제 설정 */
+  height: 12vh;
+  min-height: 90px;
+  padding: 0 20px; /* 좌우 여백 추가 */
+}
+
+.leftSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 왼쪽 끝에 위치하도록 설정 */
+}
+
+.centerSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rightSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.introLink {
+  color: rgb(140, 140, 140);
+  text-decoration: none;
+  font-size: 20px; /* 글자 크기를 키움 */
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+
+  &:hover .icon {
+    animation: fadeMove 1.5s infinite; /* 애니메이션 속도를 느리게 조정 */
+  }
+
+  &:hover {
+    color: rgb(65, 65, 65);
+  }
+}
+
+.icon {
+  font-size: 20px; /* 아이콘 크기를 키움 */
+  padding-right: 5px;
+}
+
+@keyframes fadeMove {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-3px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-5px);
+  }
+}
+
+.logo {
+  width: 200px; /* 로고 이미지의 너비와 높이를 지정 */
+  height: 100px;
+  object-fit: contain; /* 이미지가 링크 크기에 맞게 조정되도록 설정 */
+  display: block; /* 이미지 링크를 블록 요소로 설정 */
+  margin: 0 auto; /* 중앙 정렬을 위한 여백 설정 */
+}
