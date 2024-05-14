@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN apt-get -y install libgl1-mesa-glx
 
-RUN wget https://github.com/musescore/MuseScore/releases/download/v4.3.0/MuseScore-Studio-4.3.0.241231431-x86_64.AppImage -O /wesync/musescore.appimage && \
-    chmod +x /wesync/musescore.appimage
+RUN wget https://github.com/musescore/MuseScore/releases/download/v4.3.0/MuseScore-Studio-4.3.0.241231431-x86_64.AppImage -O /usr/bin/musescore.appimage && \
+    chmod +x /usr/bin/musescore.appimage
 
 
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
