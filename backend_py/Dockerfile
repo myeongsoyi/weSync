@@ -15,8 +15,6 @@ RUN wget https://github.com/musescore/MuseScore/releases/download/v4.3.0/MuseSco
 
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
 
-RUN apt-get install -y fuse
-
 COPY ./app/ /wesync/app/
 COPY ./scoreRecognition/ /wesync/scoreRecognition/
 
