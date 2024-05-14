@@ -1,7 +1,7 @@
 'use client';
 
 import Swal from 'sweetalert2';
-import { putTeamInfo } from '@/services/team';
+import { patchTeamInfo } from '@/services/team';
 
 export default async function TeamModify(
   teamId = '',
@@ -165,7 +165,7 @@ export default async function TeamModify(
   if (formValues) {
     const { teamName, teamSong, isFinished, teamProfile } = formValues;
     // console.log(teamId, teamName, teamSong, isFinished, teamProfile);
-    const response = await putTeamInfo(
+    const response = await patchTeamInfo(
       teamId,
       teamName,
       teamSong,

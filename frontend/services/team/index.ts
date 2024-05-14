@@ -15,16 +15,16 @@ import { getAccessToken } from "@/utils/getAccessToken";
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const postCreateTeam = async (formData: FormData) => {
-  // console.log("formData API", formData);
-  // formData.forEach((value, key) => {
-  //   console.warn(`${key}: ${value}`);
-  // });
+  console.log("formData API", formData);
+  formData.forEach((value, key) => {
+    console.warn(`${key}: ${value}`);
+  });
   try {
     const accessToken = await getAccessToken();
     const res = await fetch(`${baseURL}/team`, {
       method: "POST",
       headers: {
-        "content-type": "multipart/form-data", 
+        // "content-type": "multipart/form-data", 
         Authorization: accessToken ?? "",
       },
       body: formData,
@@ -46,6 +46,16 @@ export const postCreateTeam = async (formData: FormData) => {
 export async function getTeamInviteLink(teamId: string) {
   const response = await APIModule({
     action: `/team/${teamId}`,
+    method: 'GET',
+    data: null,
+  });
+
+  return response;
+}
+
+export async function getTeamInviteAccept(code: string) {
+  const response = await APIModule({
+    action: `/team/invite/${code}`,
     method: 'GET',
     data: null,
   });
@@ -84,7 +94,7 @@ export async function deleteLeaveTeam(teamId: string) {
   return response;
 }
 
-export async function putTeamInfo(teamId: string, teamName: string, songName: string, isFinished: boolean, teamProfile?: File) {
+export async function patchTeamInfo(teamId: string, teamName: string, songName: string, isFinished: boolean, teamProfile?: File) {
   const formData = new FormData();
   formData.append('teamName', teamName);
   formData.append('songName', songName);
@@ -92,14 +102,14 @@ export async function putTeamInfo(teamId: string, teamName: string, songName: st
   if (teamProfile) {
     formData.append('teamProfile', teamProfile);
   }
-  formData.forEach((value, key) => {
-    console.warn(`${key}: ${value}`);
-  });
+  // formData.forEach((value, key) => {
+  //   console.warn(`${key}: ${value}`);
+  // });
 
   try {
     const accessToken = await getAccessToken();
-    const res = await fetch(`${baseURL}/team`, {
-      method: "POST",
+    const res = await fetch(`${baseURL}/team/${teamId}`, {
+      method: "PATCH",
       headers: {
         // "content-type": "multipart/form-data", 
         Authorization: accessToken ?? "",

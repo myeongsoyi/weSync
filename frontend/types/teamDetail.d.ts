@@ -50,3 +50,20 @@ export interface TeamDetail {
   } | null;
 }
 
+export interface TeamMembers {
+  success: boolean;
+  data: {
+    teamUserId: number;
+    nickName: string;
+    userProfileUrl: string;
+    positionName: string;
+    colorName: string;
+    colorCode: string;
+    leader: boolean;
+    positionExist: boolean;
+  }[];
+  error: {
+    errorCode: string;
+    errorMessage: string;
+  } | null;
+}
