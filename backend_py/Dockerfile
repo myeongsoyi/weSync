@@ -17,6 +17,8 @@ RUN wget https://github.com/musescore/MuseScore/releases/download/v4.3.0/MuseSco
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
 
 RUN apt-get install -y fuse
+RUN apt-get update && apt-get install -y fuse
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libfuse.so.2
 
 COPY ./app/ /wesync/app/
 COPY ./scoreRecognition/ /wesync/scoreRecognition/
