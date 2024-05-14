@@ -15,8 +15,8 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@NoArgsConstructor // 파라미터가 없는 디폴트 생성자를 생성
-@AllArgsConstructor // 모든 필드 값을 파라미터로 받는 생성자를 생성
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
 @SQLDelete(sql = "UPDATE notice SET is_deleted = true WHERE notice_id=?")
 @Where(clause = "is_deleted = false")

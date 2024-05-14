@@ -10,6 +10,7 @@ import com.ssafy.weSync.team.repository.*;
 import com.ssafy.weSync.s3.service.S3Service;
 import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -19,14 +20,17 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class TeamService {
+
+    private final S3Service s3Service;
 
     private final TeamRepository teamRepository;
     private final InvitationRepository invitationRepository;
     private final TeamUserRepository teamUserRepository;
     private final AmazonS3Client amazonS3Client;
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final ColorRepository colorRepository;
     private final PositionRepository positionRepository;
     private final ScoreRepository scoreRepository;
@@ -41,17 +45,17 @@ public class TeamService {
 
     private static final String defaultProfileUrl = "https://we-sync.s3.ap-southeast-2.amazonaws.com/teamProfile/efc7da8d-f082-305e-9775-70509e96f33c%202024-05-13%2015%3A05%3A53.jpg"; //추후 변경
 
-    public TeamService(TeamRepository teamRepository, InvitationRepository invitationRepository, TeamUserRepository teamUserRepository, AmazonS3Client amazonS3Client, UserRepository userRepository, ColorRepository colorRepository, PositionRepository positionRepository, ScoreRepository scoreRepository, AccessTokenValidationAspect accessTokenValidationAspect) {
-        this.teamRepository = teamRepository;
-        this.invitationRepository = invitationRepository;
-        this.teamUserRepository = teamUserRepository;
-        this.amazonS3Client = amazonS3Client;
-        this.userRepository = userRepository;
-        this.colorRepository = colorRepository;
-        this.positionRepository = positionRepository;
-        this.scoreRepository = scoreRepository;
-        this.accessTokenValidationAspect = accessTokenValidationAspect;
-    }
+//    public TeamService(TeamRepository teamRepository, InvitationRepository invitationRepository, TeamUserRepository teamUserRepository, AmazonS3Client amazonS3Client, UserRepository userRepository, ColorRepository colorRepository, PositionRepository positionRepository, ScoreRepository scoreRepository, AccessTokenValidationAspect accessTokenValidationAspect) {
+//        this.teamRepository = teamRepository;
+//        this.invitationRepository = invitationRepository;
+//        this.teamUserRepository = teamUserRepository;
+//        this.amazonS3Client = amazonS3Client;
+//        this.userRepository = userRepository;
+//        this.colorRepository = colorRepository;
+//        this.positionRepository = positionRepository;
+//        this.scoreRepository = scoreRepository;
+//        this.accessTokenValidationAspect = accessTokenValidationAspect;
+//    }
 
     //팀 생성
     public ResponseEntity<Response<TeamIdDto>> createTeam(CreateTeamInfoDto createTeamInfoDto) throws IOException {
@@ -71,7 +75,6 @@ public class TeamService {
         MultipartFile teamProfile = createTeamInfoDto.getTeamProfile();
 
         if(!Arrays.toString(teamProfile.getBytes()).equals("[]")){
-            S3Service s3Service = new S3Service(amazonS3Client, bucket);
             String teamProfileUrl = s3Service.upload(createTeamInfoDto.getTeamProfile(),"teamProfile");
             newTeam.setProfileUrl(teamProfileUrl);
         }
@@ -110,8 +113,6 @@ public class TeamService {
             throw new GlobalException(CustomError.INCOMPLETE_INFORMATION);
         }
         else {
-
-            S3Service s3Service = new S3Service(amazonS3Client, bucket);
 
             //팀 등록
             if(teamRepository.findByTeamId(id).isEmpty()){
@@ -294,7 +295,7 @@ public class TeamService {
         }
 
         Score score = scoreRepository.findByScoreId(scorePositionDto.getScoreId()).get();
-        score.setPositionId(positionRepository.findByPositionId(scorePositionDto.getPositionId()).get());
+        score.setPosition(positionRepository.findByPositionId(scorePositionDto.getPositionId()).get());
         scoreRepository.save(score);
 
         //응답
