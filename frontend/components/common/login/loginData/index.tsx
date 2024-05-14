@@ -1,18 +1,20 @@
 'use client';
 
-// import { Avatar, Button, message } from 'antd';
-import { Avatar, Button } from 'antd';
+import { Avatar } from 'antd';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
 import LocalStorage from '@/utils/localStorage';
 import { getLogout } from '@/services/logout';
+import styles from './index.module.scss';
 
-export default function loginData(props: { canLogin: boolean }) {
+interface LoginDataProps {
+  canLogin: boolean;
+}
+
+export default function LoginData({ canLogin }: LoginDataProps) {
   const [profileImg, setProfileImg] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string | null>(null);
-
-  const { canLogin } = props;
 
   useEffect(() => {
     if (canLogin) {
@@ -22,35 +24,7 @@ export default function loginData(props: { canLogin: boolean }) {
     const nickname = LocalStorage.getItem('nickname');
     setProfileImg(profileImg);
     setNickname(nickname);
-  }, []);
-
-  // const clickLogOut = async () => {
-  //   if (window.confirm('로그아웃 하시겠습니까?')) {
-  //     // const logOut = await getLogout();
-  //     // console.log(logOut);
-  //     // if (logOut.success) {
-  //     //   console.log("로그아웃 성공");
-  //     //   window.location.href = "/welcome";
-  //     // } else {
-  //     //   console.error("로그아웃 실패");
-  //     // }
-  //     try {
-  //       const logOut = await getLogout();
-  //       console.log(logOut);
-  //       if (logOut.success) {
-  //         localStorage.clear();
-  //         console.log('로그아웃 성공');
-  //         window.location.href = '/welcome';
-  //       } else {
-  //         console.error('로그아웃 실패');
-  //       }
-  //     } catch (err) {
-  //       console.error('로그아웃 실패');
-  //     }
-  //   } else {
-  //     console.log('로그아웃 취소');
-  //   }
-  // };
+  }, [canLogin]);
 
   const handleLogout = () => {
     Swal.fire({
@@ -65,19 +39,17 @@ export default function loginData(props: { canLogin: boolean }) {
       reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // 확인 버튼을 눌렀을 때 실행될 로직
         try {
           const logOut = await getLogout();
-          // console.log(logOut);
           if (logOut.success) {
             localStorage.clear();
             Swal.fire({
               title: '로그아웃 되었습니다.',
               confirmButtonText: '확인',
-            willClose: () => {
-              window.location.href = '/welcome';
-            }}
-            );
+              willClose: () => {
+                window.location.href = '/welcome';
+              },
+            });
           } else {
             Swal.fire('로그아웃에 실패했습니다.');
           }
@@ -98,13 +70,13 @@ export default function loginData(props: { canLogin: boolean }) {
       </div>
       <div className="flex flex-col items-center">
         <p className="text-center text-lg text-gray-700 font-bold mt-2">
-          {nickname} <span className='text-base text-black font-bold'>님</span>
+          {nickname} <span className="text-base text-black font-bold">님</span>
         </p>
-        <Button type="text" size="small" onClick={handleLogout}>
-          <p className="text-base text-center text-amber-500 font-bold">
+        <div onClick={handleLogout} className={styles.logoutButton}>
+          <p className={`${styles.logoutText} text-base text-center font-bold`}>
             로그아웃
           </p>
-        </Button>
+        </div>
       </div>
     </div>
   );

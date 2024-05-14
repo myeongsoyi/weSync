@@ -1,0 +1,26 @@
+// index.module.scss
+
+.logoutButton {
+    cursor: pointer;
+    display: flex; /* 수정: flex 컨테이너로 설정 */
+    align-items: center; /* 수정: 텍스트를 수직 가운데 정렬 */
+    justify-content: center; /* 수정: 텍스트를 수평 가운데 정렬 */
+    padding: 0;
+    height: auto; /* 세로 길이 조정 */
+  }
+  
+  .logoutText {
+    color: #ffcc00; /* 기본 글씨 색상 */
+    display: inline-block;
+    position: relative;
+    transition: color 0.4s ease;
+    font-size: 14px; /* 글씨 크기 조정 */
+
+    &:hover {
+      color: #ae8c00;
+    }
+  }
+  
+
+
+  

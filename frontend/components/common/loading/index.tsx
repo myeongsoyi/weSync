@@ -11,8 +11,7 @@ export default function Loading() {
           height={450}
           style={{ margin: 'auto' }}
         ></Image>
-        <h2 className="text-center mt-10">잠시만</h2>
-        <h2 className="text-center">기다려주세요</h2>
+        <h2 className="text-center mt-10">싱크 맞추는 중</h2>
       </div>
     </div>
   );
