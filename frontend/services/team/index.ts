@@ -24,7 +24,7 @@ export const postCreateTeam = async (formData: FormData) => {
     const res = await fetch(`${baseURL}/team`, {
       method: "POST",
       headers: {
-        // "content-type": "multipart/form-data", 
+        "content-type": "multipart/form-data", 
         Authorization: accessToken ?? "",
       },
       body: formData,

@@ -91,7 +91,7 @@ export default async function TeamCreate() {
       }
 
       Swal.resetValidationMessage(); // 파일 형식이 유효하면 경고 메시지 제거
-      return [input1.value, input2.value, file || ''];
+      return [input1.value, input2.value, file || null];
     },
     didOpen: () => {
       const inputElement = document.getElementById(
@@ -142,12 +142,15 @@ export default async function TeamCreate() {
       const formData = new FormData();
       formData.append('teamName', formValues[0]);
       formData.append('songName', formValues[1]);
-      formData.append('teamProfile', formValues[2]);
-      // formData.forEach((value, key) => {
-      //   console.warn(`${key}: ${value}`);
-      // });
+      // formData.append('teamProfile', formValues[2]);
+      if (formValues[2]) {
+        formData.append('teamProfile', formValues[2]);
+      }
+      formData.forEach((value, key) => {
+        console.warn(`${key}: ${value}`);
+      });
       const res = await postCreateTeam(formData);
-      // console.log(res);
+      console.log(res);
       if (res.success) {
         Swal.fire({
           title: `${formValues[0]} 팀이 생성되었습니다!`,
