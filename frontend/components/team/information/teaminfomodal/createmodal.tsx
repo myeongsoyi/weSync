@@ -143,9 +143,9 @@ export default async function TeamCreate() {
       formData.append('teamName', formValues[0]);
       formData.append('songName', formValues[1]);
       formData.append('teamProfile', formValues[2]);
-      formData.forEach((value, key) => {
-        console.warn(`${key}: ${value}`);
-      });
+      // formData.forEach((value, key) => {
+      //   console.warn(`${key}: ${value}`);
+      // });
       const res = await postCreateTeam(formData);
       // console.log(res);
       if (res.success) {
