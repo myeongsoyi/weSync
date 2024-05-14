@@ -1,36 +1,58 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { Modal, Input, Button, Select, message, Tag } from 'antd';
+import { getPositionColors, postTeamPosition } from '@/services/team/information';
+
 const { Option } = Select;
 
 interface Colors {
-  [key: string]: string;
+  success: boolean;
+  data:
+    | {
+        colorId: number;
+        colorName: string;
+        colorCode: string;
+      }[]
+    | null;
+  error: {
+    errorCode: string;
+    errorMessage: string;
+  } | null;
 }
-
-const colors: Colors = {
-  Pink: '#ff59e9',
-  Red: '#FF0000',
-  Orange: '#ff7700',
-  Brown: '#705400',
-  Green: '#007025',
-  Blue: '#0a5cff',
-  Navy: '#000080',
-  Purple: '#8c00ff',
-  Gray: '#878787',
-  Black: '#000000',
-};
-
 interface NewPositionModalProps {
   open: boolean;
   onCancel: () => void;
-  onSuccess: (newPosition: string, color: string) => void;
+  onSuccess: (positionId: number, newPosition: string, colorCode: string) => void;
+  teamId: string;
 }
 
 const NewPositionModal: React.FC<NewPositionModalProps> = ({
   open,
   onCancel,
   onSuccess,
+  teamId,
 }) => {
   const [positionName, setPositionName] = useState<string>('');
+  const [colors, setColors] = useState<Colors['data']>([]);
+  const [selectedColorId, setSelectedColorId] = useState<number>(1);
+  const [selectedColorCode, setSelectedColorCode] = useState<string>('');
+  const [selectedColorName, setSelectedColorName] = useState<string>('');
+
+  useEffect(() => {
+    const fetchColors = async () => {
+      const response = await getPositionColors();
+      if (response.success) {
+        setColors(response.data);
+        if (response.data.length > 0) {
+          setSelectedColorId(response.data[0].colorId);
+          setSelectedColorCode(response.data[0].colorCode);
+          setSelectedColorName(response.data[0].colorName);
+        }
+      }
+    };
+    fetchColors();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -41,23 +63,41 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
     }
   };
 
-  const [selectedColor, setSelectedColor] = useState<string>('Pink');
+  const handleColorChange = (value: string, option: any) => {
+    const selectedColor = colors?.find((color) => color.colorCode === value);
+    if (selectedColor) {
+      setSelectedColorId(selectedColor.colorId);
+      setSelectedColorCode(selectedColor.colorCode);
+      setSelectedColorName(selectedColor.colorName);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!positionName.trim()) {
       message.error('포지션 이름을 입력해주세요.');
       return;
     }
-  
-    onSuccess(positionName, colors[selectedColor]);
-    message.success('새 포지션 등록 성공');
-    setPositionName('');
-    setSelectedColor('Pink');
-    onCancel();
+
+    const response = await postTeamPosition(teamId, positionName, selectedColorId);
+    if (!response.success) {
+      message.error(response.error.errorMessage);
+      return;
+    } else {
+      onSuccess(
+        response.data.positionId,
+        response.data.positionName,
+        colors?.find((color) => color.colorId === selectedColorId)?.colorCode || '',
+      );
+      message.success('새 포지션 등록 성공');
+      setPositionName('');
+      setSelectedColorCode('');
+      onCancel();
+    }
   };
 
   return (
-    <Modal style={{ textAlign: 'center'}}
+    <Modal
+      style={{ textAlign: 'center' }}
       title="새 포지션 생성"
       open={open}
       onCancel={onCancel}
@@ -75,28 +115,28 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
         style={{ marginBottom: 10 }}
       />
       <Select
-        value={selectedColor}
-        onChange={setSelectedColor}
+        value={selectedColorName}
+        onChange={handleColorChange}
         style={{ width: '100%', marginBottom: 10 }}
       >
-        {Object.entries(colors).map(([key, value]) => (
-          <Option key={key} value={key}>
+        {colors?.map((color, index) => (
+          <Option key={index} value={color.colorCode}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div
                 style={{
-                  backgroundColor: value,
+                  backgroundColor: `#${color.colorCode}`,
                   width: 20,
                   height: 20,
                   marginRight: 8,
                 }}
               />
-              {key}
+              {color.colorName}
             </div>
           </Option>
         ))}
       </Select>
 
-      {positionName && (
+      {/* {positionName && ( */}
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Tag
             style={{
@@ -107,17 +147,17 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
               textOverflow: 'ellipsis',
               whiteSpace: positionName.length > 10 ? 'normal' : 'nowrap', // 10글자가 넘어가면 줄바꿈
               textAlign: 'center',
-              color: colors[selectedColor],
-              borderColor: colors[selectedColor],
-              backgroundColor: colors[selectedColor],
+              color: `#${selectedColorCode}`,
+              borderColor: `#${selectedColorCode}`,
+              backgroundColor: `#${selectedColorCode}`,
               fontSize: '15px',
               marginBottom: '10px',
             }}
           >
-            {positionName}
+            {positionName ? positionName : '미리보기'}
           </Tag>
         </div>
-      )}
+      {/* )} */}
 
       <div style={{ textAlign: 'center' }}>
         <Button key="cancel" onClick={onCancel} style={{ marginRight: 8 }}>

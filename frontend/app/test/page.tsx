@@ -26,11 +26,12 @@ export default function TestComponent() {
       )} */}
       <div>
         <Image
-          src={'/loading.gif'}
+          src={'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/Loading.gif'}
           alt="로딩"
           width={450}
           height={450}
           style={{ margin: 'auto' }}
+          priority
         ></Image>
         <h2 className="text-center mt-10">잠시만</h2>
         <h2 className="text-center">기다려주세요</h2>

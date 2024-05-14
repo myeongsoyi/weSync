@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Modal, List, Tag, Button, message, Tooltip } from 'antd';
 import {
   ExclamationCircleOutlined,
@@ -9,10 +12,10 @@ import {
 } from '@ant-design/icons';
 import NewPositionModal from './newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
+import { getTeamPosition, getPositionColors, postTeamPosition } from '@/services/team/information';
 
 interface Position {
-  name: string;
-  color: string;
+  positionId: number, positionName: string, colorCode: string
 }
 
 // const initialPositions: Position[] = [
@@ -32,22 +35,35 @@ export default function PositionModal({
   onCancel: () => void;
 }) {
   // const [positions, setPositions] = useState<Position[]>(initialPositions);
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [newPositionVisible, setNewPositionVisible] = useState<boolean>(false);
 
-  // 차후 팀 ID 받아오도록 수정해야함.
-  const { positions, addPosition, deletePosition } = useTeamPositionStore(state => ({
+  const { positions, setPositions, addPosition, deletePosition } = useTeamPositionStore(state => ({
     positions: state.positions,
-    // getPositions: state.getPositions,
+    setPositions: state.setPositions,
     addPosition: state.addPosition,
     deletePosition: state.deletePosition,
     }));
 
-  const handlePositionSelect = (position: string): void => {
-    setSelectedPosition(position);
+  const teamId = usePathname().split('/')[2];
+
+  useEffect(() => {
+    const fetchPositions = async () => {
+      console.log('fetching positions')
+      const positions = await getTeamPosition(teamId);
+      if (positions.success) {
+        setPositions(positions.data);
+      }
+    };
+    fetchPositions();
+  }, [open]);
+
+
+  const handlePositionSelect = (positionId: number): void => {
+    setSelectedPosition(positionId);
   };
 
-  const handleDelete = (positionName: string): void => {
+  const handleDelete = (positionId: number, positionName: string): void => {
     Modal.confirm({
       title: '정말로 삭제하시겠습니까?',
       content: `${positionName}을 삭제하시겠습니까?`,
@@ -56,13 +72,13 @@ export default function PositionModal({
       okType: 'danger',
       cancelText: '아니요',
       onOk() {
-        deletePosition(positionName);
+        deletePosition(positionId);
         message.success(`${positionName}이(가) 삭제되었습니다.`);
       },
     });
   };
 
-  const modifyDelete = (name: string) => (
+  const modifyDelete = (positionId: number, positionName: string) => (
     <div style={{ display: 'flex' }}>
       {' '}
       {/* 가로 배치를 위한 flex 컨테이너 추가 */}
@@ -81,7 +97,7 @@ export default function PositionModal({
       </Button>
       <Button
         danger
-        onClick={() => handleDelete(name)}
+        onClick={() => handleDelete(positionId, positionName)}
         style={{
           width: '15px',
           height: '25px',
@@ -165,7 +181,7 @@ export default function PositionModal({
       >
         <List
           dataSource={positions}
-          renderItem={({ name, color }: Position) => (
+          renderItem={({ positionId, positionName, colorCode }: Position) => (
             <List.Item
               style={{
                 justifyContent: 'center',
@@ -173,10 +189,10 @@ export default function PositionModal({
                 margin: '2px 0',
                 padding: '4px 0',
               }}
-              onClick={() => handlePositionSelect(name)}
+              onClick={() => handlePositionSelect(positionId)}
             >
               <Tooltip
-                title={modifyDelete(name)}
+                title={modifyDelete(positionId, positionName)}
                 color="white"
                 arrow={false}
                 overlayInnerStyle={{
@@ -189,21 +205,21 @@ export default function PositionModal({
                 <Tag
                   style={{
                     cursor: 'pointer',
-                    padding: selectedPosition === name ? '4px 8px' : '1px 5px',
-                    fontSize: `calc(15px * ${selectedPosition === name ? '1.5' : '1'})`,
-                    fontWeight: selectedPosition === name ? 'bold' : 'normal',
-                    borderWidth: `calc(1px * ${selectedPosition === name ? '3' : '1'})`,
-                    margin: `calc(0px + ${selectedPosition === name ? '8px' : '0px'}) auto`,
-                    borderColor: color,
-                    color: color,
+                    padding: selectedPosition === positionId ? '4px 8px' : '1px 5px',
+                    fontSize: `calc(15px * ${selectedPosition === positionId ? '1.5' : '1'})`,
+                    fontWeight: selectedPosition === positionId ? 'bold' : 'normal',
+                    borderWidth: `calc(1px * ${selectedPosition === positionId ? '3' : '1'})`,
+                    margin: `calc(0px + ${selectedPosition === positionId ? '8px' : '0px'}) auto`,
+                    borderColor: `#${colorCode}`,
+                    color: `#${colorCode}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative', // 위치 조정을 위해 relative 설정
                   }}
-                  className={selectedPosition === name ? 'selectedTag' : ''}
+                  className={selectedPosition === positionId ? 'selectedTag' : ''}
                 >
-                  {selectedPosition === name && (
+                  {selectedPosition === positionId && (
                     <CheckOutlined
                       style={{
                         position: 'absolute',
@@ -215,7 +231,7 @@ export default function PositionModal({
                       }}
                     />
                   )}
-                  {name}
+                  {positionName}
                 </Tag>
               </Tooltip>
             </List.Item>
@@ -244,10 +260,11 @@ export default function PositionModal({
       <NewPositionModal
         open={newPositionVisible}
         onCancel={() => setNewPositionVisible(false)}
-        onSuccess={(newPosition: string, newColor: string = 'blue') => {
-          addPosition(newPosition, newColor);
+        onSuccess={(positionId:number, newPosition: string, colorCode: string) => {
+          addPosition(positionId, newPosition, colorCode);
           setNewPositionVisible(false);
         }}
+        teamId={teamId}
       />
     </Modal>
   );
