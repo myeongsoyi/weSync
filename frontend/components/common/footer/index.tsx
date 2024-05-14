@@ -50,11 +50,10 @@ export default function Footer() {
         });
     }
   };
-  
 
   return (
-    <footer className="flex justify-center items-center py-auto px-6 bg-sky-700 text-white overflow-x-hidden">
-      <div className="flex-1 flex justify-center">
+    <footer className={styles.footer}>
+      <div className={`${styles.flex1} ${styles.justifyStart}`}>
         <div className={`bg-white p-2 rounded-xl ${styles.logo}`}>
           <Image
             src={'/svgs/logo.svg'}
@@ -68,18 +67,18 @@ export default function Footer() {
           />
         </div>
       </div>
-      <div className="flex-1 flex">
+      <div className={`${styles.flex1} ${styles.justifyCenter}`}>
         <p className={`m-auto w-fit ${styles.center}`}>
-          weSync ©{new Date().getFullYear()} Created by A310
+          weSync {new Date().getFullYear()} Created by ©OneHarMony
         </p>
       </div>
-      <div className="flex-1 flex justify-center">
+      <div className={`${styles.flex1} ${styles.justifyEnd}`}>
         <div className={styles.icon} onClick={handleIconClick}>
           <Image
             src={'/svgs/wesync_icon.svg'}
             alt="아이콘"
-            height={67}
-            width={67}
+            height={60}
+            width={60}
             className="p-1.5 rounded-full border-1 border-white m-auto"
           />
         </div>
