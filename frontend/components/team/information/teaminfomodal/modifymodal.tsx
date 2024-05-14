@@ -2,6 +2,7 @@
 
 import Swal from 'sweetalert2';
 import { putTeamInfo } from '@/services/team';
+
 export default async function TeamModify(
   teamId = '',
   teamName = '',
@@ -46,14 +47,14 @@ export default async function TeamModify(
       }
       .image-preview {
         max-height: 50px;
-        display: none;
+        display: ${teamImage ? 'inline-block' : 'none'};
       }
       .toggle-switch {
         position: relative;
         display: inline-block;
         width: 60px;
         height: 34px;
-        margin-top: 20px; /* 공백 추가 */
+        margin-top: 20px;
       }
       .toggle-switch input { 
         opacity: 0;
@@ -83,21 +84,21 @@ export default async function TeamModify(
         border-radius: 50%;
       }
       input:checked + .slider {
-        background-color: #4CAF50; /* 초록색으로 변경 */
+        background-color: #4CAF50;
       }
       input:checked + .slider:before {
         transform: translateX(26px);
       }
       .practice-status-label {
-        font-weight: bold; /* 굵게 변경 */
+        font-weight: bold;
       }
     </style>
     <input id="swal-input1" class="swal2-input" type="text" placeholder="팀 이름을 입력하세요" value="${teamName}" required>
     <input id="swal-input2" class="swal2-input" type="text" placeholder="곡명을 입력하세요" value="${teamSong}">
     <input id="swal-input3" class="file-input" type="file" accept="image/*">
     <label for="swal-input3" class="file-input-label">프로필 사진 변경</label>
-    <img id="image-preview" class="image-preview" src="${teamImage}" alt="이미지 미리보기" ></img>
-    <span id="file-name" class="file-name">${teamImage ? teamImage.split('/').pop() : '선택된 파일 없음'}</span>
+    <img id="image-preview" class="image-preview" src="${teamImage}" alt="이미지 미리보기">
+    <p id="file-name" class="file-name">${teamImage ? teamImage.split('/').pop() : '선택된 파일 없음'}</p>
     <div style="font-size: 12px; color: #555; margin-top: 8px;">프로필 이미지는 JPG 또는 PNG 파일만 등록 가능합니다.</div>
     <label class="toggle-switch">
       <input type="checkbox" ${practiceCompleted ? 'checked' : ''}>
@@ -126,7 +127,6 @@ export default async function TeamModify(
       return {
         teamName: input1.value,
         teamSong: input2.value,
-        // teamImage: file || teamImage,
         isFinished: practiceCompleted.checked,
         teamProfile: file || null,
       };
@@ -164,6 +164,7 @@ export default async function TeamModify(
 
   if (formValues) {
     const { teamName, teamSong, isFinished, teamProfile } = formValues;
+    // console.log(teamId, teamName, teamSong, isFinished, teamProfile);
     const response = await putTeamInfo(
       teamId,
       teamName,
@@ -184,6 +185,9 @@ export default async function TeamModify(
         title: `팀 정보가 수정되었습니다!`,
         icon: 'success',
         confirmButtonText: '확인',
+        willClose: () => {
+          location.reload();
+        }
       });
     }
   }

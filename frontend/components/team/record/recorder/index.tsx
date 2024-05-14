@@ -1,3 +1,4 @@
+'use client';
 // 사용하는 라이브러리 및 컴포넌트 import
 import { useState, useEffect } from 'react';
 import styles from './index.module.scss';

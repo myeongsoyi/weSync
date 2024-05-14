@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import styles from './index.module.scss';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import TeamCreate from '../../../team/information/teaminfomodal/createmodal';
 import { CrownFilled, PlusCircleOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Card, Tag, Tooltip } from 'antd';
@@ -11,6 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MyTotalTeams } from '@/types/myTeams';
 import { getMyTeams } from '@/services/my-teams';
+import { DateStringFormat } from '@/utils/format';
 
 function useViewportWidth() {
   const [width, setWidth] = useState(0);
@@ -97,7 +98,7 @@ export default function CardTeams() {
               {team.isFinished && (
                 <div className={styles.isEndOverlay}>
                   <h1>완료</h1>
-                  <h3>{team.createdAt}</h3>
+                  <h3>{DateStringFormat(team.createdAt)}</h3>
                 </div>
               )}
               <Card
