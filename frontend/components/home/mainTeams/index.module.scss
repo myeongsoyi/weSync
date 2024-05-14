@@ -6,3 +6,26 @@
     margin-bottom: 4vh;
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.4);
 }
+
+.teamsLink {
+    display: flex;
+    align-items: center;
+  }
+  
+  .plusIcon {
+    transition: transform 0.3s ease-in-out;
+    transform-origin: center; /* 아이콘을 중앙을 기준으로 회전하도록 설정 */
+  }
+  
+  .teamsLink:hover .plusIcon {
+    animation: spin 0.5s linear 1; /* 애니메이션 시간을 0.5초로 설정하고, 한 번만 실행 */
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }

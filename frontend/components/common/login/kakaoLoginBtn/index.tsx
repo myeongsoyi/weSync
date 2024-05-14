@@ -46,7 +46,6 @@ export default function KakaoLoginBtn() {
             backgroundColor: '#fee500',
             display: 'flex',
           }}
-          className={styles.kakao_login}
         >
           <Image
             className="p-1 h-auto"
