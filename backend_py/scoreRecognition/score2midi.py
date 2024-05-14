@@ -23,13 +23,13 @@ def word2midi(mid, track, words, melody):
             track.append(Message('note_off', note=getattr(note.notes,note_type[0]).value, velocity=velocity, time=int(mid.ticks_per_beat*getattr(tick.ticks, dur).value)))
             time_since_last_event = 0
             
-            tone = Sine(getattr(frequency.frequency,note_type[0]).value * 10).to_audio_segment(duration=int(mid.ticks_per_beat*getattr(tick.ticks, dur).value)).fade_in(10).fade_out(100)
-            melody = melody + tone
+            # tone = Sine(getattr(frequency.frequency,note_type[0]).value * 10).to_audio_segment(duration=int(mid.ticks_per_beat*getattr(tick.ticks, dur).value)).fade_in(10).fade_out(100)
+            # melody = melody + tone
         if component_type[0] == 'rest':
             time_since_last_event += int(getattr(tick.ticks,component_type[1]).value)
             
-            rest = AudioSegment.silent(duration=int(getattr(tick.ticks,component_type[1]).value))
-            melody = melody + rest
+            # rest = AudioSegment.silent(duration=int(getattr(tick.ticks,component_type[1]).value))
+            # melody = melody + rest
         
     return melody
 
