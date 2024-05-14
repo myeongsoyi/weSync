@@ -10,6 +10,12 @@ RUN apt-get update && apt-get install -y \
 
 RUN apt-get -y install libgl1-mesa-glx
 
+RUN apt-get -y install libfuse2
+RUN apt-get -y install libjack-dev
+RUN apt-get -y install libasound2
+RUN apt-get -y install libnss3
+RUN apt-get -y install libxcb-xinerama0
+
 RUN wget https://github.com/musescore/MuseScore/releases/download/v4.3.0/MuseScore-Studio-4.3.0.241231431-x86_64.AppImage -O /usr/bin/musescore.appimage && \
     chmod +x /usr/bin/musescore.appimage
 
