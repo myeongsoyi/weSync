@@ -10,12 +10,14 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     libgl1-mesa-glx \
     libfuse2 \
-    libjack-dev \
+    libjack-jackd2-dev \
     libasound2 \
-    libnss3 \
+    libnss3-dev \
     libxcb-xinerama0
 
 # xvfb와 X11 관련 패키지들을 설치합니다.
+RUN apt-get update
+
 RUN apt-get install -y xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
 
 # MuseScore 설치
