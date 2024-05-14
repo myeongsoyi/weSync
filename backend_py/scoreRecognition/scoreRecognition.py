@@ -10,7 +10,7 @@ import scoreRecognition.predict as pd
 import scoreRecognition.score2midi as stm
 from pydub import AudioSegment
 from concurrent.futures import ThreadPoolExecutor
-from music21 import converter, environment
+from music21 import *
 import subprocess
 
 executor = ThreadPoolExecutor(max_workers=4)
@@ -101,8 +101,8 @@ async def recognition(file: UploadFile):
                     os.mkdir(f"{output_path}/accom")
 
                 # 반주 파일 저장
-                melody += 20
-                melody.export(f"{output_path}/accom/{file_name}_part{i}.wav", format="wav")
+                # melody += 20
+                # melody.export(f"{output_path}/accom/{file_name}_part{i}.wav", format="wav")
 
                 if not os.path.exists(f"{output_path}/img"):
                     os.mkdir(f"{output_path}/img")
@@ -115,7 +115,7 @@ async def recognition(file: UploadFile):
                 score = converter.parse(midi_path)
 
                 # 악보 이미지로 저장
-                score.write(f"{output_path}/img/{file_name}_part{i}.png", fp='output.png')
+                score.write('musicxml.png', fp = f"{output_path}/img/{file_name}_part{i}.png")
 
                 # MIDI 파일과 출력될 오디오 파일의 경로
                 midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
