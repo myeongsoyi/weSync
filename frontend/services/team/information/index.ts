@@ -45,10 +45,17 @@ export async function postTeamPosition(
   positionName: string,
   colorId: number,
 ) {
+  const data = new URLSearchParams({
+    teamId, positionName, colorId: colorId.toString(),
+  });
+  // data를 먼저 확인해보자
+  console.log('data:', data);
+  
+
   const response = await APIModule({
     action: '/team/position',
     method: 'POST',
-    data: { teamId, positionName, colorId },
+    data: data,
   });
 
   return response;

@@ -53,8 +53,52 @@
 
 export function DateStringFormat(dateString: string) {
   const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  
+  // 날짜를 한국 시간대로 포맷합니다.
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    timeZone: 'Asia/Seoul'
+  };
+  
+  // "YYYY. MM. DD." 형식으로 변환
+  const formattedDate = new Intl.DateTimeFormat('ko-KR', options).format(date);
+  
+  // "YYYY. MM. DD." 형태로 출력되므로 이를 한국어 형식으로 바꿉니다.
+  // 일부 브라우저에서는 . 뒤에 공백이 추가되므로 이를 제거합니다.
+  const [year, month, day] = formattedDate.replace(/\s/g, '').split('.');
+
   return `${year}년 ${month}월 ${day}일`;
 }
+
+
+
+export function DateNoticeTimeFormat(dateString: string) {
+  const date = new Date(dateString);
+  
+  // 한국 시간대의 날짜를 포맷합니다.
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    timeZone: 'Asia/Seoul'
+  };
+  const formattedDate = new Intl.DateTimeFormat('ko-KR', dateOptions).format(date);
+  
+  // 한국 시간대의 시간을 포맷합니다.
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Seoul'
+  };
+  const formattedTime = new Intl.DateTimeFormat('ko-KR', timeOptions).format(date);
+  
+  // "YYYY. M. D." 형태로 출력되므로 이를 한국어 형식으로 바꿉니다.
+  const [year, month, day] = formattedDate.split('.').map(part => part.trim());
+  
+  return `${year}년 ${month}월 ${day}일 ${formattedTime}`;
+}
+
+
