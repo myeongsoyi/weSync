@@ -16,7 +16,7 @@ RUN apt-get -y install libasound2
 RUN apt-get -y install libnss3
 RUN apt-get -y install libxcb-xinerama0
 
-RUN wget https://github.com/musescore/MuseScore/releases/download/v4.3.0/MuseScore-Studio-4.3.0.241231431-x86_64.AppImage -O /usr/bin/musescore.appimage && \
+RUN wget https://github.com/musescore/MuseScore/releases/download/v3.4.1/MuseScore-3.4.1-x86_64.AppImage -O /usr/bin/musescore.appimage && \
     chmod +x /usr/bin/musescore.appimage
 
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
