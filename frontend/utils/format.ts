@@ -50,3 +50,11 @@
 //   else if (elapsedMinutes >= 60) return `${Math.floor(elapsedMinutes / 60)}시간 전`;
 //   else return `${elapsedMinutes}분 전`;
 // }
+
+export function DateStringFormat(dateString: string) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}년 ${month}월 ${day}일`;
+}
