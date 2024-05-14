@@ -14,15 +14,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class TeamService {
+
+    private final S3Service s3Service;
 
     private final TeamRepository teamRepository;
     private final InvitationRepository invitationRepository;
@@ -34,9 +35,6 @@ public class TeamService {
     private final ScoreRepository scoreRepository;
 
     private final AccessTokenValidationAspect accessTokenValidationAspect;
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
 
     private static final String[] DefaultPositionName = {"소프라노","메조소프라노", "알토", "바리톤", "테너", "베이스", "퍼커션"}; // 디폴트 포지션 이름
     private static final Long[] DefaultColorId = {1L,2L,3L,4L,5L,6L,7L}; // 디폴트 포지션별 colorId
@@ -62,7 +60,6 @@ public class TeamService {
             newTeam.setProfileUrl(defaultProfileUrl);
         }
         else{
-            S3Service s3Service = new S3Service(amazonS3Client, bucket);
             String teamProfileUrl = s3Service.upload(createTeamInfoDto.getTeamProfile(),"teamProfile");
             newTeam.setProfileUrl(teamProfileUrl);
         }
@@ -134,7 +131,6 @@ public class TeamService {
             editTeam.setProfileUrl(defaultProfileUrl);
         }
         else{
-            S3Service s3Service = new S3Service(amazonS3Client, bucket);
 
             //이전 프로필 S3 데이터 삭제
             if(!Objects.equals(beforeUrl, defaultProfileUrl)){
@@ -355,7 +351,7 @@ public class TeamService {
             throw new GlobalException(CustomError.UNAUTHORIZED_USER);
         }
 
-        score.setPositionId(positionRepository.findByPositionId(scorePositionDto.getPositionId()).get());
+        score.setPosition(positionRepository.findByPositionId(scorePositionDto.getPositionId()).get());
         scoreRepository.save(score);
 
         //응답
