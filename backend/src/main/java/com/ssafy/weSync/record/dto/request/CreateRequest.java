@@ -34,10 +34,10 @@ public class CreateRequest {
     }
 
     public Long parseTime(String time){
-        String[] parts = time.split(":");
         if (time == null){
             return 0L;
         }
+        String[] parts = time.split(":");
         if (parts.length != 3){
             throw new GlobalException(CustomError.WRONG_TIME_FORMAT);
         }

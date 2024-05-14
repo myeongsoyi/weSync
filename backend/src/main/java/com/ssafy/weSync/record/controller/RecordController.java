@@ -1,8 +1,9 @@
 package com.ssafy.weSync.record.controller;
 
+import com.ssafy.weSync.global.ApiResponse.AccessTokenValidationAspect;
 import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.record.dto.request.CreateRequest;
-import com.ssafy.weSync.record.dto.request.GetAllMyResponse;
+import com.ssafy.weSync.record.dto.response.GetAllMyResponse;
 import com.ssafy.weSync.record.dto.response.CreateResponse;
 import com.ssafy.weSync.record.service.RecordService;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/records")
 public class RecordController {
+
+    private final AccessTokenValidationAspect accessTokenValidationAspect;
 
     private final RecordService recordService;
 
@@ -30,7 +34,10 @@ public class RecordController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<Response<GetAllMyResponse>> getMyRecordList(){
-        
+    public ResponseEntity<Response<List<GetAllMyResponse>>> getMyRecordList(){
+        Long userId = accessTokenValidationAspect.getUserId();
+        List<GetAllMyResponse> getAllMyResponse = recordService.getMyRecordList(userId);
+        Response<List<GetAllMyResponse>> response = new Response<>(true, getAllMyResponse, null);
+        return ResponseEntity.ok(response);
     }
 }

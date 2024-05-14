@@ -29,7 +29,7 @@ public class Score extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
-    private Position positionId;
+    private Position position;
 
     @Column(name = "title")
     private String title;
@@ -42,7 +42,5 @@ public class Score extends BaseTime {
     private Team team;
 
     @OneToMany(mappedBy = "score", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Column(name = "record")
-    private List<Record> records = new ArrayList<>();
-
+    private List<Record> records;
 }

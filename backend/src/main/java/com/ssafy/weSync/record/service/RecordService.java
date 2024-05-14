@@ -3,6 +3,7 @@ package com.ssafy.weSync.record.service;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
 import com.ssafy.weSync.record.dto.request.CreateRequest;
+import com.ssafy.weSync.record.dto.response.GetAllMyResponse;
 import com.ssafy.weSync.record.dto.response.CreateResponse;
 import com.ssafy.weSync.record.entity.Record;
 import com.ssafy.weSync.record.repository.RecordRepository;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -45,10 +48,16 @@ public class RecordService {
         String url = s3Service.upload(file, "record");
 
         Record record = createRequest.toEntity(url, score, teamUser);
-        Long recordId = recordRepository.save(record).getRecord_id();
+        Long recordId = recordRepository.save(record).getRecordId();
         return CreateResponse.toDto(recordId, url);
     }
 
 
-
+    public List<GetAllMyResponse> getMyRecordList(Long userId) {
+        List<Record> records = recordRepository.findAllByUserId(userId);
+        List<GetAllMyResponse> getAllMyResponses = records.stream()
+                .map(GetAllMyResponse::toDto)
+                .collect(Collectors.toList());
+        return getAllMyResponses;
+    }
 }

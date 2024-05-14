@@ -1,5 +1,6 @@
 package com.ssafy.weSync.record.entity;
 
+import com.ssafy.weSync.global.entity.BaseTime;
 import com.ssafy.weSync.team.entity.Score;
 import com.ssafy.weSync.team.entity.TeamUser;
 import jakarta.persistence.*;
@@ -19,11 +20,11 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE record SET is_deleted = true WHERE record_id=?")
 @Where(clause = "is_deleted = false")
 @Table(name = "record")
-public class Record {
+public class Record extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "record_id")
-    private Long record_id;
+    private Long recordId;
 
     @Column(name = "title")
     @NotNull
