@@ -637,9 +637,6 @@ public class TeamService {
                 throw new GlobalException(CustomError.NO_TEAM);
             }
             List<TeamUser> teamUserList = leaveTeam.get().getTeamUsers();
-            System.out.println(123);
-            System.out.println(teamUserList.size());
-            System.out.println(456);
             for(TeamUser teamUser : teamUserList){
                 if(!teamUser.getIsBanned()){
                     leaveTeam.get().setTeamLeaderId(teamUser.getUser().getUserId());
