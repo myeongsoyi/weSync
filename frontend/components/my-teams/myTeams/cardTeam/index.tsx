@@ -60,8 +60,6 @@ export default function CardTeams() {
     }
   }, [width]);
 
-  const router = useRouter();
-  console.log(router);
 
   if (!success) {
     return (
