@@ -118,7 +118,7 @@ async def recognition(file: UploadFile):
                 print("**convert")
 
                 # 악보 이미지로 저장
-                score.write('musicxml.png', fp = f"{output_path}/img/{file_name}_part{i}.png")
+                score.write('png', fp = f"{output_path}/img/{file_name}_part{i}.png")
                 print("**end")
                 # up.upload_file_to_s3('example.txt')
 
