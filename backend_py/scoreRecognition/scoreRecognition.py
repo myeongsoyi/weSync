@@ -10,6 +10,8 @@ import scoreRecognition.predict as pd
 import scoreRecognition.score2midi as stm
 from pydub import AudioSegment
 from concurrent.futures import ThreadPoolExecutor
+from music21 import converter, environment
+import subprocess
 
 executor = ThreadPoolExecutor(max_workers=4)
 
@@ -95,8 +97,29 @@ async def recognition(file: UploadFile):
                 melody += 20
                 melody.export(f"{output_path}/accom/{file_name}_part{i}.wav", format="wav")
 
+                if not os.path.exists(f"{output_path}/img"):
+                    os.mkdir(f"{output_path}/img")
+
+                # MuseScore의 경로 설정 (환경에 따라 변경 필요)
+                environment.set('musescoreDirectPNGPath', '/usr/bin/mscore3')
+
+                # MIDI 파일 로드
+                midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
+                score = converter.parse(midi_path)
+
+                # 악보 이미지로 저장
+                score.write(f"{output_path}/img/{file_name}_part{i}.png", fp='output.png')
+
+                # MIDI 파일과 출력될 오디오 파일의 경로
+                midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
+                audio_path = f"{output_path}/accom/{file_name}_part{i}.wav"
+
+                # MuseScore의 경로 및 변환 명령어 실행
+                musescore_path = '/usr/bin/mscore3'
+                subprocess.run([musescore_path, midi_path, '--export-to', audio_path])
+
         except Exception as e:
-            pass # 오류
+            print(e.args) # 오류
         finally:
             # shutil.rmtree(output_path)
             # shutil.move(temp_output_folder, output_path)

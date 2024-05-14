@@ -4,11 +4,20 @@ WORKDIR /wesync
 
 COPY requirements.txt /wesync/requirements.txt
 
-RUN apt-get update
+RUN apt-get update && apt-get install -y \
+    wget \
+    software-properties-common
+
+RUN apt-get -y install libgl1-mesa-glx
+
+RUN wget https://musescore.org/en/download/musescore-x86_64.AppImage -O /usr/local/bin/musescore.appimage && \
+    chmod +x /usr/local/bin/musescore.appimage
+
 
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
 
 COPY ./app/ /wesync/app/
+COPY ./scoreRecognition/ /wesync/scoreRecognition/
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
 
