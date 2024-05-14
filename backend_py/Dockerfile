@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
 # xvfb와 X11 관련 패키지들을 설치합니다.
 RUN apt-get update
 
-RUN apt-get install -y xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
+RUN apt-get install -y xvfb
 
 # MuseScore 설치
 RUN wget https://github.com/musescore/MuseScore/releases/download/v3.4.1/MuseScore-3.4.1-x86_64.AppImage -O /usr/bin/musescore.appimage && \
