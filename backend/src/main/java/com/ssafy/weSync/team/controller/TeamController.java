@@ -25,7 +25,7 @@ public class TeamController {
     }
 
     //팀 정보 변경
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Response<TeamIdDto>> editTeam(@ModelAttribute EditTeamInfoDto editTeamInfoDto, @PathVariable Long id) throws IOException {
         return teamService.editTeam(editTeamInfoDto, id);
     }
@@ -74,7 +74,7 @@ public class TeamController {
 
     //커스텀 포지션 생성
     @PostMapping("/position")
-    public ResponseEntity<Response<CustomPositionDto>> addCustomPosition(@ModelAttribute CustomPositionDto customPositionDto) {
+    public ResponseEntity<Response<PositionDto>> addCustomPosition(@ModelAttribute CustomPositionDto customPositionDto) {
         return teamService.addCustomPosition(customPositionDto);
     }
 
