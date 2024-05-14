@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     libjack-jackd2-dev \
     libasound2 \
     libnss3-dev \
-    libxcb-xinerama0
+    libxcb-xinerama0 \
+    libegl1-mesa
 
 # xvfb와 X11 관련 패키지들을 설치합니다.
 RUN apt-get update
