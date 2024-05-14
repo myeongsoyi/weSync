@@ -105,8 +105,8 @@ async def recognition(file: UploadFile):
                 # melody += 20
                 # melody.export(f"{output_path}/accom/{file_name}_part{i}.wav", format="wav")
 
-                # if not os.path.exists(f"{output_path}/img"):
-                #     os.mkdir(f"{output_path}/img")
+                if not os.path.exists(f"{output_path}/img"):
+                    os.mkdir(f"{output_path}/img")
 
                 # MuseScore의 경로 설정 (환경에 따라 변경 필요)
                 environment.set('musescoreDirectPNGPath', '/usr/bin/musescore.appimage')
