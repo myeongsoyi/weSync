@@ -12,6 +12,7 @@ from pydub import AudioSegment
 from concurrent.futures import ThreadPoolExecutor
 from music21 import *
 import subprocess
+import scoreRecognition.upload as up
 
 executor = ThreadPoolExecutor(max_workers=4)
 
@@ -97,25 +98,29 @@ async def recognition(file: UploadFile):
                 # MIDI 파일 저장
                 mid.save(f'{output_path}/midi/{file_name}_part{i}.mid')
 
-                if not os.path.exists(f"{output_path}/accom"):
-                    os.mkdir(f"{output_path}/accom")
+                # if not os.path.exists(f"{output_path}/accom"):
+                #     os.mkdir(f"{output_path}/accom")
 
                 # 반주 파일 저장
                 # melody += 20
                 # melody.export(f"{output_path}/accom/{file_name}_part{i}.wav", format="wav")
 
-                if not os.path.exists(f"{output_path}/img"):
-                    os.mkdir(f"{output_path}/img")
+                # if not os.path.exists(f"{output_path}/img"):
+                #     os.mkdir(f"{output_path}/img")
 
                 # MuseScore의 경로 설정 (환경에 따라 변경 필요)
                 environment.set('musescoreDirectPNGPath', '/usr/bin/musescore.appimage')
 
                 # MIDI 파일 로드
                 midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
+                print("**start")
                 score = converter.parse(midi_path)
+                print("**convert")
 
                 # 악보 이미지로 저장
                 score.write('musicxml.png', fp = f"{output_path}/img/{file_name}_part{i}.png")
+                print("**end")
+                # up.upload_file_to_s3('example.txt')
 
                 # MIDI 파일과 출력될 오디오 파일의 경로
                 midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
@@ -128,11 +133,10 @@ async def recognition(file: UploadFile):
         except Exception as e:
             print(e.args) # 오류
         finally:
-            # shutil.rmtree(output_path)
-            # shutil.move(temp_output_folder, output_path)
-            pass
+            shutil.rmtree(output_path)
+            shutil.move(temp_output_folder, output_path)
     except Exception as e:
-        pass # 오류
+        print(e.args) # 오류
     finally:
         # shutil.rmtree(temp_input_folder)
         shutil.rmtree(input_path)
