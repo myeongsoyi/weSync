@@ -24,6 +24,9 @@ async def recognition(file: UploadFile):
     file_name = file.filename.split('.')[0]
     input_path = "./scoreRecognition/Input"
 
+    if not os.path.exists(f"{input_path}"):
+                os.mkdir(f"{input_path}")
+
     temp_input_folder = f"{input_path}_backup"
     shutil.copytree(input_path, temp_input_folder)
 
@@ -56,6 +59,10 @@ async def recognition(file: UploadFile):
             dn.split_part(img, f"{resource_path}/part", i)
     
         output_path = "./scoreRecognition/Output"
+
+        if not os.path.exists(f"{output_path}"):
+                    os.mkdir(f"{output_path}")
+
         temp_output_folder = f"{output_path}_backup"
         shutil.copytree(output_path, temp_output_folder)
         
@@ -91,7 +98,7 @@ async def recognition(file: UploadFile):
                 mid.save(f'{output_path}/midi/{file_name}_part{i}.mid')
 
                 if not os.path.exists(f"{output_path}/accom"):
-                    os.mkdir(f"./scoreRecognition/Output/accom")
+                    os.mkdir(f"{output_path}/accom")
 
                 # 반주 파일 저장
                 melody += 20
