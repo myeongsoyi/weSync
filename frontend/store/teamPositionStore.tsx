@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
 interface TeamPositionState {
-  positions: { positionId: number, positionName: string, colorCode: string }[];
-  setPositions: (positions: { positionId: number, positionName: string, colorCode: string }[]) => void;
-  getPositions: () => { positionId: number, positionName: string, colorCode: string }[];
-  addPosition: (positionId: number, positionName: string, colorCode: string) => void;
+  positions: { positionId: number, positionName: string, colorCode: string, colorId: number }[];
+  setPositions: (positions: { positionId: number, positionName: string, colorCode: string, colorId: number }[]) => void;
+  getPositions: () => { positionId: number, positionName: string, colorCode: string, colorId: number }[];
+  addPosition: (positionId: number, positionName: string, colorCode: string, colorId: number) => void;
   deletePosition: (positionId: number) => void;
 }
 
@@ -20,9 +20,9 @@ export const useTeamPositionStore = create<TeamPositionState>((set, get) => ({
     return get().positions;
   },
   // post 요청을 보내고 응답을 받아 set 함수를 통해 상태를 업데이트하자.
-  addPosition: (positionId: number, positionName: string, colorCode: string) => {
+  addPosition: (positionId: number, positionName: string, colorCode: string, colorId: number) => {
     // 이전 상태의 positions 배열을 가져와 새 position 객체를 추가합니다.
-    const newPositions = [...get().positions, { positionId, positionName, colorCode }];
+    const newPositions = [...get().positions, { positionId, positionName, colorCode, colorId }];
     set({ positions: newPositions });
   },
   deletePosition: (positionId: number) => {

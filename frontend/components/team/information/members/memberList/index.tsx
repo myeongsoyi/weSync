@@ -1,5 +1,5 @@
 'use client';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, List, Dropdown, message, Tag, Badge } from 'antd';
 import { Meta } from 'antd/es/list/Item';
 import Swal from 'sweetalert2';
@@ -74,6 +74,15 @@ export default function TeamMemberList({ teamId }: IParams) {
     setModalVisible(false);
   };
 
+  if (!success) {
+    return (
+      <div>
+        <p>멤버 정보를 불러오는 중 오류가 발생했습니다.</p>
+        <p>{error?.errorMessage}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-auto">
       <List
@@ -91,18 +100,22 @@ export default function TeamMemberList({ teamId }: IParams) {
         }) => (
           <List.Item>
             <Meta
-              avatar={<Badge
-                count={
-                  leader ? (
-                    <CrownFilled
-                      style={{ color: 'orange', fontSize: '21px' }}
-                    />
-                  ) : (
-                    0
-                  )
-                }
-                offset={[-22.5, -4]}
-              ><Avatar src={userProfileUrl} alt={nickName} size={45} /></Badge>}
+              avatar={
+                <Badge
+                  count={
+                    leader ? (
+                      <CrownFilled
+                        style={{ color: 'orange', fontSize: '21px' }}
+                      />
+                    ) : (
+                      0
+                    )
+                  }
+                  offset={[-22.5, -4]}
+                >
+                  <Avatar src={userProfileUrl} alt={nickName} size={45} />
+                </Badge>
+              }
               title={
                 <Dropdown
                   trigger={['click']}
@@ -149,10 +162,10 @@ export default function TeamMemberList({ teamId }: IParams) {
                   color: `#${colorCode}`,
                   maxWidth: '40%',
                   minWidth: '20%',
-                  padding: '4px',
+                  padding: '2px',
                   textAlign: 'center',
                 }}
-                className='truncate'
+                className="truncate"
               >
                 <span>{positionName}</span>
               </Tag>
@@ -163,10 +176,10 @@ export default function TeamMemberList({ teamId }: IParams) {
                   color: `#121212`,
                   maxWidth: '40%',
                   minWidth: '20%',
-                  padding: '4px',
+                  padding: '2px',
                   textAlign: 'center',
                 }}
-                className='truncate'
+                className="truncate"
               >
                 <span>미정</span>
               </Tag>

@@ -23,7 +23,7 @@ interface Colors {
 interface NewPositionModalProps {
   open: boolean;
   onCancel: () => void;
-  onSuccess: (positionId: number, newPosition: string, colorCode: string) => void;
+  onSuccess: (positionId: number, newPosition: string, colorCode: string, colorId: number) => void;
   teamId: string;
 }
 
@@ -63,7 +63,7 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
     }
   };
 
-  const handleColorChange = (value: string, option: any) => {
+  const handleColorChange = (value: string) => {
     const selectedColor = colors?.find((color) => color.colorCode === value);
     if (selectedColor) {
       setSelectedColorId(selectedColor.colorId);
@@ -77,8 +77,8 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
       message.error('포지션 이름을 입력해주세요.');
       return;
     }
-
     const response = await postTeamPosition(teamId, positionName, selectedColorId);
+    console.log('response:', response);
     if (!response.success) {
       message.error(response.error.errorMessage);
       return;
@@ -87,6 +87,7 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
         response.data.positionId,
         response.data.positionName,
         colors?.find((color) => color.colorId === selectedColorId)?.colorCode || '',
+        selectedColorId,
       );
       message.success('새 포지션 등록 성공');
       setPositionName('');

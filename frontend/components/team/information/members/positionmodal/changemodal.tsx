@@ -12,10 +12,10 @@ import {
 } from '@ant-design/icons';
 import NewPositionModal from './newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
-import { getTeamPosition, getPositionColors, postTeamPosition } from '@/services/team/information';
+import { getTeamPosition } from '@/services/team/information';
 
 interface Position {
-  positionId: number, positionName: string, colorCode: string
+  positionId: number, positionName: string, colorCode: string, colorId: number
 }
 
 // const initialPositions: Position[] = [
@@ -49,7 +49,7 @@ export default function PositionModal({
 
   useEffect(() => {
     const fetchPositions = async () => {
-      console.log('fetching positions')
+      // console.log('fetching positions')
       const positions = await getTeamPosition(teamId);
       if (positions.success) {
         setPositions(positions.data);
@@ -260,8 +260,8 @@ export default function PositionModal({
       <NewPositionModal
         open={newPositionVisible}
         onCancel={() => setNewPositionVisible(false)}
-        onSuccess={(positionId:number, newPosition: string, colorCode: string) => {
-          addPosition(positionId, newPosition, colorCode);
+        onSuccess={(positionId:number, newPosition: string, colorCode: string, colorId: number) => {
+          addPosition(positionId, newPosition, colorCode, colorId);
           setNewPositionVisible(false);
         }}
         teamId={teamId}

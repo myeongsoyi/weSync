@@ -4,8 +4,9 @@ import React from 'react';
 import { EditFilled } from '@ant-design/icons';
 import { Button, Tooltip, message } from 'antd';
 import Swal from 'sweetalert2';
+import { postTeamNotice } from '@/services/team/notice';
 
-export default function NoticeWrite() {
+export default function NoticeWrite({teamId}: {teamId: string}) {
   // 입력 폼이 있는 알림
   const handlePrompt = () => {
     Swal.fire({
@@ -20,9 +21,16 @@ export default function NoticeWrite() {
           return '내용을 입력해주세요!';
         }
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire('등록됨', '글이 등록되었습니다', 'success');
+        const response = await postTeamNotice(teamId, result.value);
+        if (response.success) {
+          Swal.fire('등록완료', '글이 등록되었습니다', 'success').then(() => {
+            window.location.reload();
+          });
+        } else {
+          Swal.fire('등록실패', '글 등록에 실패했습니다', 'error');
+        }
       } else {
         message.error('글 작성이 취소되었습니다.');
       }
