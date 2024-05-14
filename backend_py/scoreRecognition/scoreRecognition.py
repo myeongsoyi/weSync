@@ -128,7 +128,7 @@ async def recognition(file: UploadFile):
 
                 # MuseScore의 경로 및 변환 명령어 실행
                 musescore_path = '/usr/bin/mscore3'
-                subprocess.run([musescore_path, midi_path, '--export-to', audio_path])
+                subprocess.run([musescore_path, "-j", midi_path, '--export-to', audio_path])
 
         except Exception as e:
             print(e.args) # 오류
