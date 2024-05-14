@@ -108,7 +108,7 @@ async def recognition(file: UploadFile):
                     os.mkdir(f"{output_path}/img")
 
                 # MuseScore의 경로 설정 (환경에 따라 변경 필요)
-                environment.set('musescoreDirectPNGPath', '/usr/bin/mscore3')
+                environment.set('musescoreDirectPNGPath', '/usr/bin/musescore.appimage')
 
                 # MIDI 파일 로드
                 midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
