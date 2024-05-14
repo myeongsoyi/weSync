@@ -30,17 +30,15 @@ export default function TestComponent() {
 
   return (
     <div className="loading flex-col justify-center items-center">
-      <input id="swal-input3" onChange={handleImageChange} type="file" accept="image/*"/>
-      {/* {images && (
-        // <p>input3: {images[0].url}</p>
-      )} */}
+      {/* <Button type="primary" onClick={handleClick}>버튼</Button> */}
       <div>
         <Image
-          src={'/loading.gif'}
+          src={'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/Loading.gif'}
           alt="로딩"
           width={450}
           height={450}
           style={{ margin: 'auto' }}
+          priority
         ></Image>
         <h2 className="text-center mt-10">싱크 맞추는 중{dots}</h2>
       </div>
