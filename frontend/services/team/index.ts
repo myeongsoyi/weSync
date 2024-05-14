@@ -24,7 +24,7 @@ export const postCreateTeam = async (formData: FormData) => {
     const res = await fetch(`${baseURL}/team`, {
       method: "POST",
       headers: {
-        // "content-type": "multipart/form-data", 
+        "content-type": "multipart/form-data", 
         Authorization: accessToken ?? "",
       },
       body: formData,
@@ -92,13 +92,32 @@ export async function putTeamInfo(teamId: string, teamName: string, songName: st
   if (teamProfile) {
     formData.append('teamProfile', teamProfile);
   }
-  const response = await APIModule({
-    action: `/team/${teamId}`,
-    method: 'PUT',
-    data: formData,
+  formData.forEach((value, key) => {
+    console.warn(`${key}: ${value}`);
   });
 
-  return response;
+  try {
+    const accessToken = await getAccessToken();
+    const res = await fetch(`${baseURL}/team`, {
+      method: "POST",
+      headers: {
+        // "content-type": "multipart/form-data", 
+        Authorization: accessToken ?? "",
+      },
+      body: formData,
+    });
+    // console.log("res", res);
+    const obj = await res.json();
+    // console.log("obj", obj);
+    if (obj.success) {
+      return obj;
+    } else {
+      //TODO: error 페이지로 이동
+      throw new Error(obj.error.errorMessage);
+    }
+  } catch (e: any) {
+    //TODO: error 페이지로 이동
+  }
 }
 
 export async function getTeamNotices(teamId: string) {
