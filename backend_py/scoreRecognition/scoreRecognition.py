@@ -109,6 +109,8 @@ def recognition(file: UploadFile):
 
                 midi_to_ly(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/lily/{file_name}_part{i}.ly')
 
+                up.upload_file_to_s3(f'{output_path}/lily/{file_name}_part{i}.ly', "scoreOutput/lily/", f"{file_name}_part{i}.ly")
+
                 if not os.path.exists(f"{output_path}/img"):
                     os.mkdir(f"{output_path}/img")
 
