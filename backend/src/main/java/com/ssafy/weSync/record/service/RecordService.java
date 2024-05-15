@@ -3,10 +3,7 @@ package com.ssafy.weSync.record.service;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
 import com.ssafy.weSync.record.dto.request.CreateRequest;
-import com.ssafy.weSync.record.dto.response.GetAllMyResponse;
-import com.ssafy.weSync.record.dto.response.CreateResponse;
-import com.ssafy.weSync.record.dto.response.GetAllTeamCommon;
-import com.ssafy.weSync.record.dto.response.GetAllTeamResponse;
+import com.ssafy.weSync.record.dto.response.*;
 import com.ssafy.weSync.record.entity.Record;
 import com.ssafy.weSync.record.repository.RecordRepository;
 import com.ssafy.weSync.s3.service.S3Service;
@@ -56,6 +53,7 @@ public class RecordService {
     public CreateResponse createRecord(CreateRequest createRequest, MultipartFile file, Long scoreId, Long teamUserId) throws IOException {
         Score score = scoreRepository.findByScoreId(scoreId).orElseThrow(() -> new GlobalException(CustomError.NO_SCORE));
         TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
+
         String url = s3Service.upload(file, "record");
 
         Record record = createRequest.toEntity(url, score, teamUser);
@@ -75,30 +73,50 @@ public class RecordService {
     public List<GetAllTeamCommon> getTeamRecordList(Long teamId, String filter, Long userId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
 
-        List<GetAllTeamCommon> getAllTeamCommons;
+        List<GetAllTeamCommon> getAllTeamCommons = new ArrayList<>();
         if (filter.equals("all")){
-            getAllTeamCommons = getAllTeamRecordList(teamId);
+            List<GetAllTeamResponse> getAllTeamResponses = getAllTeamRecordList(teamId);
+            for (GetAllTeamResponse r : getAllTeamResponses){
+                getAllTeamCommons.add(r);
+            }
         }
-        if (filter.equals("my")){
-            return getAllMyTeamRecordList(teamId);
+        else if (filter.equals("my")){
+            List<GetAllMyTeamResponse> getAllMyTeamResponses = getAllMyTeamRecordList(userId, teamId);
+            for (GetAllMyTeamResponse r : getAllMyTeamResponses){
+                getAllTeamCommons.add(r);
+            }
         }
-        if (filter.substring(0, 3).equals("pos")){
-            return getAllTeamRecordListByPos(teamId, userId);
+        else if (filter.substring(0, 3).equals("pos")){
+            Long posId = Long.valueOf(filter.substring(3));
+            List<GetAllTeamResponseByPos> getAllTeamResponsesByPos = getAllTeamRecordListByPos(teamId, posId);
+            for (GetAllTeamResponseByPos r : getAllTeamResponsesByPos){
+                getAllTeamCommons.add(r);
+            }
         }
-
+        else {
+            throw new GlobalException(CustomError.WRONT_FILTER_FORMAT);
+        }
+        return getAllTeamCommons;
     }
 
 
     private List<GetAllTeamResponse> getAllTeamRecordList(Long teamId) {
         List<Record> records = recordRepository.findAllByTeamId(teamId);
-        List<GetAllTeamResponse> getAllTeamResponses = records.stream()
+        return records.stream()
                 .map(GetAllTeamResponse::toDto)
                 .collect(Collectors.toList());
-        return getAllTeamResponses;
     }
-    private List<GetAllTeamCommon> getAllTeamRecordListByPos(Long teamId) {
+    private List<GetAllTeamResponseByPos> getAllTeamRecordListByPos(Long teamId, Long posId) {
+        List<Record> records = recordRepository.findAllByTeamIdByPosition(teamId, posId);
+        return records.stream()
+                .map(GetAllTeamResponseByPos::toDto)
+                .collect(Collectors.toList());
     }
-    private List<GetAllTeamCommon> getAllMyTeamRecordList(Long userId) {
+    private List<GetAllMyTeamResponse> getAllMyTeamRecordList(Long userId, Long teamId) {
+        List<Record> records = recordRepository.findAllByUserIdByTeamId(userId, teamId);
+        return records.stream()
+                .map(GetAllMyTeamResponse::toDto)
+                .collect(Collectors.toList());
     }
 
 }
