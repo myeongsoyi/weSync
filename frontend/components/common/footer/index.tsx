@@ -52,7 +52,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} footer`}>
       <div className={`${styles.flex1} ${styles.justifyStart}`}>
         <div className={`bg-white p-2 rounded-xl ${styles.logo}`}>
           <Image

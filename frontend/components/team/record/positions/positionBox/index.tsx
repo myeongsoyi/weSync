@@ -19,6 +19,9 @@ export default function PositionBox({ teamId, position: initialPosition }: IPara
   const [savedVolume, setSavedVolume] = useState(30);
   const [position, setPosition] = useState<IRecord>(initialPosition);
   const [positionModalOpen, setPositionModalOpen] = useState(false);
+  // TODO: 팀원 선택이 가능하도록 수정 필요
+  const selectedMemberId = 1;
+
   console.log(teamId);
   const handlePositionSelect = (selectedPosition: IRecord) => {
     setPosition(selectedPosition);
@@ -76,7 +79,7 @@ export default function PositionBox({ teamId, position: initialPosition }: IPara
         )}
         <Slider defaultValue={30} value={volume} onChange={changeVolume} />
       </div>
-      <PositionModal open={positionModalOpen} onOk={handleOk} onCancel={closePositionModal} />
+      <PositionModal open={positionModalOpen} onOk={handleOk} onCancel={closePositionModal} selectedMemberId={selectedMemberId}/>
     </div>
   );
 }

@@ -67,7 +67,7 @@ export default function TeamMemberList({ teamId }: IParams) {
 
   const handleModalOk = () => {
     setModalVisible(false);
-    console.log('Position change confirmed for member ID:', selectedMemberId);
+    // console.log('Position change confirmed for member ID:', selectedMemberId);
   };
 
   const handleModalCancel = () => {
@@ -191,6 +191,7 @@ export default function TeamMemberList({ teamId }: IParams) {
         open={modalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
+        selectedMemberId={selectedMemberId}
       />
     </div>
   );
