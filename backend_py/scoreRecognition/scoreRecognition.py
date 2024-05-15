@@ -89,7 +89,7 @@ def recognition(file: UploadFile):
                     words = pd.decode_score(f'{resource_path}/{i}/{j}.png', 
                                     './scoreRecognition/Models/semantic_model/semantic_model.meta', 
                                     './scoreRecognition/Data/vocabulary_semantic.txt')
-                    melody = stm.word2midi(mid, track, words, melody)
+                    stm.word2midi(mid, track, words, melody)
                 
                 if not os.path.exists(f"{output_path}/midi"):
                     os.mkdir(f"{output_path}/midi")
@@ -99,10 +99,6 @@ def recognition(file: UploadFile):
 
                 if not os.path.exists(f"{output_path}/accom"):
                     os.mkdir(f"{output_path}/accom")
-
-                # 반주 파일 저장
-                # melody += 20
-                # melody.export(f"{output_path}/accom/{file_name}_part{i}.wav", format="wav")
 
                 convert_midi_to_wav(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/accom/{file_name}_part{i}.wav')
 
