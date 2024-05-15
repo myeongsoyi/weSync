@@ -11,6 +11,7 @@ import com.ssafy.weSync.record.repository.RecordRepository;
 import com.ssafy.weSync.team.entity.Team;
 import com.ssafy.weSync.team.entity.TeamUser;
 import com.ssafy.weSync.team.repository.TeamRepository;
+import com.ssafy.weSync.team.repository.TeamUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,12 @@ public class FeedBackService {
 
     private final FeedBackRepository feedBackRepository;
     private final TeamRepository teamRepository;
+    private final TeamUserRepository teamUserRepository;
     private final RecordRepository recordRepository;
 
     public CreateResponse createFeedBack(CreateRequest createRequest, Long userId, Long teamId, Long recordId) {
         Team team =  teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
-        TeamUser teamUser = feedBackRepository.findByUserIdAndTeamId(userId, team.getTeamId());
+        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, team.getTeamId());
         Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
 
         FeedBack feedBack = feedBackRepository.save(createRequest.toEntity(record, teamUser));
