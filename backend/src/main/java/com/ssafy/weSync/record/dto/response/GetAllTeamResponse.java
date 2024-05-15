@@ -19,6 +19,7 @@ public class GetAllTeamResponse extends GetAllTeamCommon{
     private String nickname;
     private Long positionId;
     private String positionName;
+    private String colorCode;
 
     public static GetAllTeamResponse toDto(Record record){
         return GetAllTeamResponse.builder()
@@ -32,6 +33,7 @@ public class GetAllTeamResponse extends GetAllTeamCommon{
                 .nickname(record.getTeamUser().getUser().getNickname())
                 .positionId(record.getTeamUser().getPosition().getPositionId())
                 .positionName(record.getTeamUser().getPosition().getPositionName())
+                .colorCode(record.getTeamUser().getPosition().getColor().getColorCode())
                 .build();
     }
 }

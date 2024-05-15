@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 public class GetAllMyTeamResponse extends GetAllTeamCommon{
     private Long positionId;
     private String positionName;
+    private String colorCode;
 
     public static GetAllMyTeamResponse toDto(Record record){
         return GetAllMyTeamResponse.builder()
@@ -24,6 +25,7 @@ public class GetAllMyTeamResponse extends GetAllTeamCommon{
                 .createAt(record.getCreatedAt())
                 .positionId(record.getTeamUser().getPosition().getPositionId())
                 .positionName(record.getTeamUser().getPosition().getPositionName())
+                .colorCode(record.getTeamUser().getPosition().getColor().getColorCode())
                 .build();
     }
 }
