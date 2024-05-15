@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /wesync/requirements.txt
+COPY .env /wesync/.env
+
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
 
 COPY ./app/ /wesync/app/
