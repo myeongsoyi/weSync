@@ -18,7 +18,6 @@ public class UserController {
 
     @GetMapping("")
     public ResponseEntity<Response<LoginDto>> kakaoCallback(@RequestBody CodeDto codeDto, HttpServletRequest request){
-        System.out.println(codeDto.getCode());
         return userService.kakaoCallback(codeDto.getCode(), request);
     }
 
