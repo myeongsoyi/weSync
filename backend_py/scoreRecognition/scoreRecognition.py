@@ -97,18 +97,23 @@ async def recognition(file: UploadFile):
                 # MIDI 파일 저장
                 mid.save(f'{output_path}/midi/{file_name}_part{i}.mid')
 
-                # if not os.path.exists(f"{output_path}/accom"):
-                #     os.mkdir(f"{output_path}/accom")
+                if not os.path.exists(f"{output_path}/accom"):
+                    os.mkdir(f"{output_path}/accom")
 
                 # 반주 파일 저장
                 # melody += 20
                 # melody.export(f"{output_path}/accom/{file_name}_part{i}.wav", format="wav")
 
+                convert_midi_to_wav(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/accom/{file_name}_part{i}.wav')
+
+                if not os.path.exists(f"{output_path}/lily"):
+                    os.mkdir(f"{output_path}/lily")
+                midi_to_ly(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/lily/{file_name}_part{i}.ly')
+
                 if not os.path.exists(f"{output_path}/img"):
                     os.mkdir(f"{output_path}/img")
 
-                convert_midi_to_wav(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/accom/{file_name}_part{i}.wav')
-                convert_midi_to_png(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/img/{file_name}_part{i}.png')
+                ly_to_png( f'{output_path}/lily/{file_name}_part{i}.ly',  f'{output_path}/img/{file_name}_part{i}.png')
         except Exception as e:
             print(e.args) # 오류
         finally:
@@ -127,16 +132,21 @@ async def recognition(file: UploadFile):
 
 def convert_midi_to_wav(midi_path, wav_path):
     try:
-        # 'timidity' 명령어 실행
         result = subprocess.run(['timidity', midi_path, '-Ow', '-o', wav_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print(f"Conversion successful: {result.stdout}")
     except subprocess.CalledProcessError as e:
-        # 오류 발생시 처리
         print(f"Error converting MIDI to WAV: {e.stderr}")
 
-def convert_midi_to_png(midi_path, png_path):
-    # LilyPond는 MIDI 파일을 직접 PNG로 변환하지 않으므로 우선 MIDI를 LilyPond 파일(.ly)로 변환 필요
-    ly_path = midi_path.replace('.mid', '.ly')
-    subprocess.run(["midi2ly", midi_path, "-o", ly_path], check=True)
-    # LilyPond 파일을 PNG로 변환
-    subprocess.run(["lilypond", "--png", "-o", png_path.replace('.png', ''), ly_path], check=True)
+def midi_to_ly(midi_path, ly_path):
+    try:
+        subprocess.run(['midi2ly', midi_path, '-o', ly_path], check=True)
+        print(f"MIDI to LilyPond conversion successful: {midi_path} -> {ly_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error converting MIDI to LilyPond: {e}")
+
+def ly_to_png(ly_path, output_base):
+    try:
+        subprocess.run(['lilypond', '--png', '-o', output_base, ly_path], check=True)
+        print(f"LilyPond to PNG conversion successful: {ly_path} -> {output_base}.png")
+    except subprocess.CalledProcessError as e:
+        print(f"Error converting LilyPond to PNG: {e}")
