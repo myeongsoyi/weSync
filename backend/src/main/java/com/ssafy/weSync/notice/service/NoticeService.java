@@ -1,5 +1,6 @@
 package com.ssafy.weSync.notice.service;
 
+import com.ssafy.weSync.global.ApiResponse.AccessTokenValidationAspect;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
 import com.ssafy.weSync.notice.dto.request.CreateRequest;
@@ -27,6 +28,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class NoticeService {
 
+    private final AccessTokenValidationAspect accessTokenValidationAspect;
+    private final Long userId = accessTokenValidationAspect.getUserId();
+
     private final NoticeRepository noticeRepository;
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
@@ -43,7 +47,7 @@ public class NoticeService {
         TeamUser teamUser = teamUserRepository.findById(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
 
         // 권한체크
-        if (teamUserId != team.getTeamLeaderId()){
+        if (userId != team.getTeamLeaderId()){
             throw new GlobalException(CustomError.NO_TEAM_LEADER);
         }
 
@@ -81,7 +85,7 @@ public class NoticeService {
         Team team = teamUser.getTeam();
 
         // 권한체크
-        if (teamUserId != team.getTeamLeaderId()){
+        if (userId != team.getTeamLeaderId()){
             throw new GlobalException(CustomError.NO_TEAM_LEADER);
         }
 
@@ -103,7 +107,7 @@ public class NoticeService {
         Team team = teamUser.getTeam();
 
         // 권한체크
-        if (teamUserId != team.getTeamLeaderId()){
+        if (userId != team.getTeamLeaderId()){
             throw new GlobalException(CustomError.NO_TEAM_LEADER);
         }
 
@@ -123,7 +127,7 @@ public class NoticeService {
         Team team = teamUser.getTeam();
 
         // 권한체크
-        if (teamUserId != team.getTeamLeaderId()){
+        if (userId != team.getTeamLeaderId()){
             throw new GlobalException(CustomError.NO_TEAM_LEADER);
         }
 
