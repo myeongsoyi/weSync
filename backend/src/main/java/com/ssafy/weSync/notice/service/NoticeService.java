@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 public class NoticeService {
 
     private final AccessTokenValidationAspect accessTokenValidationAspect;
-    private final Long userId = accessTokenValidationAspect.getUserId();
 
     private final NoticeRepository noticeRepository;
     private final TeamRepository teamRepository;
@@ -45,6 +44,7 @@ public class NoticeService {
     public CreateResponse createNotice(CreateRequest createRequest, Long teamId, Long teamUserId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
         TeamUser teamUser = teamUserRepository.findById(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
+        Long userId = accessTokenValidationAspect.getUserId();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -83,6 +83,7 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
         TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         Team team = teamUser.getTeam();
+        Long userId = accessTokenValidationAspect.getUserId();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -105,6 +106,7 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
         TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         Team team = teamUser.getTeam();
+        Long userId = accessTokenValidationAspect.getUserId();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -125,6 +127,7 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
         TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         Team team = teamUser.getTeam();
+        Long userId = accessTokenValidationAspect.getUserId();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
