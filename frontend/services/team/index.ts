@@ -10,36 +10,32 @@ export async function getPositionColors() {
   return response;
 }
 
-import { getAccessToken } from "@/utils/getAccessToken";
+import { getAccessToken } from '@/utils/getAccessToken';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const postCreateTeam = async (formData: FormData) => {
-  console.log("formData API", formData);
-  formData.forEach((value, key) => {
-    console.warn(`${key}: ${value}`);
+  // console.log("formData API", formData);
+  // formData.forEach((value, key) => {
+  //   console.warn(`${key}: ${value}`);
+  // });
+
+  const accessToken = await getAccessToken();
+  const response = await fetch(`${baseURL}/team`, {
+    method: 'POST',
+    headers: {
+      // "Content-Type": "multipart/form-data",
+      Authorization: accessToken ?? '',
+    },
+    body: formData,
   });
+
+  // json 파싱 분기 처리
   try {
-    const accessToken = await getAccessToken();
-    const res = await fetch(`${baseURL}/team`, {
-      method: "POST",
-      headers: {
-        // "content-type": "multipart/form-data", 
-        Authorization: accessToken ?? "",
-      },
-      body: formData,
-    });
-    // console.log("res", res);
-    const obj = await res.json();
-    // console.log("obj", obj);
-    if (obj.success) {
-      return obj;
-    } else {
-      //TODO: error 페이지로 이동
-      throw new Error(obj.error.errorMessage);
-    }
-  } catch (e: any) {
-    //TODO: error 페이지로 이동
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
   }
 };
 
@@ -94,7 +90,13 @@ export async function deleteLeaveTeam(teamId: string) {
   return response;
 }
 
-export async function patchTeamInfo(teamId: string, teamName: string, songName: string, isFinished: boolean, teamProfile?: File) {
+export async function patchTeamInfo(
+  teamId: string,
+  teamName: string,
+  songName: string,
+  isFinished: boolean,
+  teamProfile?: File,
+) {
   const formData = new FormData();
   formData.append('teamName', teamName);
   formData.append('songName', songName);
@@ -106,27 +108,21 @@ export async function patchTeamInfo(teamId: string, teamName: string, songName: 
   //   console.warn(`${key}: ${value}`);
   // });
 
+  const accessToken = await getAccessToken();
+  const response = await fetch(`${baseURL}/team/${teamId}`, {
+    method: 'PATCH',
+    headers: {
+      // "content-type": "multipart/form-data",
+      Authorization: accessToken ?? '',
+    },
+    body: formData,
+  });
+  // json 파싱 분기 처리
   try {
-    const accessToken = await getAccessToken();
-    const res = await fetch(`${baseURL}/team/${teamId}`, {
-      method: "PATCH",
-      headers: {
-        // "content-type": "multipart/form-data", 
-        Authorization: accessToken ?? "",
-      },
-      body: formData,
-    });
-    // console.log("res", res);
-    const obj = await res.json();
-    // console.log("obj", obj);
-    if (obj.success) {
-      return obj;
-    } else {
-      //TODO: error 페이지로 이동
-      throw new Error(obj.error.errorMessage);
-    }
-  } catch (e: any) {
-    //TODO: error 페이지로 이동
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
   }
 }
 

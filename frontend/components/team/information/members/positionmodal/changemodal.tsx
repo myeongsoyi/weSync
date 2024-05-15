@@ -12,10 +12,16 @@ import {
 } from '@ant-design/icons';
 import NewPositionModal from './newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
-import { getTeamPosition } from '@/services/team/information';
+import {
+  getTeamPosition,
+  putMemberPosition,
+} from '@/services/team/information';
 
 interface Position {
-  positionId: number, positionName: string, colorCode: string, colorId: number
+  positionId: number;
+  positionName: string;
+  colorCode: string;
+  colorId: number;
 }
 
 // const initialPositions: Position[] = [
@@ -29,20 +35,25 @@ export default function PositionModal({
   open,
   onOk,
   onCancel,
+  selectedMemberId,
 }: {
   open: boolean;
   onOk: () => void;
   onCancel: () => void;
+  selectedMemberId: number | null;
 }) {
   // const [positions, setPositions] = useState<Position[]>(initialPositions);
-  const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<number | null>(
+    selectedMemberId,
+  );
   const [newPositionVisible, setNewPositionVisible] = useState<boolean>(false);
 
-  const { positions, setPositions, addPosition, deletePosition } = useTeamPositionStore(state => ({
-    positions: state.positions,
-    setPositions: state.setPositions,
-    addPosition: state.addPosition,
-    deletePosition: state.deletePosition,
+  const { positions, setPositions, addPosition, deletePosition } =
+    useTeamPositionStore((state) => ({
+      positions: state.positions,
+      setPositions: state.setPositions,
+      addPosition: state.addPosition,
+      deletePosition: state.deletePosition,
     }));
 
   const teamId = usePathname().split('/')[2];
@@ -51,13 +62,13 @@ export default function PositionModal({
     const fetchPositions = async () => {
       // console.log('fetching positions')
       const positions = await getTeamPosition(teamId);
+      console.log(positions);
       if (positions.success) {
         setPositions(positions.data);
       }
     };
     fetchPositions();
   }, [open]);
-
 
   const handlePositionSelect = (positionId: number): void => {
     setSelectedPosition(positionId);
@@ -115,25 +126,19 @@ export default function PositionModal({
     if (!selectedPosition) {
       message.error('포지션을 선택해 주세요.');
       return;
-    }
-    try {
-      const response = await fetch('/api/assignPosition', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ position: selectedPosition }),
-      });
-      if (!response.ok) throw new Error('네트워크 오류 발생');
-      const data = await response.json();
-      if (data.success) {
-        message.success(`${selectedPosition} 포지션이 할당되었습니다.`);
-        onOk(); // Callback to indicate successful operation
+    } else if (selectedMemberId) {
+      const response = await putMemberPosition(
+        selectedMemberId,
+        selectedPosition,
+      );
+      if (response.success) {
+        message.success('포지션 변경이 완료되었습니다.');
+        onOk();
       } else {
-        throw new Error(data.message || '에러 발생');
+        message.error('포지션 변경에 실패했습니다.');
       }
-    } catch (error) {
-      message.error(`${selectedPosition} 포지션 할당이 실패하였습니다`);
+    } else {
+      message.error('멤버를 다시 선택해 주세요.');
     }
   };
 
@@ -205,9 +210,11 @@ export default function PositionModal({
                 <Tag
                   style={{
                     cursor: 'pointer',
-                    padding: selectedPosition === positionId ? '4px 8px' : '1px 5px',
+                    padding:
+                      selectedPosition === positionId ? '4px 8px' : '1px 5px',
                     fontSize: `calc(15px * ${selectedPosition === positionId ? '1.5' : '1'})`,
-                    fontWeight: selectedPosition === positionId ? 'bold' : 'normal',
+                    fontWeight:
+                      selectedPosition === positionId ? 'bold' : 'normal',
                     borderWidth: `calc(1px * ${selectedPosition === positionId ? '3' : '1'})`,
                     margin: `calc(0px + ${selectedPosition === positionId ? '8px' : '0px'}) auto`,
                     borderColor: `#${colorCode}`,
@@ -217,7 +224,9 @@ export default function PositionModal({
                     justifyContent: 'center',
                     position: 'relative', // 위치 조정을 위해 relative 설정
                   }}
-                  className={selectedPosition === positionId ? 'selectedTag' : ''}
+                  className={
+                    selectedPosition === positionId ? 'selectedTag' : ''
+                  }
                 >
                   {selectedPosition === positionId && (
                     <CheckOutlined
@@ -260,7 +269,12 @@ export default function PositionModal({
       <NewPositionModal
         open={newPositionVisible}
         onCancel={() => setNewPositionVisible(false)}
-        onSuccess={(positionId:number, newPosition: string, colorCode: string, colorId: number) => {
+        onSuccess={(
+          positionId: number,
+          newPosition: string,
+          colorCode: string,
+          colorId: number,
+        ) => {
           addPosition(positionId, newPosition, colorCode, colorId);
           setNewPositionVisible(false);
         }}

@@ -6,11 +6,10 @@ import { Button, Tooltip, message } from 'antd';
 import Swal from 'sweetalert2';
 import { postTeamNotice } from '@/services/team/notice';
 
-export default function NoticeWrite({teamId}: {teamId: string}) {
-  // 입력 폼이 있는 알림
+export default function NoticeWrite({teamId, fetchNotices}: {teamId: string, fetchNotices: () => void}) {
   const handlePrompt = () => {
     Swal.fire({
-      title: '글 작성',
+      title: '공지 작성',
       input: 'textarea',
       inputPlaceholder: '글을 작성해주세요.',
       showCancelButton: true,
@@ -26,7 +25,7 @@ export default function NoticeWrite({teamId}: {teamId: string}) {
         const response = await postTeamNotice(teamId, result.value);
         if (response.success) {
           Swal.fire('등록완료', '글이 등록되었습니다', 'success').then(() => {
-            window.location.reload();
+            fetchNotices();  // 공지를 다시 가져옴
           });
         } else {
           Swal.fire('등록실패', '글 등록에 실패했습니다', 'error');

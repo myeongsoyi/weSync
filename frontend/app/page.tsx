@@ -9,7 +9,6 @@ export default function HomePage() {
       <div className="content">
         <MainTeams />
         <MainRecords />
-
       </div>
     </div>
   );
