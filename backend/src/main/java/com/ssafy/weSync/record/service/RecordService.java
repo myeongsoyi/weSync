@@ -44,15 +44,6 @@ public class RecordService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
 
-    /***
-     *
-     * @param createRequest
-     * @param file
-     * @param scoreId
-     * @param teamUserId
-     * @return CreateResponse
-     * @throws IOException
-     */
     public CreateResponse createRecord(CreateRequest createRequest, MultipartFile file, Long scoreId, Long teamUserId) throws IOException {
         System.out.println(createRequest.toString());
         Score score = scoreRepository.findByScoreId(scoreId).orElseThrow(() -> new GlobalException(CustomError.NO_SCORE));
@@ -65,7 +56,11 @@ public class RecordService {
         return CreateResponse.toDto(recordId, url);
     }
 
-
+    /***
+     *
+     * @param userId
+     * @return
+     */
     public List<GetAllMyResponse> getMyRecordList(Long userId) {
         List<Record> records = recordRepository.findAllByUserId(userId);
         List<GetAllMyResponse> getAllMyResponses = records.stream()
@@ -103,19 +98,37 @@ public class RecordService {
         return getAllTeamCommons;
     }
 
-
+    /***
+     *
+     * @param teamId
+     * @return
+     */
     private List<GetAllTeamResponse> getAllTeamRecordList(Long teamId) {
         List<Record> records = recordRepository.findAllByTeamId(teamId);
         return records.stream()
                 .map(GetAllTeamResponse::toDto)
                 .collect(Collectors.toList());
     }
+
+    /***
+     *
+     * @param teamId
+     * @param posId
+     * @return
+     */
     private List<GetAllTeamResponseByPos> getAllTeamRecordListByPos(Long teamId, Long posId) {
         List<Record> records = recordRepository.findAllByTeamIdByPosition(teamId, posId);
         return records.stream()
                 .map(GetAllTeamResponseByPos::toDto)
                 .collect(Collectors.toList());
     }
+
+    /***
+     *
+     * @param userId
+     * @param teamId
+     * @return
+     */
     private List<GetAllMyTeamResponse> getAllMyTeamRecordList(Long userId, Long teamId) {
         List<Record> records = recordRepository.findAllByUserIdByTeamId(userId, teamId);
         return records.stream()
@@ -123,6 +136,12 @@ public class RecordService {
                 .collect(Collectors.toList());
     }
 
+    /***
+     *
+     * @param userId
+     * @param recordId
+     * @return
+     */
     public UpdateResponse updateRecord(Long userId, Long recordId) {
         Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
         

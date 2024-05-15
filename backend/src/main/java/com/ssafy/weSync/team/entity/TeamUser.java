@@ -1,6 +1,8 @@
 package com.ssafy.weSync.team.entity;
 
+import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.global.entity.BaseTime;
+import com.ssafy.weSync.notice.entity.Notice;
 import com.ssafy.weSync.record.entity.Record;
 import com.ssafy.weSync.user.entity.User;
 import jakarta.persistence.*;
@@ -42,6 +44,12 @@ public class TeamUser extends BaseTime {
 
     @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Record> records;
+
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notice> notices;
+
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedBack> feedBacks;
 
     @Column(name = "is_banned")
     private Boolean isBanned;
