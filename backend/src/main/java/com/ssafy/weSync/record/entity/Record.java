@@ -35,11 +35,15 @@ public class Record extends BaseTime {
     private String url;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     @NotNull
     private Status status;
 
     @Column(name = "start_at")
     private Long startAt;
+
+    @Column(name = "end_at")
+    private Long endAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "score_id")

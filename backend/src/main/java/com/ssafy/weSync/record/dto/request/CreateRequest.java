@@ -19,7 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class CreateRequest {
     private String title;
     private Status status;
-    private String time;
+    private String startAt;
+    private String endAt;
     private MultipartFile file;
 
     public Record toEntity(String url, Score score, TeamUser teamUser){
@@ -27,7 +28,8 @@ public class CreateRequest {
                 .title(title)
                 .url(url)
                 .status(status)
-                .startAt(parseTime(time))
+                .startAt(parseTime(startAt))
+                .endAt(parseTime(endAt))
                 .score(score)
                 .teamUser(teamUser)
                 .build();
@@ -38,9 +40,9 @@ public class CreateRequest {
             return 0L;
         }
         String[] parts = time.split(":");
-        if (parts.length != 3){
+        if (parts.length != 2){
             throw new GlobalException(CustomError.WRONG_TIME_FORMAT);
         }
-        return 60000L * Long.parseLong(parts[0]) + 1000L * Long.parseLong(parts[1]) + Long.parseLong(parts[2]);
+        return 1000L * Long.parseLong(parts[0]) + Long.parseLong(parts[1]);
     }
 }

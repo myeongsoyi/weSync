@@ -5,6 +5,8 @@ import com.ssafy.weSync.global.ApiResponse.Response;
 import com.ssafy.weSync.record.dto.request.CreateRequest;
 import com.ssafy.weSync.record.dto.response.GetAllMyResponse;
 import com.ssafy.weSync.record.dto.response.CreateResponse;
+import com.ssafy.weSync.record.dto.response.GetAllTeamCommon;
+import com.ssafy.weSync.record.dto.response.GetAllTeamResponse;
 import com.ssafy.weSync.record.service.RecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,4 +42,13 @@ public class RecordController {
         Response<List<GetAllMyResponse>> response = new Response<>(true, getAllMyResponse, null);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/team/{teamId}")
+    public ResponseEntity<Response<List<GetAllTeamCommon>>> getTeamRecordList(@PathVariable Long teamId, @RequestParam String filter){
+        Long userId = accessTokenValidationAspect.getUserId();
+        List<GetAllTeamCommon> getAllTeamResponses = recordService.getTeamRecordList(teamId, filter, userId);
+        Response<List<GetAllTeamCommon>> response = new Response<>(true, getAllTeamResponses, null);
+        return ResponseEntity.ok(response);
+    }
+
 }
