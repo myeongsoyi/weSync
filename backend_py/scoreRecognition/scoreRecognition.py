@@ -10,9 +10,8 @@ import scoreRecognition.predict as pd
 import scoreRecognition.score2midi as stm
 from pydub import AudioSegment
 from concurrent.futures import ThreadPoolExecutor
-from music21 import *
-import subprocess
 import scoreRecognition.upload as up
+import subprocess
 
 executor = ThreadPoolExecutor(max_workers=4)
 
@@ -108,28 +107,8 @@ async def recognition(file: UploadFile):
                 if not os.path.exists(f"{output_path}/img"):
                     os.mkdir(f"{output_path}/img")
 
-                # MuseScore의 경로 설정 (환경에 따라 변경 필요)
-                environment.set('musescoreDirectPNGPath', '/usr/bin/musescore.appimage')
-
-                # MIDI 파일 로드
-                midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
-                print("**start")
-                score = converter.parse(midi_path)
-                print("**convert")
-
-                # 악보 이미지로 저장
-                score.write('musicxml.png', fp = f"{output_path}/img/{file_name}_part{i}.png")
-                print("**end")
-                # up.upload_file_to_s3('example.txt')
-
-                # MIDI 파일과 출력될 오디오 파일의 경로
-                midi_path = f'{output_path}/midi/{file_name}_part{i}.mid'
-                audio_path = f"{output_path}/accom/{file_name}_part{i}.wav"
-
-                # MuseScore의 경로 및 변환 명령어 실행
-                musescore_path = '/usr/bin/mscore3'
-                subprocess.run([musescore_path, "-j", midi_path, '--export-to', audio_path])
-
+                convert_midi_to_wav(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/accom/{file_name}_part{i}.wav')
+                convert_midi_to_png(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/img/{file_name}_part{i}.png')
         except Exception as e:
             print(e.args) # 오류
         finally:
@@ -145,3 +124,14 @@ async def recognition(file: UploadFile):
     
     doc.close()
     os.remove(temp_file_path)
+
+def convert_midi_to_wav(midi_path, wav_path):
+    # Timidity를 사용하여 MIDI 파일을 WAV 파일로 변환
+    subprocess.run(["timidity", midi_path, "-Ow", "-o", wav_path], check=True)
+
+def convert_midi_to_png(midi_path, png_path):
+    # LilyPond는 MIDI 파일을 직접 PNG로 변환하지 않으므로 우선 MIDI를 LilyPond 파일(.ly)로 변환 필요
+    ly_path = midi_path.replace('.mid', '.ly')
+    subprocess.run(["midi2ly", midi_path, "-o", ly_path], check=True)
+    # LilyPond 파일을 PNG로 변환
+    subprocess.run(["lilypond", "--png", "-o", png_path.replace('.png', ''), ly_path], check=True)
