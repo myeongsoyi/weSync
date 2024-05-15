@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -31,10 +32,16 @@ public class Score extends BaseTime {
     @JoinColumn(name = "position_id")
     private Position position;
 
+    @JoinColumn(name = "part_num")
+    @NotNull
+    private int partNum;
+
     @Column(name = "title")
+    @NotNull
     private String title;
 
     @Column(name = "score_url")
+    @NotNull
     private String scoreUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
