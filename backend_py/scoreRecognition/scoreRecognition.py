@@ -106,7 +106,7 @@ def recognition(file: UploadFile):
 
                 convert_midi_to_wav(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/accom/{file_name}_part{i}.wav')
 
-                up.upload_file_to_s3(f'{output_path}/accom/{file_name}_part{i}.wav', "{file_name}_part{i}.wav")
+                up.upload_file_to_s3(f'{output_path}/accom/{file_name}_part{i}.wav', f"{file_name}_part{i}.wav")
 
                 if not os.path.exists(f"{output_path}/lily"):
                     os.mkdir(f"{output_path}/lily")
@@ -118,7 +118,7 @@ def recognition(file: UploadFile):
 
                 ly_to_png( f'{output_path}/lily/{file_name}_part{i}.ly',  f'{output_path}/img/{file_name}_part{i}.png')
 
-                up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}.png', "{file_name}_part{i}.png")
+                up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}.png', f"{file_name}_part{i}.png")
         except Exception as e:
             print(e.args) # 오류
         finally:
