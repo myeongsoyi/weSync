@@ -28,10 +28,12 @@ public class Notice extends BaseTime {
     private Long noticeId;
 
     @Column(name = "content")
+    @NotNull
     private String content;
 
     @Column(name = "is_fixed")
-    private Boolean isFixed;
+    @NotNull
+    private boolean isFixed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")

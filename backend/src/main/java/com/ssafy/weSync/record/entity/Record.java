@@ -34,10 +34,9 @@ public class Record extends BaseTime {
     @NotNull
     private String url;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
+    @Column(name = "is_public")
     @NotNull
-    private Status status;
+    private boolean isPublic;
 
     @Column(name = "start_at")
     private Long startAt;
@@ -52,4 +51,12 @@ public class Record extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_user_id")
     private TeamUser teamUser;
+
+    public void updateIsPublic() {
+        if (this.isPublic == true) {
+            this.isPublic = false;
+        } else {
+            this.isPublic = true;
+        }
+    }
 }

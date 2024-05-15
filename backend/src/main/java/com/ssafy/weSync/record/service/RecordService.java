@@ -13,6 +13,8 @@ import com.ssafy.weSync.team.entity.TeamUser;
 import com.ssafy.weSync.team.repository.ScoreRepository;
 import com.ssafy.weSync.team.repository.TeamRepository;
 import com.ssafy.weSync.team.repository.TeamUserRepository;
+import com.ssafy.weSync.user.entity.User;
+import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,7 @@ public class RecordService {
     private final ScoreRepository scoreRepository;
     private final TeamUserRepository teamUserRepository;
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
     /***
      *
@@ -51,6 +54,7 @@ public class RecordService {
      * @throws IOException
      */
     public CreateResponse createRecord(CreateRequest createRequest, MultipartFile file, Long scoreId, Long teamUserId) throws IOException {
+        System.out.println(createRequest.toString());
         Score score = scoreRepository.findByScoreId(scoreId).orElseThrow(() -> new GlobalException(CustomError.NO_SCORE));
         TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
 
@@ -94,7 +98,7 @@ public class RecordService {
             }
         }
         else {
-            throw new GlobalException(CustomError.WRONT_FILTER_FORMAT);
+            throw new GlobalException(CustomError.WRONG_FILTER_FORMAT);
         }
         return getAllTeamCommons;
     }
@@ -119,4 +123,16 @@ public class RecordService {
                 .collect(Collectors.toList());
     }
 
+    public UpdateResponse updateRecord(Long userId, Long recordId) {
+        Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        
+        // 권한 체크
+        if (record.getTeamUser().getUser().getUserId() != userId) {
+            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
+        }
+        
+        record.updateIsPublic();
+        Record newRecord = recordRepository.save(record);
+        return UpdateResponse.toDto(newRecord.isPublic());
+    }
 }

@@ -19,7 +19,7 @@ public class GetAllResponse {
         return GetAllResponse.builder()
                 .noticeId(notice.getNoticeId())
                 .content(notice.getContent())
-                .isFixed(notice.getIsFixed())
+                .isFixed(notice.isFixed())
                 .createdAt(notice.getCreatedAt())
                 .build();
     }

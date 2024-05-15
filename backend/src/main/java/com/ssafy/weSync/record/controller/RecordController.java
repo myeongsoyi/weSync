@@ -2,11 +2,9 @@ package com.ssafy.weSync.record.controller;
 
 import com.ssafy.weSync.global.ApiResponse.AccessTokenValidationAspect;
 import com.ssafy.weSync.global.ApiResponse.Response;
+import com.ssafy.weSync.notice.dto.request.UpdateRequest;
 import com.ssafy.weSync.record.dto.request.CreateRequest;
-import com.ssafy.weSync.record.dto.response.GetAllMyResponse;
-import com.ssafy.weSync.record.dto.response.CreateResponse;
-import com.ssafy.weSync.record.dto.response.GetAllTeamCommon;
-import com.ssafy.weSync.record.dto.response.GetAllTeamResponse;
+import com.ssafy.weSync.record.dto.response.*;
 import com.ssafy.weSync.record.service.RecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +46,14 @@ public class RecordController {
         Long userId = accessTokenValidationAspect.getUserId();
         List<GetAllTeamCommon> getAllTeamResponses = recordService.getTeamRecordList(teamId, filter, userId);
         Response<List<GetAllTeamCommon>> response = new Response<>(true, getAllTeamResponses, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{recordId}")
+    public ResponseEntity<Response<UpdateResponse>> updateRecord(@PathVariable Long recordId){
+        Long userId = accessTokenValidationAspect.getUserId();
+        UpdateResponse updateResponse = recordService.updateRecord(userId, recordId);
+        Response<UpdateResponse> response = new Response<>(true, updateResponse, null);
         return ResponseEntity.ok(response);
     }
 
