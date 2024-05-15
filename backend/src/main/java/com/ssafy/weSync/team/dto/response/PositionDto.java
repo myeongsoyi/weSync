@@ -11,4 +11,5 @@ public class PositionDto {
     private  Long positionId;
     private String positionName;
     private Long colorId;
+    private String colorCode;
 }
