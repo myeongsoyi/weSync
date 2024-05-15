@@ -2,18 +2,15 @@ FROM python:3.7
 
 WORKDIR /wesync
 
-COPY requirements.txt /wesync/requirements.txt
-
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     timidity \
-    lilypond
+    lilypond \
+    python-ly \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update
-
+COPY requirements.txt /wesync/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
 
 COPY ./app/ /wesync/app/
-
-CMD ["ls"]
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
