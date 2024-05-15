@@ -34,13 +34,6 @@ public class NoticeService {
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
 
-    /***
-     *
-     * @param createRequest
-     * @param teamId
-     * @param teamUserId
-     * @return CreateResponse
-     */
     public CreateResponse createNotice(CreateRequest createRequest, Long teamId, Long teamUserId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
         TeamUser teamUser = teamUserRepository.findById(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
@@ -59,11 +52,6 @@ public class NoticeService {
         return CreateResponse.toDto(notice.getNoticeId(), createdTime);
     }
 
-    /***
-     *
-     * @param teamId
-     * @return List<GetALlResponse>
-     */
     public List<GetAllResponse> getAllNotices(Long teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
 
@@ -118,11 +106,6 @@ public class NoticeService {
         return ContentUpdateResponse.toDto(newNotice.getUpdatedAt());
     }
 
-    /***
-     *
-     * @param noticeId
-     * @param teamUserId
-     */
     public void deleteNotice(Long noticeId, Long teamUserId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
         TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));

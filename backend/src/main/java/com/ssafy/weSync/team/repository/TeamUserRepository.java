@@ -4,6 +4,8 @@ import com.ssafy.weSync.team.entity.Position;
 import com.ssafy.weSync.team.entity.TeamUser;
 import com.ssafy.weSync.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +18,7 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
     List<TeamUser> findByUserOrderByCreatedAtDesc(User user);
     Optional<TeamUser> findByUserUserIdAndTeamTeamId(Long userId, Long teamId);
     List<TeamUser> findByPosition(Position position);
+
+    @Query("SELECT tu FROM TeamUser tu JOIN tu.team t JOIN tu.user u WHERE u.userId = :userId And t.teamId = :teamId")
+    TeamUser findByUserIdAndTeamId(@Param("userId") Long userId, @Param("teamId") Long teamId);
 }
