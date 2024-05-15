@@ -122,8 +122,9 @@ def recognition(file: UploadFile):
         except Exception as e:
             print(e.args) # 오류
         finally:
-            shutil.rmtree(output_path)
-            shutil.move(temp_output_folder, output_path)
+            # shutil.rmtree(output_path)
+            # shutil.move(temp_output_folder, output_path)
+            pass
     except Exception as e:
         print(e.args) # 오류
     finally:
