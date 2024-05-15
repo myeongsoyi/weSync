@@ -40,19 +40,16 @@ export default function LoginData({ canLogin }: LoginDataProps) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const logOut = await getLogout();
-          if (logOut.success) {
-            localStorage.clear();
-            Swal.fire({
-              title: '로그아웃 되었습니다.',
-              confirmButtonText: '확인',
-              willClose: () => {
-                window.location.href = '/welcome';
-              },
-            });
-          } else {
-            Swal.fire('로그아웃에 실패했습니다.');
-          }
+          // const logOut = await getLogout();
+          await getLogout();
+          localStorage.clear();
+          Swal.fire({
+            title: '로그아웃 되었습니다.',
+            confirmButtonText: '확인',
+            willClose: () => {
+              window.location.href = '/welcome';
+            },
+          });
         } catch (err) {
           Swal.fire('로그아웃에 실패했습니다.');
         }

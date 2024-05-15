@@ -16,7 +16,7 @@ const contentStyle: React.CSSProperties = {
 export default function welcome() {
   return (
     <div>
-      <div className={styles.welcome}>
+      <div className={`${styles.welcome} welcome`}>
         <div className={styles.content}>
           <div>
             <div className="flex justify-center">
