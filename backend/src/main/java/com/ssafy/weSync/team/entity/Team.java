@@ -60,6 +60,5 @@ public class Team extends BaseTime {
 
     //공지
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Column(name = "team_position")
     private List<Notice> notices;
 }

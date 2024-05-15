@@ -1,5 +1,6 @@
 package com.ssafy.weSync.record.entity;
 
+import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.global.entity.BaseTime;
 import com.ssafy.weSync.team.entity.Score;
 import com.ssafy.weSync.team.entity.TeamUser;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,6 +54,9 @@ public class Record extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_user_id")
     private TeamUser teamUser;
+
+    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedBack> feedBacks;
 
     public void updateIsPublic() {
         if (this.isPublic == true) {
