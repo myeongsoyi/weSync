@@ -32,8 +32,8 @@ public class TeamController {
 
     //현재 속한 팀 이름, 곡 이름, 프로필 사진, 팀장 여부, 진행중인 팀 이름, 곡 이름, 프로필 사진 조회
     @GetMapping("/info")
-    public ResponseEntity<Response<ShortCurrentTeamInfoDto>> activeTeamsInfo(@RequestParam() Long teamId) {
-        return teamService.getActiveTeamsShort(teamId);
+    public ResponseEntity<Response<ShortCurrentTeamInfoDto>> activeTeamsInfo(@RequestBody TeamIdDto teamIdDto) {
+        return teamService.getActiveTeamsShort(teamIdDto.getTeamId());
     }
 
     //팀 초대 링크 생성
@@ -68,14 +68,26 @@ public class TeamController {
 
     //포지션 조회
     @GetMapping("/position")
-    public ResponseEntity<Response<List<PositionDto>>> getPositionList(@RequestParam() Long id) {
-        return teamService.getPositionList(id);
+    public ResponseEntity<Response<List<PositionDto>>> getPositionList(@RequestBody TeamIdDto teamIdDto) {
+        return teamService.getPositionList(teamIdDto.getTeamId());
     }
 
     //커스텀 포지션 생성
     @PostMapping("/position")
     public ResponseEntity<Response<PositionDto>> addCustomPosition(@ModelAttribute CustomPositionDto customPositionDto) {
         return teamService.addCustomPosition(customPositionDto);
+    }
+
+    //포지션 수정
+    @PutMapping("/position")
+    public ResponseEntity<Response<PositionDto>> editCustomPosition(@ModelAttribute PositionDto positionDto) {
+        return teamService.editCustomPosition(positionDto);
+    }
+
+    //포지션 삭제
+    @DeleteMapping("/position")
+    public ResponseEntity<Response<PositionDto>> deleteCustomPosition(@ModelAttribute PositionDto positionDto) {
+        return teamService.deleteCustomPosition(positionDto);
     }
 
     //진행중인 팀목록 조회
