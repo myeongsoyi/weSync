@@ -147,7 +147,12 @@ def midi_to_ly(midi_path, ly_path):
 
 def ly_to_png(ly_path, output_base):
     try:
-        subprocess.run(['lilypond', '--png', '-o', output_base, ly_path],  check=True)
+        subprocess.run(['lilypond', '--png', '-o', output_base, ly_path],  check=True, stderr=subprocess.PIPE)
         print(f"LilyPond to PNG conversion successful: {ly_path} -> {output_base}.png")
     except subprocess.CalledProcessError as e:
-        print(f"Error converting LilyPond to PNG: {e}\nSTDERR: {e.stderr.decode()}")
+        # stderr가 None인 경우를 확인하고, None이 아니면 디코드합니다.
+        if e.stderr:
+            print(f"Error converting LilyPond to PNG: {e}\nSTDERR: {e.stderr.decode()}")
+        else:
+            print(f"Error converting LilyPond to PNG: {e}")
+
