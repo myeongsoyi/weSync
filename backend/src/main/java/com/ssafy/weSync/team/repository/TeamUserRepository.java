@@ -1,5 +1,6 @@
 package com.ssafy.weSync.team.repository;
 
+import com.ssafy.weSync.team.entity.Position;
 import com.ssafy.weSync.team.entity.TeamUser;
 import com.ssafy.weSync.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,6 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
     Optional<TeamUser> findByTeamUserId(Long teamUserId);
     List<TeamUser> findByUser(User user);
     List<TeamUser> findByUserOrderByCreatedAtDesc(User user);
-
     Optional<TeamUser> findByUserUserIdAndTeamTeamId(Long userId, Long teamId);
+    List<TeamUser> findByPosition(Position position);
 }
