@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from 'antd';
-import styles from './index.module.scss';
+// import styles from './index.module.scss';
 
 declare global {
   interface Window {
