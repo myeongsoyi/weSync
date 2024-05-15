@@ -136,7 +136,6 @@ public class TeamService {
                 String parsing = beforeParsingKey.replaceAll("%20", " ");
                 String parsedKey = parsing.replaceAll("%3A", ":");
                 s3Service.deleteS3Object(parsedKey);
-                System.out.println(parsedKey);
             }
 
             String teamProfileUrl = s3Service.upload(editTeamInfoDto.getTeamProfile(),"teamProfile");
