@@ -45,9 +45,9 @@ export async function postTeamPosition(
   positionName: string,
   colorId: number,
 ) {
-  const data = new URLSearchParams({
-    teamId, positionName, colorId: colorId.toString(),
-  });
+  const data = {
+    teamId, positionName, colorId,
+  };
   // data를 먼저 확인해보자
   console.log('data:', data);
   
@@ -55,6 +55,37 @@ export async function postTeamPosition(
   const response = await APIModule({
     action: '/team/position',
     method: 'POST',
+    data: data,
+  });
+
+  return response;
+}
+
+export async function putTeamPosition(positionId: number, positionName: string, colorId: number) {
+  const data = {
+    positionId,
+    positionName,
+    colorId,
+  };
+
+  const response = await APIModule({
+    action: '/team/position',
+    method: 'PUT',
+    data: data,
+  });
+
+  return response;
+}
+
+export async function putMemberPosition(teamUserId: number, positionId: number) {
+  const data = {
+    teamUserId,
+    positionId,
+  };
+
+  const response = await APIModule({
+    action: '/team/position',
+    method: 'PUT',
     data: data,
   });
 

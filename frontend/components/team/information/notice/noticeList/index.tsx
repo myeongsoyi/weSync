@@ -14,17 +14,24 @@ import NoticeWrite from '../noticeWrite/noticeWrite';
 import { DateNoticeTimeFormat } from '@/utils/format';
 
 export default function NoticeList({ teamId }: { teamId: string }) {
-  // 공지사항 목록의 상태를 관리합니다.
   const [success, setSuccess] = useState<TeamNotices['success']>(true);
   const [noticeList, setNoticeList] = useState<TeamNotices['data']>([]);
   const [error, setError] = useState<TeamNotices['error']>(null);
   const [noticeLength, setNoticeLength] = useState<number>(1);
 
+  const fetchNotices = async () => {
+    const notices = await getTeamNotices(teamId);
+    setSuccess(notices.success);
+    setNoticeList(notices.data);
+    setNoticeLength(notices.data.length);
+    setError(notices.error);
+    // console.log(notices.data);
+  };
+
   const togglePin = async (noticeId: number) => {
     const response = await putChangeFixed(noticeId);
     if (response.success) {
-      setNoticeList(response.data);
-      setNoticeLength(response.data.length);
+      fetchNotices();
     } else {
       setError(response.error);
       message.error(response.error.errorMessage);
@@ -32,13 +39,6 @@ export default function NoticeList({ teamId }: { teamId: string }) {
   };
 
   useEffect(() => {
-    const fetchNotices = async () => {
-      const notices = await getTeamNotices(teamId);
-      setSuccess(notices.success);
-      setNoticeList(notices.data);
-      setNoticeLength(notices.data.length);
-      setError(notices.error);
-    };
     fetchNotices();
   }, [teamId]);
 
@@ -55,6 +55,7 @@ export default function NoticeList({ teamId }: { teamId: string }) {
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete(noticeId);
+        message.success('삭제되었습니다.');
       }
     });
   };
@@ -62,10 +63,7 @@ export default function NoticeList({ teamId }: { teamId: string }) {
   const handleDelete = async (noticeId: number) => {
     const response = await deleteNotice(noticeId);
     if (response.success) {
-      const notices = await getTeamNotices(teamId);
-      setSuccess(notices.success);
-      setNoticeList(notices.data);
-      setError(notices.error);
+      fetchNotices();
     } else {
       message.error(response.error.errorMessage);
     }
@@ -158,7 +156,7 @@ export default function NoticeList({ teamId }: { teamId: string }) {
           pageSize={5}
           style={{ flex: 1, textAlign: 'center' }}
         />
-        <NoticeWrite teamId={teamId} />
+        <NoticeWrite teamId={teamId} fetchNotices={fetchNotices} />
       </div>
     </Space>
   );

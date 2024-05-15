@@ -13,7 +13,7 @@ export default function HomePage() {
 
   return (
     <Layout style={{ backgroundColor: '#FFFFFF' }}>
-      <Header className={styles.header}>
+      <Header className={styles.header} style={{height: '12vh', minHeight: '90px'}}>
         <div className={styles.leftSection}>
           <Link href="/welcome" className={styles.introLink}>
             <DoubleLeftOutlined className={styles.icon} /> INFO
