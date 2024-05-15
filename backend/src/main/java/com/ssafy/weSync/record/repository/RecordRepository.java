@@ -14,7 +14,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @return
      */
     @Query("SELECT r FROM Record r JOIN r.score s JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
-            "JOIN tu.user u WHERE u.userId = :userId ORDER BY r.createdAt DESC LIMIT 10")
+            "JOIN tu.user u join p.color WHERE u.userId = :userId ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByUserId(@Param("userId") Long userId);
 
     /***
@@ -23,7 +23,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @return
      */
     @Query("SELECT r FROM Record r JOIN r.score s JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
-            "JOIN tu.user u WHERE t.teamId = :teamId AND r.status = 'PUBLIC' ORDER BY r.createdAt DESC LIMIT 10")
+            "JOIN tu.user u join p.color WHERE t.teamId = :teamId AND r.isPublic = true ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByTeamId(Long teamId);
 
     /***
@@ -33,7 +33,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @return
      */
     @Query("SELECT r FROM Record r JOIN r.score s JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
-            "JOIN tu.user u WHERE t.teamId = :teamId AND p.positionId = :positionId AND r.status = 'PUBLIC'" +
+            "JOIN tu.user u join p.color WHERE t.teamId = :teamId AND p.positionId = :positionId AND r.isPublic = true " +
             "ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByTeamIdByPosition(@Param("teamId") Long teamId, @Param("positionId") Long positionId);
 
@@ -44,7 +44,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @return
      */
     @Query("SELECT r FROM Record r JOIN r.score s JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
-            "JOIN tu.user u WHERE u.userId = :userId AND t.teamId = :teamId ORDER BY r.createdAt DESC LIMIT 10")
+            "JOIN tu.user u join p.color WHERE u.userId = :userId AND t.teamId = :teamId ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByUserIdByTeamId(@Param("userId") Long userId, @Param("teamId") Long teamId);
 
 

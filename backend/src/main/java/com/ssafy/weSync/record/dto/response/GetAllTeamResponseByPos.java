@@ -19,6 +19,7 @@ public class GetAllTeamResponseByPos extends GetAllTeamCommon{
                 .recordId(record.getRecordId())
                 .title(record.getTitle())
                 .recordUrl(record.getUrl())
+                .isPublic(record.isPublic())
                 .startAt(parseTime(record.getStartAt()))
                 .endAt(parseTime(record.getEndAt()))
                 .createAt(record.getCreatedAt())
