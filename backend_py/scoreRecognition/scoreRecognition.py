@@ -126,8 +126,13 @@ async def recognition(file: UploadFile):
     os.remove(temp_file_path)
 
 def convert_midi_to_wav(midi_path, wav_path):
-    # Timidity를 사용하여 MIDI 파일을 WAV 파일로 변환
-    subprocess.run(["timidity", midi_path, "-Ow", "-o", wav_path], check=True)
+    try:
+        # 'timidity' 명령어 실행
+        result = subprocess.run(['timidity', midi_path, '-Ow', '-o', wav_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"Conversion successful: {result.stdout}")
+    except subprocess.CalledProcessError as e:
+        # 오류 발생시 처리
+        print(f"Error converting MIDI to WAV: {e.stderr}")
 
 def convert_midi_to_png(midi_path, png_path):
     # LilyPond는 MIDI 파일을 직접 PNG로 변환하지 않으므로 우선 MIDI를 LilyPond 파일(.ly)로 변환 필요
