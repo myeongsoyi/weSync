@@ -146,7 +146,7 @@ def midi_to_ly(midi_path, ly_path):
             content = file.read()
             file.seek(0, 0)
             # LilyPond 파일의 시작 부분에 \version 선언을 추가
-            file.write('\\version "{}"\n'.format("2.24.1") + content)
+            file.write('\\version "{}"\n'.format('2.24.1') + content)
         print(f"Added \\version declaration to: {ly_path}")
     except subprocess.CalledProcessError as e:
         print(f"Error converting MIDI to LilyPond: {e}") 
