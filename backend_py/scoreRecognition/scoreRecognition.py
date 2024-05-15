@@ -116,15 +116,14 @@ def recognition(file: UploadFile):
                 if not os.path.exists(f"{output_path}/img"):
                     os.mkdir(f"{output_path}/img")
 
-                ly_to_png( f'{output_path}/lily/{file_name}_part{i}.ly',  f'{output_path}/img/{file_name}_part{i}.png')
+                ly_to_png( f'{output_path}/lily/{file_name}_part{i}.ly',  f'{output_path}/img')
 
                 up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}.png', f"{file_name}_part{i}.png")
         except Exception as e:
             print(e.args) # 오류
         finally:
-            # shutil.rmtree(output_path)
-            # shutil.move(temp_output_folder, output_path)
-            pass
+            shutil.rmtree(output_path)
+            shutil.move(temp_output_folder, output_path)
     except Exception as e:
         print(e.args) # 오류
     finally:
@@ -147,7 +146,7 @@ def midi_to_ly(midi_path, ly_path):
         subprocess.run(['midi2ly', midi_path, '-o', ly_path], check=True)
         print(f"MIDI to LilyPond conversion successful: {midi_path} -> {ly_path}")
     except subprocess.CalledProcessError as e:
-        print(f"Error converting MIDI to LilyPond: {e}")
+        print(f"Error converting MIDI to LilyPond: {e}") 
 
 def ly_to_png(ly_path, output_base):
     try:
