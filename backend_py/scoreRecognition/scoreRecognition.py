@@ -15,7 +15,7 @@ import subprocess
 
 executor = ThreadPoolExecutor(max_workers=4)
 
-async def recognition(file: UploadFile):
+def recognition(file: UploadFile):
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         shutil.copyfileobj(file.file, temp_file)
         temp_file_path = temp_file.name
@@ -110,6 +110,7 @@ async def recognition(file: UploadFile):
 
                 if not os.path.exists(f"{output_path}/lily"):
                     os.mkdir(f"{output_path}/lily")
+
                 midi_to_ly(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/lily/{file_name}_part{i}.ly')
 
                 if not os.path.exists(f"{output_path}/img"):
