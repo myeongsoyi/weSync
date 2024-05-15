@@ -1,8 +1,6 @@
 package com.ssafy.weSync.record.repository;
 
 import com.ssafy.weSync.record.entity.Record;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,7 +35,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("SELECT r FROM Record r JOIN r.score s JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
             "JOIN tu.user u WHERE t.teamId = :teamId AND p.positionId = :positionId AND r.status = 'PUBLIC'" +
             "ORDER BY r.createdAt DESC LIMIT 10")
-    List<Record> findAllByTeamIdByPosition(@Param("teamId") Long teamId, @Param("position_id") Long positionId);
+    List<Record> findAllByTeamIdByPosition(@Param("teamId") Long teamId, @Param("positionId") Long positionId);
 
     /***
      * 팀 내 나의 녹음목록 조회
