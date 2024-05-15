@@ -1,6 +1,7 @@
 package com.ssafy.weSync.user.controller;
 
 import com.ssafy.weSync.global.ApiResponse.Response;
+import com.ssafy.weSync.user.dto.CodeDto;
 import com.ssafy.weSync.user.dto.LoginDto;
 import com.ssafy.weSync.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +17,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<Response<LoginDto>> kakaoCallback(@RequestParam("code") String authorizationCode, HttpServletRequest request){
-        return userService.kakaoCallback(authorizationCode, request);
+    public ResponseEntity<Response<LoginDto>> kakaoCallback(@RequestBody CodeDto codeDto, HttpServletRequest request){
+        System.out.println(codeDto.getCode());
+        return userService.kakaoCallback(codeDto.getCode(), request);
     }
 
     @DeleteMapping("")
