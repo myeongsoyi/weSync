@@ -142,15 +142,24 @@ def midi_to_ly(midi_path, ly_path):
     try:
         subprocess.run(['midi2ly', midi_path, '-o', ly_path], check=True)
         print(f"MIDI to LilyPond conversion successful: {midi_path} -> {ly_path}")
+        with open(ly_path, 'r+') as file:
+            content = file.read()
+            file.seek(0, 0)
+            # LilyPond 파일의 시작 부분에 \version 선언을 추가
+            file.write('\\version "{}"\n'.format("2.24.1") + content)
+        print(f"Added \\version declaration to: {ly_path}")
     except subprocess.CalledProcessError as e:
         print(f"Error converting MIDI to LilyPond: {e}") 
 
 def ly_to_png(ly_path, output_base):
     try:
+        if os.path.exists(ly_path):
+            print("파일이 존재합니다.")
+        else:
+            print("파일이 존재하지 않습니다.")
         subprocess.run(['lilypond', '--png', '-o', output_base, ly_path],  check=True, stderr=subprocess.PIPE)
         print(f"LilyPond to PNG conversion successful: {ly_path} -> {output_base}.png")
     except subprocess.CalledProcessError as e:
-        # stderr가 None인 경우를 확인하고, None이 아니면 디코드합니다.
         if e.stderr:
             print(f"Error converting LilyPond to PNG: {e}\nSTDERR: {e.stderr.decode()}")
         else:
