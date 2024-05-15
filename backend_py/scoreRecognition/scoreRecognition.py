@@ -58,7 +58,7 @@ def recognition(file: UploadFile):
             img = cv2. imread(f"{resource_path}/crop/{i}.png")
             dn.split_part(img, f"{resource_path}/part", i)
     
-        output_path = "./scoreRecognition/Output"
+        output_path = f"{os.getcwd()}/scoreRecognition/Output"
 
         if not os.path.exists(f"{output_path}"):
                     os.mkdir(f"{output_path}")
@@ -157,7 +157,7 @@ def ly_to_png(ly_path, output_base):
             print("파일이 존재합니다.")
         else:
             print("파일이 존재하지 않습니다.")
-        subprocess.run(['lilypond', '--png', '-o', output_base, ly_path],  check=True, stderr=subprocess.PIPE)
+        subprocess.run(['lilypond', '--png', '-o', output_base, ly_path],  check=True, stderr=subprocess.PIPE, shell=True)
         print(f"LilyPond to PNG conversion successful: {ly_path} -> {output_base}.png")
     except subprocess.CalledProcessError as e:
         if e.stderr:
