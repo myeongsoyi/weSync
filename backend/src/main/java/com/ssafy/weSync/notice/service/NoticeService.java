@@ -92,7 +92,7 @@ public class NoticeService {
 
         notice.updateIsFixed();
         Notice newNotice = noticeRepository.save(notice);
-        return FixUpdateResponse.toDto(newNotice.getIsFixed());
+        return FixUpdateResponse.toDto(newNotice.isFixed());
     }
 
     /***

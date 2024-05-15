@@ -33,7 +33,8 @@ public enum CustomError {
 
     // Record
     WRONG_TIME_FORMAT(400, "잘못된 시간 형식입니다."),
-    WRONT_FILTER_FORMAT(400, "잘못된 필터 형식입니다."),
+    WRONG_FILTER_FORMAT(400, "잘못된 필터 형식입니다."),
+    NO_RECORD(400, "존재하지 않는 녹음입니다."),
 
     // Others
     INCOMPLETE_INFORMATION(400, "입력한 정보가 부족합니다."),

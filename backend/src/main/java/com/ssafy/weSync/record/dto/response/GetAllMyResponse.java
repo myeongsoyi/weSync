@@ -16,6 +16,7 @@ public class GetAllMyResponse {
     private Long recordId;
     private String title;
     private String recordUrl;
+    private boolean isPublic;
     private String startAt;
     private String endAt;
     private LocalDateTime createdAt;
@@ -30,6 +31,7 @@ public class GetAllMyResponse {
                 .recordId(record.getRecordId())
                 .title(record.getTitle())
                 .recordUrl(record.getUrl())
+                .isPublic(record.isPublic())
                 .teamId(record.getScore().getTeam().getTeamId())
                 .teamUrl(record.getScore().getTeam().getProfileUrl())
                 .songName(record.getScore().getTitle())

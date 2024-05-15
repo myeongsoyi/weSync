@@ -18,16 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class CreateRequest {
     private String title;
-    private Status status;
     private String startAt;
     private String endAt;
-    private MultipartFile file;
 
     public Record toEntity(String url, Score score, TeamUser teamUser){
         return Record.builder()
                 .title(title)
                 .url(url)
-                .status(status)
                 .startAt(parseTime(startAt))
                 .endAt(parseTime(endAt))
                 .score(score)
