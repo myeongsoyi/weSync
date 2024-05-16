@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Table, Tag, message } from 'antd';
 import { MainRecords } from '@/types/homeMain';
-import { getMainRecords } from '@/services/home';
+// import { getMainRecords } from '@/services/home';
 
 export default function ListRecord() {
   const [success, setSuccess] = useState<MainRecords['success']>(true);
