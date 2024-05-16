@@ -37,9 +37,9 @@ export default function welcome() {
                     alt="Carousel Image 1"
                     // layout="responsive"
                     width={1000}
-                    height={400}
-                    // objectFit="cover"
+                    height={400}                   
                     unoptimized
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
                 <div>
@@ -51,6 +51,7 @@ export default function welcome() {
                     height={400}
                     // objectFit="cover"
                     unoptimized
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
                 <div>
@@ -62,6 +63,7 @@ export default function welcome() {
                     height={400}
                     // objectFit="cover"
                     unoptimized
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
                 <div>
@@ -73,6 +75,7 @@ export default function welcome() {
                     height={400}
                     // objectFit="cover"
                     unoptimized
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
               </Carousel>

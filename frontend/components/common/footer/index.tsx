@@ -59,7 +59,7 @@ export default function Footer() {
             src={'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/%EC%9B%90%ED%95%A0%EB%AA%A8%EB%8B%88.png'}
             alt="로고"
             width={60}
-            height={0}
+            height={60}
             className="m-auto h-auto"
             onClick={() => alert('SSAFY 자율 프로젝트 A310')}
             style={{ cursor: 'pointer', borderRadius: '50%' }}
