@@ -9,7 +9,7 @@ export default function Loading() {
   useEffect(() => {
     const interval = setInterval(() => {
       setDots((prevDots) => (prevDots.length < 3 ? prevDots + '.' : ''));
-    }, 500);
+    }, 300);
 
     return () => clearInterval(interval);
   }, []);

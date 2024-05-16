@@ -54,7 +54,7 @@
       transform: rotate(0deg) scale(1); /* 시작과 끝에서 원래 크기와 회전각 */
     }
     50% {
-      transform: rotate(180deg) scale(1.05); /* 180도에서 크기가 1.05배 */
+      transform: rotate(180deg) scale(1.2);
     }
     100% {
       transform: rotate(360deg) scale(1);
