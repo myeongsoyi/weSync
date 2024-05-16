@@ -3,7 +3,7 @@ from app.response import BaseResponse
 from sqlalchemy.orm import Session
 from app.response import CommonResponse
 from scoreRecognition.scoreRecognition import recognition
-from scoreRecognition.createOutput import co
+import scoreRecognition.createOutput as co
 import scoreRecognition.upload as up
 from app import database
 
