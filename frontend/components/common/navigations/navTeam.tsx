@@ -11,12 +11,19 @@ import type { MenuProps } from 'antd';
 import styles from '@/components/team/information/members/memberList/index.module.scss';
 import LoginComponent from '@/components/common/login';
 import { usePathname, useRouter } from 'next/navigation';
-import { getTeamInviteLink, getTeamDetail, deleteLeaveTeam, deleteRemoveTeam } from '@/services/team';
+import {
+  getTeamInviteLink,
+  getTeamDetail,
+  deleteLeaveTeam,
+  deleteRemoveTeam,
+} from '@/services/team';
 import { TeamDetail } from '@/types/teamDetail';
 
 export default function TeamPage() {
   const [success, setSuccess] = useState<TeamDetail['success']>(true);
-  const [teamDetail, setTeamDetail] = useState<TeamDetail['data']>({} as TeamDetail['data']);
+  const [teamDetail, setTeamDetail] = useState<TeamDetail['data']>(
+    {} as TeamDetail['data'],
+  );
   const [error, setError] = useState<TeamDetail['error']>(null);
   const [isLeader, setIsLeader] = useState(false);
   const pathname = usePathname();
@@ -34,6 +41,15 @@ export default function TeamPage() {
     } else {
       setSuccess(response.success);
       setError(response.error);
+      Swal.fire({
+        title: '팀 정보를 불러오는데 실패했습니다.',
+        text: response.error.errorMessage,
+        icon: 'error',
+        confirmButtonColor: 'red',
+        timer: 10000,
+        timerProgressBar: true,
+        willClose: () => router.replace('/'),
+      });
     }
   };
 
@@ -85,7 +101,9 @@ ${response.data.url}</textarea>
           confirmButtonText: '복사하기',
           cancelButtonText: '닫기',
           preConfirm: () => {
-            const copyText = document.getElementById('inviteLink') as HTMLTextAreaElement;
+            const copyText = document.getElementById(
+              'inviteLink',
+            ) as HTMLTextAreaElement;
             copyText.select();
             document.execCommand('copy');
 
@@ -108,7 +126,14 @@ ${response.data.url}</textarea>
       }
     } else if (key === 'edit-team-info') {
       if (teamDetail) {
-        TeamModify(teamId, teamDetail.teamName, teamDetail.songName, teamDetail.teamProfileUrl, teamDetail.finished);
+        const songName = teamDetail.songNameExist ? teamDetail.songName : '';
+        TeamModify(
+          teamId,
+          teamDetail.teamName,
+          songName,
+          teamDetail.teamProfileUrl,
+          teamDetail.finished,
+        );
       }
     } else if (key === 'delete-team') {
       Swal.fire({
@@ -153,7 +178,10 @@ ${response.data.url}</textarea>
   const items: MenuProps['items'] = [
     {
       label: (
-        <p style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer' }} onClick={() => handleMenuClick('create-invite-link')}>
+        <p
+          style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer' }}
+          onClick={() => handleMenuClick('create-invite-link')}
+        >
           초대 링크 생성
         </p>
       ),
@@ -161,7 +189,10 @@ ${response.data.url}</textarea>
     },
     {
       label: (
-        <p style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer' }} onClick={() => handleMenuClick('set-position')}>
+        <p
+          style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer' }}
+          onClick={() => handleMenuClick('set-position')}
+        >
           내 포지션 설정
         </p>
       ),
@@ -173,7 +204,15 @@ ${response.data.url}</textarea>
     items.push(
       {
         label: (
-          <p style={{ fontWeight: 'bold', textAlign: 'center', color: 'blue', cursor: 'pointer' }} onClick={() => handleMenuClick('edit-team-info')}>
+          <p
+            style={{
+              fontWeight: 'bold',
+              textAlign: 'center',
+              color: 'blue',
+              cursor: 'pointer',
+            }}
+            onClick={() => handleMenuClick('edit-team-info')}
+          >
             팀 정보 변경
           </p>
         ),
@@ -181,7 +220,15 @@ ${response.data.url}</textarea>
       },
       {
         label: (
-          <p style={{ fontWeight: 'bold', color: 'red', textAlign: 'center', cursor: 'pointer' }} onClick={() => handleMenuClick('leave-team')}>
+          <p
+            style={{
+              fontWeight: 'bold',
+              color: 'red',
+              textAlign: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={() => handleMenuClick('leave-team')}
+          >
             팀 나가기
           </p>
         ),
@@ -189,7 +236,14 @@ ${response.data.url}</textarea>
       },
       {
         label: (
-          <p style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer' }} onClick={() => handleMenuClick('delete-team')}>
+          <p
+            style={{
+              fontWeight: 'bold',
+              textAlign: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={() => handleMenuClick('delete-team')}
+          >
             팀 삭제
           </p>
         ),
@@ -222,7 +276,112 @@ ${response.data.url}</textarea>
   );
 
   if (!success) {
-    return <div>{error?.errorMessage}</div>;
+    return (
+      <Layout style={{ backgroundColor: '#FFFFFF' }}>
+        <Header
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: '#FFFFFF',
+            height: '12vh',
+            minHeight: '90px',
+          }}
+        >
+          <div
+            className="flex-1"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              height: '100%',
+              minWidth: '170px',
+            }}
+          >
+            <Link href="/" passHref>
+              <span
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  src={'/svgs/logo.svg'}
+                  alt="로고"
+                  width={170}
+                  height={100}
+                  className="h-auto"
+                />
+              </span>
+            </Link>
+          </div>
+
+          {/* center */}
+          <div className="flex flex-1 justify-center">
+            <div className="flex flex-row">
+              <div>
+                <Avatar
+                  size={55}
+                  src={teamDetail?.teamProfileUrl ?? '/svgs/wesync_icon.svg'}
+                  style={{
+                    marginRight: '10px',
+                    border: '3px solid #FFC500',
+                  }}
+                />{' '}
+                {/* 간격 추가 */}
+              </div>
+              <div className="flex flex-col items-center">
+                <Link href={`/team/${teamId}/information`}>
+                  <p
+                    className="text-4xl text-gray-700 font-bold"
+                    style={{ whiteSpace: 'nowrap', cursor: 'pointer' }}
+                  >
+                    {teamDetail?.teamName ?? '팀 이름'}
+                  </p>
+                </Link>
+                <p
+                  className="text-sm text-gray-500 font-bold"
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  {teamDetail?.songName ?? '미정'}
+                </p>
+
+                <div
+                  className="flex justify-center"
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  <Button
+                    type="text"
+                    style={{
+                      padding: '0 10px',
+                      fontSize: '20px',
+                      color: 'gray',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <CaretDownOutlined />
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <Button
+              type="text"
+              style={{ padding: '0 10px 5px', margin: 'auto 0' }}
+            >
+              <SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
+            </Button>
+          </div>
+
+          {/* end */}
+          <div className="flex flex-1 justify-end">
+            <LoginComponent />
+          </div>
+        </Header>
+      </Layout>
+    );
   }
 
   return (
@@ -254,7 +413,13 @@ ${response.data.url}</textarea>
                 alignItems: 'center',
               }}
             >
-              <Image src={'/svgs/logo.svg'} alt="로고" width={170} height={100} className="h-auto" />
+              <Image
+                src={'/svgs/logo.svg'}
+                alt="로고"
+                width={170}
+                height={100}
+                className="h-auto"
+              />
             </span>
           </Link>
         </div>
@@ -275,16 +440,32 @@ ${response.data.url}</textarea>
             </div>
             <div className="flex flex-col items-center">
               <Link href={`/team/${teamId}/information`}>
-                <p className="text-4xl text-gray-700 font-bold" style={{ whiteSpace: 'nowrap', cursor: 'pointer' }}>
+                <p
+                  className="text-4xl text-gray-700 font-bold"
+                  style={{ whiteSpace: 'nowrap', cursor: 'pointer' }}
+                >
                   {teamDetail?.teamName ?? '팀 이름'}
                 </p>
               </Link>
-              <p className="text-sm text-gray-500 font-bold" style={{ whiteSpace: 'nowrap' }}>
+              <p
+                className="text-sm text-gray-500 font-bold"
+                style={{ whiteSpace: 'nowrap' }}
+              >
                 {teamDetail?.songName ?? '미정'}
               </p>
 
-              <div className="flex justify-center" style={{ whiteSpace: 'nowrap' }}>
-                <Popover content={content} arrow={false} trigger="click" placement="bottom" open={open} onOpenChange={handleOpenChange}>
+              <div
+                className="flex justify-center"
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                <Popover
+                  content={content}
+                  arrow={false}
+                  trigger="click"
+                  placement="bottom"
+                  open={open}
+                  onOpenChange={handleOpenChange}
+                >
                   <Button
                     type="text"
                     style={{
@@ -304,7 +485,10 @@ ${response.data.url}</textarea>
             </div>
           </div>
           <Dropdown menu={{ items }} trigger={['click']}>
-            <Button type="text" style={{ padding: '0 10px 5px', margin: 'auto 0' }}>
+            <Button
+              type="text"
+              style={{ padding: '0 10px 5px', margin: 'auto 0' }}
+            >
               <SettingFilled style={{ color: 'gray', fontSize: '20px' }} />
             </Button>
           </Dropdown>
