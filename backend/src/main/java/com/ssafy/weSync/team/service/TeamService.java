@@ -26,7 +26,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final InvitationRepository invitationRepository;
     private final TeamUserRepository teamUserRepository;
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final ColorRepository colorRepository;
     private final PositionRepository positionRepository;
     private final ScoreRepository scoreRepository;
@@ -50,7 +50,12 @@ public class TeamService {
         Team newTeam = new Team();
         newTeam.setTeamLeaderId(accessTokenValidationAspect.getUserId());
         newTeam.setTeamName(createTeamInfoDto.getTeamName());
-        newTeam.setSongName(createTeamInfoDto.getSongName());
+        if(createTeamInfoDto.getSongName().isEmpty()){
+            newTeam.setSongName(null);
+        }
+        else{
+            newTeam.setSongName(createTeamInfoDto.getSongName());
+        }
 
         //팀 프로필이 없는 경우
         if(createTeamInfoDto.getTeamProfile() == null || Arrays.toString(createTeamInfoDto.getTeamProfile().getBytes()).equals("[]")){
@@ -120,7 +125,13 @@ public class TeamService {
         //팀 등록
         Team editTeam = teamRepository.findByTeamId(id).get();
         editTeam.setTeamName(editTeamInfoDto.getTeamName());
-        editTeam.setSongName(editTeamInfoDto.getSongName());
+
+        if(editTeamInfoDto.getSongName().isEmpty()){
+            editTeam.setSongName(null);
+        }
+        else{
+            editTeam.setSongName(editTeamInfoDto.getSongName());
+        }
         String beforeUrl = editTeam.getProfileUrl();
 
         //변경할 팀 프로필이 없는 경우

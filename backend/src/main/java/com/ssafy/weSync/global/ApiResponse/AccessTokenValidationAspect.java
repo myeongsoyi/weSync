@@ -4,7 +4,6 @@ import com.ssafy.weSync.token.dto.TokenDto;
 import com.ssafy.weSync.user.entity.User;
 import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
