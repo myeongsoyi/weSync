@@ -18,7 +18,7 @@ import org.springframework.lang.NonNull;
 @SQLDelete(sql = "UPDATE accompaniment  SET is_deleted = true WHERE accompaniment_id=?")
 @Where(clause = "is_deleted = false")
 @Table(name = "accompaniment")
-public class Accompaniment {
+public class Accompaniment extends BaseTime{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "accompaniment_id")
