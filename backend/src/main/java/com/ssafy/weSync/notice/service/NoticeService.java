@@ -15,6 +15,8 @@ import com.ssafy.weSync.team.entity.Team;
 import com.ssafy.weSync.team.entity.TeamUser;
 import com.ssafy.weSync.team.repository.TeamRepository;
 import com.ssafy.weSync.team.repository.TeamUserRepository;
+import com.ssafy.weSync.user.entity.User;
+import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,16 +30,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class NoticeService {
 
-    private final AccessTokenValidationAspect accessTokenValidationAspect;
-
     private final NoticeRepository noticeRepository;
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
 
-    public CreateResponse createNotice(CreateRequest createRequest, Long teamId, Long teamUserId) {
+    public CreateResponse createNotice(CreateRequest createRequest, Long teamId, Long userId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
-        TeamUser teamUser = teamUserRepository.findById(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
-        Long userId = accessTokenValidationAspect.getUserId();
+        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, teamId);
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -65,13 +64,12 @@ public class NoticeService {
     /***
      * 상단고정여부 변경
      * @param noticeId
-     * @param teamUserId
+     * @param userId
      */
-    public FixUpdateResponse updateNotice(Long noticeId, Long teamUserId) {
+    public FixUpdateResponse updateNotice(Long noticeId, Long userId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
+        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId);
         Team team = teamUser.getTeam();
-        Long userId = accessTokenValidationAspect.getUserId();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -87,14 +85,13 @@ public class NoticeService {
      * 공지내용변경
      * @param updateRequest
      * @param noticeId
-     * @param teamUserId
+     * @param userId
      * @return UpdateResponse
      */
-    public ContentUpdateResponse updateNotice(UpdateRequest updateRequest, Long noticeId, Long teamUserId){
+    public ContentUpdateResponse updateNotice(UpdateRequest updateRequest, Long noticeId, Long userId){
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
+        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId);
         Team team = teamUser.getTeam();
-        Long userId = accessTokenValidationAspect.getUserId();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -106,11 +103,10 @@ public class NoticeService {
         return ContentUpdateResponse.toDto(newNotice.getUpdatedAt());
     }
 
-    public void deleteNotice(Long noticeId, Long teamUserId) {
+    public void deleteNotice(Long noticeId, Long userId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
+        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId);
         Team team = teamUser.getTeam();
-        Long userId = accessTokenValidationAspect.getUserId();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){

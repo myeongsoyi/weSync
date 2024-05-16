@@ -48,6 +48,6 @@ public class Score extends BaseTime {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToMany(mappedBy = "score", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "score")
     private List<Record> records;
 }

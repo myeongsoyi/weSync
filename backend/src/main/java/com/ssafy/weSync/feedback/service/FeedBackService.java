@@ -1,7 +1,10 @@
 package com.ssafy.weSync.feedback.service;
 
 import com.ssafy.weSync.feedback.dto.request.CreateRequest;
+import com.ssafy.weSync.feedback.dto.request.UpdateRequest;
+import com.ssafy.weSync.feedback.dto.response.UpdateResponse;
 import com.ssafy.weSync.feedback.dto.response.CreateResponse;
+import com.ssafy.weSync.feedback.dto.response.GetAllResponse;
 import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.feedback.repository.FeedBackRepository;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
@@ -15,6 +18,9 @@ import com.ssafy.weSync.team.repository.TeamUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +39,26 @@ public class FeedBackService {
 
         FeedBack feedBack = feedBackRepository.save(createRequest.toEntity(record, teamUser));
         return CreateResponse.toDto(feedBack);
+    }
+
+    public List<GetAllResponse> getAllFeedbacks(Long recordId) {
+        recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        List<FeedBack> feedbacks = feedBackRepository.findAllByRecordId(recordId);
+        return feedbacks.stream()
+                .map(GetAllResponse::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public UpdateResponse updateFeedBack(UpdateRequest updateRequest, Long userId, Long feedbackId) {
+        FeedBack feedBack = feedBackRepository.findById(feedbackId).orElseThrow(() -> new GlobalException(CustomError.NO_FEEDBACK));
+
+        // 권한 체크
+        if (feedBack.getTeamUser().getUser().getUserId() != userId){
+            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
+        }
+
+        feedBack.updateContent(updateRequest.getContent());
+        FeedBack newFeedBack = feedBackRepository.save(feedBack);
+        return UpdateResponse.toDto(newFeedBack);
     }
 }
