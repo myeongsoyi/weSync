@@ -1,14 +1,23 @@
 package com.ssafy.weSync.user.entity;
 
 import com.ssafy.weSync.global.entity.BaseTime;
+import com.ssafy.weSync.team.entity.TeamUser;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.util.List;
 
 @Entity
-@Table(name = "User")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE user_id=?")
+@Where(clause = "is_deleted = false")
+@Table(name = "user")
 public class User extends BaseTime {
 
     @Id
@@ -27,4 +36,7 @@ public class User extends BaseTime {
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TeamUser> teamUsers;
 }

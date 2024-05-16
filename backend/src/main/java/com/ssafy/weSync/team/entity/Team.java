@@ -4,6 +4,8 @@ import com.ssafy.weSync.global.entity.BaseTime;
 import com.ssafy.weSync.notice.entity.Notice;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -11,7 +13,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TEAM")
+@SQLDelete(sql = "UPDATE team SET is_deleted = true WHERE team_id=?")
+@Where(clause = "is_deleted = false")
+@Table(name = "team")
 public class Team extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,22 +43,22 @@ public class Team extends BaseTime {
     private Long teamLeaderId;
 
     //팀원
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "team_users")
     private List<TeamUser> teamUsers;
 
     //악보
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "score")
     private List<Score> scores;
 
     //포지션
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "position")
     private List<Position> positions;
 
     //초대
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "invitation")
     private List<Invitation> invitations;
 

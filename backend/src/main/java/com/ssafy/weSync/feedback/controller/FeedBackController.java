@@ -1,6 +1,8 @@
 package com.ssafy.weSync.feedback.controller;
 
 import com.ssafy.weSync.feedback.dto.request.CreateRequest;
+import com.ssafy.weSync.feedback.dto.request.UpdateRequest;
+import com.ssafy.weSync.feedback.dto.response.UpdateResponse;
 import com.ssafy.weSync.feedback.dto.response.CreateResponse;
 import com.ssafy.weSync.feedback.dto.response.GetAllResponse;
 import com.ssafy.weSync.feedback.service.FeedBackService;
@@ -35,6 +37,15 @@ public class FeedBackController {
     public ResponseEntity<Response<List<GetAllResponse>>> getAllFeedbacks(@PathVariable Long recordId){
         List<GetAllResponse> getAllResponse = feedBackService.getAllFeedbacks(recordId);
         Response<List<GetAllResponse>> response = new Response<>(true, getAllResponse, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{feedbackId}")
+    public ResponseEntity<Response<UpdateResponse>> updateFeedback(@RequestBody UpdateRequest updateRequest,
+                                                                   @PathVariable Long feedbackId){
+        Long userId = accessTokenValidationAspect.getUserId();
+        UpdateResponse updateResponse = feedBackService.updateFeedBack(updateRequest, userId, feedbackId);
+        Response<UpdateResponse> response = new Response<>(true, updateResponse, null);
         return ResponseEntity.ok(response);
     }
 }

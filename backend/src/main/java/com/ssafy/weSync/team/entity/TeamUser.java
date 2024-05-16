@@ -42,13 +42,13 @@ public class TeamUser extends BaseTime {
     @JoinColumn(name = "position_id")
     private Position position;
 
-    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "teamUser")
     private List<Record> records;
 
-    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "teamUser")
     private List<Notice> notices;
 
-    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "teamUser")
     private List<FeedBack> feedBacks;
 
     @Column(name = "is_banned")

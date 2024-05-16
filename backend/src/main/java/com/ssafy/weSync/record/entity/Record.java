@@ -55,7 +55,7 @@ public class Record extends BaseTime {
     @JoinColumn(name = "team_user_id")
     private TeamUser teamUser;
 
-    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL)
     private List<FeedBack> feedBacks;
 
     public void updateIsPublic() {
