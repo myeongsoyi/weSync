@@ -23,6 +23,7 @@ export default function TestComponent() {
           width={450}
           height={450}
           style={{ margin: 'auto' }}
+          unoptimized
           priority
         ></Image>
         <h2 className="text-center mt-10">싱크 맞추는 중{dots}</h2>
