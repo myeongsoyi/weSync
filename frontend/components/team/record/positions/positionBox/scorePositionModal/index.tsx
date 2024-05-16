@@ -10,20 +10,20 @@ import {
   DeleteOutlined,
   CheckOutlined,
 } from '@ant-design/icons';
-import UpdatePositionModal from './updatepositionmodal';
-import NewPositionModal from './newpositionmodal';
+import UpdatePositionModal from '@/components/team/information/members/positionmodal/updatepositionmodal';
+import NewPositionModal from '@/components/team/information/members/positionmodal/newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
 import {
-  getTeamPosition,
-  putMemberPosition,
-  deleteTeamPosition,
+    getTeamPosition,
+    putMemberPosition,
+    deleteTeamPosition,
 } from '@/services/team/information';
 
 interface Position {
-  positionId: number;
-  positionName: string;
-  colorCode: string;
-  colorId: number;
+    positionId: number;
+    positionName: string;
+    colorCode: string;
+    colorId: number;
 }
 
 export default function PositionModal({
@@ -31,13 +31,11 @@ export default function PositionModal({
   onOk,
   onCancel,
   selectedMemberId,
-  fetchMembers,
 }: {
   open: boolean;
   onOk: () => void;
   onCancel: () => void;
   selectedMemberId: number | null;
-  fetchMembers: () => void;
 }) {
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(
     null,
@@ -64,7 +62,7 @@ export default function PositionModal({
       }
     };
     fetchPositions();
-    fetchMembers();
+    // fetchMembers();
   }, [open]);
 
   const handlePositionSelect = (position: Position): void => {
@@ -84,7 +82,7 @@ export default function PositionModal({
         if (response.success) {
           message.success(`${positionName}이(가) 삭제되었습니다.`);
           getPositions(teamId);
-          fetchMembers();
+        //   fetchMembers();
         } else {
           message.error('포지션 삭제에 실패했습니다.');
         }

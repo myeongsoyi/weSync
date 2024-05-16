@@ -78,7 +78,6 @@ const NewPositionModal: React.FC<NewPositionModalProps> = ({
       return;
     }
     const response = await postTeamPosition(teamId, positionName, selectedColorId);
-    console.log('response:', response);
     if (!response.success) {
       message.error(response.error.errorMessage);
       return;

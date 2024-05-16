@@ -1,8 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import AlertTest from '@/components/home/alertTest';
-import CssTest from '@/components/home/cssTest';
 import { useState, useEffect } from 'react';
 
 export default function TestComponent() {
@@ -29,8 +27,6 @@ export default function TestComponent() {
         ></Image>
         <h2 className="text-center mt-10">싱크 맞추는 중{dots}</h2>
       </div>
-      <AlertTest />
-      <CssTest />
     </div>
   );
 }

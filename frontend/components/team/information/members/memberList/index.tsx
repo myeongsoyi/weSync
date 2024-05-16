@@ -53,9 +53,10 @@ export default function TeamMemberList({ teamId }: IParams) {
 
       if (result.isConfirmed) {
         const response = await deleteTeamMember(memberId);
-        console.log(response);
+        // console.log(response);
         if (response.success) {
           message.success('멤버가 강퇴되었습니다.');
+          fetchMembers();
         } else {
           message.error('멤버 강퇴에 실패했습니다.');
         }
