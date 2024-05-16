@@ -23,5 +23,5 @@ class Deleter(enum.Enum):
 class BaseTimeEntity:
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
-    is_deleted = Column(Boolean, default=false)
-    deleted_by = Column(Enum(Deleter), nullable=True)
+    is_deleted = Column(Boolean, default=False)
+    deleted_by = Column(Enum(Deleter), nullable=True, default=None)
