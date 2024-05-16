@@ -81,6 +81,8 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
 
         if score.accompaniment:
             score.accompaniment.is_deleted = True
+        
+        db.add(score)
     
     db.commit()
     
