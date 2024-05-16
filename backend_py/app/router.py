@@ -6,6 +6,7 @@ from scoreRecognition.scoreRecognition import recognition
 import scoreRecognition.createOutput as co
 import scoreRecognition.upload as up
 from app import database
+from app.models import *
 
 import os
 
