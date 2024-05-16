@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 import scoreRecognition.upload as up
 import scoreRecognition.createOutput as co
 from sqlalchemy.orm import Session
+from app.models import *
 
 executor = ThreadPoolExecutor(max_workers=4)
 
