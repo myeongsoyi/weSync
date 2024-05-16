@@ -12,10 +12,11 @@ from pydub import AudioSegment
 from concurrent.futures import ThreadPoolExecutor
 import scoreRecognition.upload as up
 import scoreRecognition.createOutput as co
+from sqlalchemy.orm import Session
 
 executor = ThreadPoolExecutor(max_workers=4)
 
-def recognition(file: UploadFile):
+def recognition(file: UploadFile, team_id: int, db: Session):
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         shutil.copyfileobj(file.file, temp_file)
         temp_file_path = temp_file.name
@@ -97,13 +98,6 @@ def recognition(file: UploadFile):
                 # MIDI 파일 저장
                 mid.save(f'{output_path}/midi/{file_name}_part{i}.mid')
 
-                if not os.path.exists(f"{output_path}/accom"):
-                    os.mkdir(f"{output_path}/accom")
-
-                co.convert_midi_to_wav(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/accom/{file_name}_part{i}.wav')
-
-                up.upload_file_to_s3(f'{output_path}/accom/{file_name}_part{i}.wav', "scoreOutput/wav/", f"{file_name}_part{i}.wav")
-
                 if not os.path.exists(f"{output_path}/lily"):
                     os.mkdir(f"{output_path}/lily")
 
@@ -115,6 +109,24 @@ def recognition(file: UploadFile):
                 co.ly_to_png( f'{output_path}/lily/{file_name}_part{i}.ly',  f'{output_path}/img/{file_name}_part{i}')
 
                 up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}.png', "scoreOutput/png/", f"{file_name}_part{i}.png")
+
+                db_img = Score(part_num = i, position_id = None, title = None, \
+                            score_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv('cloud_aws_region_static')}.amazonaws.com/{"scoreOutput/png/"}{file_name}_part{i}.png', team_id = team_id )
+                db.add(db_img)
+                db.commit()
+
+                if not os.path.exists(f"{output_path}/accom"):
+                    os.mkdir(f"{output_path}/accom")
+
+                co.convert_midi_to_wav(f'{output_path}/midi/{file_name}_part{i}.mid', f'{output_path}/accom/{file_name}_part{i}.wav')
+
+                up.upload_file_to_s3(f'{output_path}/accom/{file_name}_part{i}.wav', "scoreOutput/wav/", f"{file_name}_part{i}.wav")
+
+                db_accom = Accompainment(score_id = db_img.score_id, title = file_name, \
+                                         accompainment_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv('cloud_aws_region_static')}.amazonaws.com/{"scoreOutput/wav/"}{file_name}_part{i}.wav')
+                db.add(db_accom)
+                db.commit()
+
         except Exception as e:
             print(e.args) # 오류
         finally:
