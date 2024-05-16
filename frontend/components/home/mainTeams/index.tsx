@@ -13,8 +13,8 @@ export default async function MainTeams() {
             <Image
               src="/svgs/plus.svg"
               alt="Plus Icon"
-              width={23} // 크기 조정
-              height={23} // 크기 조정
+              width={20} // 크기 조정
+              height={20} // 크기 조정
               className={styles.plusIcon} // 스타일 클래스 추가
             />
           </div>
