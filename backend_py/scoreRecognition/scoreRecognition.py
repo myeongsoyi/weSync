@@ -112,9 +112,15 @@ def recognition(file: UploadFile, team_id: int, db: Session):
                 up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}.png', "scoreOutput/png/", f"{file_name}_part{i}.png")
 
                 db_img = Score(part_num = i, position_id = None, title = None, \
-                            score_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv("cloud_aws_region_static")}.amazonaws.com/{"scoreOutput/png/"}{file_name}_part{i}.png', team_id = team_id )
-                db.add(db_img)
-                db.commit()
+                            score_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv("cloud_aws_region_static")}.amazonaws.com/{"scoreOutput/png/"}{file_name}_part{i}.png',\
+                            team_id = team_id )
+                try:
+                    db.add(db_img)
+                    print("db.add passed")
+                    db.commit()
+                    print("db.commit passed")
+                except Exception as e:
+                    print(f"Exception: {e}")
 
                 if not os.path.exists(f"{output_path}/accom"):
                     os.mkdir(f"{output_path}/accom")
@@ -125,8 +131,13 @@ def recognition(file: UploadFile, team_id: int, db: Session):
 
                 db_accom = Accompainment(score_id = db_img.score_id, title = file_name, \
                                          accompainment_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv("cloud_aws_region_static")}.amazonaws.com/{"scoreOutput/wav/"}{file_name}_part{i}.wav')
-                db.add(db_accom)
-                db.commit()
+                try:
+                    db.add(db_accom)
+                    print("db.add passed")
+                    db.commit()
+                    print("db.commit passed")
+                except Exception as e:
+                    print(f"Exception: {e}")
 
         except Exception as e:
             print(e.args) # 오류
