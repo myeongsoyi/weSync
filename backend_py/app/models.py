@@ -27,6 +27,9 @@ class Score(Base, BaseTimeEntity):
     score_url = Column(String(255), nullable=False)
     accompaniment = relationship("Accompaniment", back_populates="score", uselist=False)
 
+    def __str__(self):
+        return f"Score ID: {self.score_id}, Title: {self.title}, URL: {self.score_url}"
+
 
 class Accompaniment(Base, BaseTimeEntity):
     __tablename__ = "accompaniment"
