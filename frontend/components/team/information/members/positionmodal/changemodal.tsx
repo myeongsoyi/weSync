@@ -10,12 +10,15 @@ import {
   DeleteOutlined,
   CheckOutlined,
 } from '@ant-design/icons';
+import UpdatePositionModal from './updatepositionmodal';
 import NewPositionModal from './newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
 import {
   getTeamPosition,
   putMemberPosition,
+  deleteTeamPosition,
 } from '@/services/team/information';
+import { get } from 'http';
 
 interface Position {
   positionId: number;
@@ -24,75 +27,84 @@ interface Position {
   colorId: number;
 }
 
-// const initialPositions: Position[] = [
-//   { name: '소프라노', color: '#f50' },
-//   { name: '알토', color: '#2db7f5' },
-//   { name: '바리톤', color: '#87d068' },
-//   { name: '테너', color: '#108ee9' },
-// ];
-
 export default function PositionModal({
   open,
   onOk,
   onCancel,
   selectedMemberId,
+  fetchMembers,
 }: {
   open: boolean;
   onOk: () => void;
   onCancel: () => void;
   selectedMemberId: number | null;
+  fetchMembers: () => void;
 }) {
-  // const [positions, setPositions] = useState<Position[]>(initialPositions);
-  const [selectedPosition, setSelectedPosition] = useState<number | null>(
-    selectedMemberId,
+  const [selectedPosition, setSelectedPosition] = useState<Position | null>(
+    null,
   );
   const [newPositionVisible, setNewPositionVisible] = useState<boolean>(false);
+  const [updatePositionVisible, setUpdatePositionVisible] =
+    useState<boolean>(false);
 
-  const { positions, setPositions, addPosition, deletePosition } =
-    useTeamPositionStore((state) => ({
+  const { positions, setPositions, getPositions } = useTeamPositionStore(
+    (state) => ({
       positions: state.positions,
       setPositions: state.setPositions,
-      addPosition: state.addPosition,
-      deletePosition: state.deletePosition,
-    }));
+      getPositions: state.getPositions,
+    }),
+  );
 
   const teamId = usePathname().split('/')[2];
 
   useEffect(() => {
     const fetchPositions = async () => {
-      // console.log('fetching positions')
       const positions = await getTeamPosition(teamId);
-      console.log(positions);
       if (positions.success) {
         setPositions(positions.data);
       }
     };
     fetchPositions();
+    fetchMembers();
   }, [open]);
 
-  const handlePositionSelect = (positionId: number): void => {
-    setSelectedPosition(positionId);
+  const handlePositionSelect = (position: Position): void => {
+    setSelectedPosition(position);
   };
 
   const handleDelete = (positionId: number, positionName: string): void => {
     Modal.confirm({
       title: '정말로 삭제하시겠습니까?',
-      content: `${positionName}을 삭제하시겠습니까?`,
+      content: `${positionName}을(를) 삭제하시겠습니까?`,
       icon: <ExclamationCircleOutlined />,
       okText: '예',
       okType: 'danger',
       cancelText: '아니요',
-      onOk() {
-        deletePosition(positionId);
-        message.success(`${positionName}이(가) 삭제되었습니다.`);
+      async onOk() {
+        const response = await deleteTeamPosition(positionId);
+        if (response.success) {
+          message.success(`${positionName}이(가) 삭제되었습니다.`);
+          getPositions(teamId);
+          fetchMembers();
+        } else {
+          message.error('포지션 삭제에 실패했습니다.');
+        }
       },
     });
   };
 
-  const modifyDelete = (positionId: number, positionName: string) => (
+  const handleUpdatePosition = async (
+    positionId: number,
+    positionName: string,
+    colorCode: string,
+    colorId: number,
+  ) => {
+    setSelectedPosition({ positionId, positionName, colorCode, colorId });
+    setUpdatePositionVisible(true);
+  };
+
+  const modifyDelete = (position: Position) => (
     <div style={{ display: 'flex' }}>
-      {' '}
-      {/* 가로 배치를 위한 flex 컨테이너 추가 */}
       <Button
         style={{
           width: '15px',
@@ -103,12 +115,20 @@ export default function PositionModal({
           marginRight: '8px', // 버튼 사이 간격
           borderColor: '#1890ff', // 테두리 색상을 흰색으로 설정
         }}
+        onClick={() =>
+          handleUpdatePosition(
+            position.positionId,
+            position.positionName,
+            position.colorCode,
+            position.colorId,
+          )
+        }
       >
         <FormOutlined style={{ fontSize: '15px', color: '#1890ff' }} />
       </Button>
       <Button
         danger
-        onClick={() => handleDelete(positionId, positionName)}
+        onClick={() => handleDelete(position.positionId, position.positionName)}
         style={{
           width: '15px',
           height: '25px',
@@ -129,7 +149,7 @@ export default function PositionModal({
     } else if (selectedMemberId) {
       const response = await putMemberPosition(
         selectedMemberId,
-        selectedPosition,
+        selectedPosition.positionId,
       );
       if (response.success) {
         message.success('포지션 변경이 완료되었습니다.');
@@ -186,7 +206,7 @@ export default function PositionModal({
       >
         <List
           dataSource={positions}
-          renderItem={({ positionId, positionName, colorCode }: Position) => (
+          renderItem={(position: Position) => (
             <List.Item
               style={{
                 justifyContent: 'center',
@@ -194,10 +214,10 @@ export default function PositionModal({
                 margin: '2px 0',
                 padding: '4px 0',
               }}
-              onClick={() => handlePositionSelect(positionId)}
+              onClick={() => handlePositionSelect(position)}
             >
               <Tooltip
-                title={modifyDelete(positionId, positionName)}
+                title={modifyDelete(position)}
                 color="white"
                 arrow={false}
                 overlayInnerStyle={{
@@ -211,24 +231,30 @@ export default function PositionModal({
                   style={{
                     cursor: 'pointer',
                     padding:
-                      selectedPosition === positionId ? '4px 8px' : '1px 5px',
-                    fontSize: `calc(15px * ${selectedPosition === positionId ? '1.5' : '1'})`,
+                      selectedPosition?.positionId === position.positionId
+                        ? '4px 8px'
+                        : '1px 5px',
+                    fontSize: `calc(15px * ${selectedPosition?.positionId === position.positionId ? '1.5' : '1'})`,
                     fontWeight:
-                      selectedPosition === positionId ? 'bold' : 'normal',
-                    borderWidth: `calc(1px * ${selectedPosition === positionId ? '3' : '1'})`,
-                    margin: `calc(0px + ${selectedPosition === positionId ? '8px' : '0px'}) auto`,
-                    borderColor: `#${colorCode}`,
-                    color: `#${colorCode}`,
+                      selectedPosition?.positionId === position.positionId
+                        ? 'bold'
+                        : 'normal',
+                    borderWidth: `calc(1px * ${selectedPosition?.positionId === position.positionId ? '3' : '1'})`,
+                    margin: `calc(0px + ${selectedPosition?.positionId === position.positionId ? '8px' : '0px'}) auto`,
+                    borderColor: `#${position.colorCode}`,
+                    color: `#${position.colorCode}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative', // 위치 조정을 위해 relative 설정
                   }}
                   className={
-                    selectedPosition === positionId ? 'selectedTag' : ''
+                    selectedPosition?.positionId === position.positionId
+                      ? 'selectedTag'
+                      : ''
                   }
                 >
-                  {selectedPosition === positionId && (
+                  {selectedPosition?.positionId === position.positionId && (
                     <CheckOutlined
                       style={{
                         position: 'absolute',
@@ -240,7 +266,7 @@ export default function PositionModal({
                       }}
                     />
                   )}
-                  {positionName}
+                  {position.positionName}
                 </Tag>
               </Tooltip>
             </List.Item>
@@ -248,6 +274,7 @@ export default function PositionModal({
           size="small"
           split={false}
         />
+        {/* 새 포지션 생성 */}
         <Button
           type="link"
           onClick={() => setNewPositionVisible(true)}
@@ -269,17 +296,32 @@ export default function PositionModal({
       <NewPositionModal
         open={newPositionVisible}
         onCancel={() => setNewPositionVisible(false)}
-        onSuccess={(
-          positionId: number,
-          newPosition: string,
-          colorCode: string,
-          colorId: number,
-        ) => {
-          addPosition(positionId, newPosition, colorCode, colorId);
+        onSuccess={() => {
+          getPositions(teamId);
           setNewPositionVisible(false);
         }}
         teamId={teamId}
       />
+      {selectedPosition && (
+        <UpdatePositionModal
+          open={updatePositionVisible}
+          onCancel={() => setUpdatePositionVisible(false)}
+          onSuccess={(
+            positionId: number,
+            newPosition: string,
+            colorCode: string,
+            colorId: number,
+          ) => {
+            getPositions(teamId);
+            setUpdatePositionVisible(false);
+          }}
+          teamId={teamId}
+          positionId={selectedPosition.positionId}
+          currentName={selectedPosition.positionName}
+          currentColorCode={selectedPosition.colorCode}
+          currentColorId={selectedPosition.colorId}
+        />
+      )}
     </Modal>
   );
 }
