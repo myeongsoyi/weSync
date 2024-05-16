@@ -1,25 +1,15 @@
+'use client';
+
 import Image from 'next/image';
 import styles from './index.module.scss';
-import { Carousel, message } from 'antd';
+import { Carousel } from 'antd';
 import React from 'react';
 import LoginComponent from '@/components/common/login';
 import Link from 'next/link';
-import { useLoginStore } from '@/store/login';
-
-const carouselSettings = {
-  autoplay: true,
-  speed: 1500,
-  arrows: true,
-};
 
 export default function welcome() {
-  const { isLoggedIn, setIsLogin } = useLoginStore((state) => ({
-    isLoggedIn: state.isLoggedIn,
-    setIsLogin: state.setIsLogin,
-  }));
   return (
     <div>
-      {isLoggedIn ?? message.error('로그인이 필요합니다.')}
       <div className={`${styles.welcome} welcome`}>
         <div className={styles.content}>
           <div>
@@ -38,15 +28,17 @@ export default function welcome() {
               <LoginComponent />
             </div>
             <div className={styles.carouselWrapper}>
-              <Carousel {...carouselSettings}>
+              {/* <Carousel autoplay speed={1500} autoplaySpeed={6000} arrows> */}
+              {/* arrows 사용시 react-slick 때문에 콘솔에 경고 발생 */}
+              <Carousel autoplay speed={1500} autoplaySpeed={6000}>
                 <div>
                   <Image
                     src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG1.png"
                     alt="Carousel Image 1"
-                    layout="responsive"
+                    // layout="responsive"
                     width={1000}
                     height={400}
-                    objectFit="cover"
+                    // objectFit="cover"
                     unoptimized
                   />
                 </div>
@@ -54,10 +46,10 @@ export default function welcome() {
                   <Image
                     src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG2.png"
                     alt="Carousel Image 2"
-                    layout="responsive"
+                    // layout="responsive"
                     width={1000}
                     height={400}
-                    objectFit="cover"
+                    // objectFit="cover"
                     unoptimized
                   />
                 </div>
@@ -65,10 +57,10 @@ export default function welcome() {
                   <Image
                     src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG3.png"
                     alt="Carousel Image 3"
-                    layout="responsive"
+                    // layout="responsive"
                     width={1000}
                     height={400}
-                    objectFit="cover"
+                    // objectFit="cover"
                     unoptimized
                   />
                 </div>
@@ -76,10 +68,10 @@ export default function welcome() {
                   <Image
                     src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG4.png"
                     alt="Carousel Image 4"
-                    layout="responsive"
+                    // layout="responsive"
                     width={1000}
                     height={400}
-                    objectFit="cover"
+                    // objectFit="cover"
                     unoptimized
                   />
                 </div>
