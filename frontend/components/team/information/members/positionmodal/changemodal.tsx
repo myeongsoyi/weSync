@@ -132,10 +132,10 @@ export default function PositionModal({
         selectedPosition,
       );
       if (response.success) {
-        message.success('포지션 변경이 완료되었습니다.');
+        message.success('포지션 할당 완료');
         onOk();
       } else {
-        message.error('포지션 변경에 실패했습니다.');
+        message.error('포지션 할당 실패');
       }
     } else {
       message.error('멤버를 다시 선택해 주세요.');
@@ -146,7 +146,7 @@ export default function PositionModal({
     <Modal
       title={
         <div style={{ textAlign: 'center', fontSize: '20px' }}>
-          포지션 변경하기
+          포지션 설정
         </div>
       }
       open={open}

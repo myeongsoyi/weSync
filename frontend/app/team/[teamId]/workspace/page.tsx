@@ -8,7 +8,7 @@ export async function generateMetadata({ params: { teamId } }: IParams) {
   // 나중에 api 나오면 대충 이런 식으로...
   // const teamName = await getTeamName(teamId);
   return {
-    title: `WORKPLACE | ${teamId}` ,
+    title: `WORKSPACE | ${teamId}` ,
     description: '팀 상세 페이지',
   };
 }
