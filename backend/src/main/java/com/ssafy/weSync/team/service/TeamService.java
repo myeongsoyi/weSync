@@ -199,7 +199,7 @@ public class TeamService {
         List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(userId).get());
         for(TeamUser teamUser : teamUserList){
             Team team = teamUser.getTeam();
-            if(!team.getIsFinished() && !team.isDeleted()){
+            if(team!=null && !team.getIsFinished() && !team.isDeleted()){
                 ShortActiveTeamInfoDto shortActiveTeamInfoDto = new ShortActiveTeamInfoDto();
                 shortActiveTeamInfoDto.setTeamId(team.getTeamId());
                 shortActiveTeamInfoDto.setTeamName(team.getTeamName());
@@ -248,7 +248,7 @@ public class TeamService {
 
         UUID uuid = UUID.randomUUID();
         String randomLink = "https://wesync.co.kr/api/team/invite/" + uuid;
-        String sendLink = "https://wesync.co.kr/team/invite/" + uuid;
+        String sendLink = "https://wesync.co.kr/invite/" + uuid;
 
         //팀 링크 등록
         Invitation newInvitation = new Invitation();
@@ -540,6 +540,9 @@ public class TeamService {
         List<LongTeamInfoDto> longTeamInfoDtoList = new ArrayList<>();
         for (TeamUser teamUser : teamUserList) {
             Team team = teamUser.getTeam();
+            if(team==null){
+                continue;
+            }
             if(team.isDeleted() || teamUser.getIsBanned()){
                 continue;
             }
@@ -695,6 +698,11 @@ public class TeamService {
         deleteTeam.get().setDeletedBy(Expunger.normal);
         deleteTeam.get().setIsFinished(true);
         teamRepository.save(deleteTeam.get());
+
+        List<TeamUser> teamUserList = teamUserRepository.findByTeam(deleteTeam.get());
+        for(TeamUser teamUser : teamUserList){
+            teamUser.setTeam(null);
+        }
 
         //응답
         TeamIdDto teamIdDto = new TeamIdDto(id);
