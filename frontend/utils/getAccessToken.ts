@@ -1,7 +1,6 @@
 // import { cookies } from "next/headers";
 import { setItemWithExpireTime, getItemWithExpireTime } from "./controlStorage";
 import LocalStorage from "./localStorage";
-import { useLoginStore } from "@/store/login";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -39,12 +38,11 @@ export const isLogin = async () => {
 export async function getAccessToken() {
   // 클라이언트 전용 코드
   if (typeof window !== "undefined") {
-    const { setIsLogin } = useLoginStore((state) => ({
-      setIsLogin: state.setIsLogin,
-    }));
+    // const { setIsLogin } = useLoginStore();
     const token = await isLogin();
+    // console.log("token", token)
     if (!token) {
-      setIsLogin(false);
+      // setIsLogin(false);
       window.location.href = "/welcome";
     }
     return token;
