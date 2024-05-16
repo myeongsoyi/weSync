@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Getter
@@ -27,12 +28,10 @@ public class Notice extends BaseTime {
     @Column(name = "notice_id")
     private Long noticeId;
 
-    @Column(name = "content")
-    @NotNull
+    @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "is_fixed")
-    @NotNull
+    @Column(name = "is_fixed", nullable = false)
     private boolean isFixed;
 
     @ManyToOne(fetch = FetchType.LAZY)

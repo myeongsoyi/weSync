@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -29,16 +30,13 @@ public class Record extends BaseTime {
     @Column(name = "record_id")
     private Long recordId;
 
-    @Column(name = "title")
-    @NotNull
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "record_url")
-    @NotNull
+    @Column(name = "record_url", nullable = false)
     private String url;
 
-    @Column(name = "is_public")
-    @NotNull
+    @Column(name = "is_public", nullable = false)
     private boolean isPublic;
 
     @Column(name = "start_at")

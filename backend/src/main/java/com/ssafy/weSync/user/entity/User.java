@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -25,16 +26,16 @@ public class User extends BaseTime {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "kakao_id")
+    @Column(name = "kakao_id", nullable = false)
     private Long kakaoId;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @Column(name = "img_url")
     private String imgUrl;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Data
@@ -25,9 +26,9 @@ public class Invitation extends BaseTime {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @Column(name = "link")
+    @Column(name = "link", nullable = false)
     private String link;
 
-    @Column(name = "is_valid")
+    @Column(name = "is_valid", nullable = false)
     private Boolean isValid;
 }

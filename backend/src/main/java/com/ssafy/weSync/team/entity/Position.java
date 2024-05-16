@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Data
@@ -21,7 +22,7 @@ public class Position extends BaseTime {
     @Column(name = "position_id")
     private Long positionId;
 
-    @Column(name = "position_name")
+    @Column(name = "position_name", nullable = false)
     private String positionName;
 
     @ManyToOne(fetch = FetchType.LAZY)

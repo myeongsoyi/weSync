@@ -3,14 +3,12 @@ package com.ssafy.weSync.record.dto.request;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
 import com.ssafy.weSync.record.entity.Record;
-import com.ssafy.weSync.record.entity.Status;
 import com.ssafy.weSync.team.entity.Score;
 import com.ssafy.weSync.team.entity.TeamUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
