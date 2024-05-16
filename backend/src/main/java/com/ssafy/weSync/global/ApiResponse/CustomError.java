@@ -36,6 +36,9 @@ public enum CustomError {
     WRONG_FILTER_FORMAT(400, "잘못된 필터 형식입니다."),
     NO_RECORD(400, "존재하지 않는 녹음입니다."),
 
+    // FeedBack
+    NO_FEEDBACK(400, "존재하지 않는 피드백입니다."),
+
     // Others
     INCOMPLETE_INFORMATION(400, "입력한 정보가 부족합니다."),
     KAKAO_API_ERROR(400, "카카오 api 오류가 발생했습니다."),

@@ -6,11 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE color SET is_deleted = true WHERE color_id=?")
+@Where(clause = "is_deleted = false")
 @Table(name = "color")
 public class Color extends BaseTime {
     @Id
