@@ -2,17 +2,14 @@ FROM python:3.7
 
 WORKDIR /wesync
 
+# 필요한 패키지 설치
 RUN apt-get update && apt-get install -y \
     timidity \
     python-ly \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get -y install libgl1-mesa-glx
-
-# LilyPond 설치
-RUN wget http://download.linuxaudio.org/lilypond/binaries/linux-64/lilypond-2.14.0-1.linux-64.sh \
+    libgl1-mesa-glx \
+    && wget http://download.linuxaudio.org/lilypond/binaries/linux-64/lilypond-2.14.0-1.linux-64.sh \
     && sh lilypond-2.14.0-1.linux-64.sh --batch \
-    && rm lilypond-2.14.0-1.linux-64.sh
+    && rm -rf /var/lib/apt/lists/* lilypond-2.14.0-1.linux-64.sh
 
 COPY requirements.txt /wesync/requirements.txt
 COPY .env /wesync/.env
