@@ -41,7 +41,7 @@ def upload_score(team_id: int, file: UploadFile = File(...), db: Session = Depen
 
 @rScore.get('/{team_id}', tags = ['score'], response_model=BaseResponse)
 def get_scores(team_id: int, db: Session = Depends(get_db)):
-    scoreData = db.query(Score.score_url, Accompaniment.accompainment_url, Position.position_name, Color.color_code)\
+    scoreData = db.query(Score.score_url, Accompaniment.accompaniment_url, Position.position_name, Color.color_code)\
         .join(Accompaniment, Score.score_id == Accompaniment.score_id)\
         .join(Position, Score.position_id == Position.position_id)\
         .join(Color, Position.color_id == Color.color_id)\
