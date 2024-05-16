@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Table, Tag, message } from 'antd';
 import { MainRecords } from '@/types/homeMain';
-// import { getMainRecords } from '@/services/home';
+import { getMainRecords } from '@/services/home';
 
 export default function ListRecord() {
   const [success, setSuccess] = useState<MainRecords['success']>(true);
@@ -12,42 +12,42 @@ export default function ListRecord() {
 
   const { Column } = Table;
 
-  // useEffect(() => {
-  //   const fetchRecords = async () => {
-  //     try {
-  //       const response = await getMainRecords();
-  //       if (response.success) {
-  //         setRecords(response.data);
-  //         setSuccess(true);
-  //       } else {
-  //         setError(response.error);
-  //         setSuccess(false);
-  //       }
-  //     } catch (err) {
-  //       message.error('데이터를 불러오는데 실패했습니다.');
-  //     }
-  //   };
-  //   fetchRecords();
-  // }, []);
-
   useEffect(() => {
-    setRecords([
-      {
-        recordId: 1,
-        title: '안녕',
-        isPublic: true,
-        recordUrl: 'https://we-sync.s3.ap-southeast-2.amazonaws.com/record/m2.mp3',
-        teamId: 1,
-        teamUrl: 'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/3d-render-of-red-paper-clipboard-with-cross-mark.png',
-        songName: '노래1',
-        positionName: '포지션1',
-        colorCode: 'FFE27F',
-        startAt: 1.5,
-        endAt: 12.5,
-        createAt: '2024-05-12T02:45:33.926036',
-      },
-    ]);
+    const fetchRecords = async () => {
+      try {
+        const response = await getMainRecords();
+        if (response.success) {
+          setRecords(response.data);
+          setSuccess(true);
+        } else {
+          setError(response.error);
+          setSuccess(false);
+        }
+      } catch (err) {
+        message.error('데이터를 불러오는데 실패했습니다.');
+      }
+    };
+    fetchRecords();
   }, []);
+
+  // useEffect(() => {
+  //   setRecords([
+  //     {
+  //       recordId: 1,
+  //       title: '안녕',
+  //       isPublic: true,
+  //       recordUrl: 'https://we-sync.s3.ap-southeast-2.amazonaws.com/record/m2.mp3',
+  //       teamId: 1,
+  //       teamUrl: 'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/3d-render-of-red-paper-clipboard-with-cross-mark.png',
+  //       songName: '노래1',
+  //       positionName: '포지션1',
+  //       colorCode: 'FFE27F',
+  //       startAt: 1.5,
+  //       endAt: 12.5,
+  //       createAt: '2024-05-12T02:45:33.926036',
+  //     },
+  //   ]);
+  // }, []);
 
   if (!success) {
     return (
