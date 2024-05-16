@@ -25,7 +25,7 @@ class Score(Base, BaseTimeEntity):
     team = relationship("Team", back_populates="scores")
     title = Column(String(30), nullable=True)
     score_url = Column(String(255), nullable=False)
-    accompaniment = relationship("accompaniment", back_populates="score", uselist=False)
+    accompaniment = relationship("Accompaniment", back_populates="score", uselist=False)
 
 
 class Accompaniment(Base, BaseTimeEntity):
