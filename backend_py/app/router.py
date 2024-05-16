@@ -2,6 +2,10 @@ from fastapi import APIRouter, File, UploadFile, BackgroundTasks
 from app.response import BaseResponse
 from app.response import CommonResponse
 from scoreRecognition.scoreRecognition import recognition
+from scoreRecognition.createOutput import co
+import scoreRecognition.upload as up
+
+import os
 
 rScore = APIRouter(prefix="/py-api/score")
 
@@ -32,3 +36,16 @@ def get_scores():
 @rScore.delete('/{team_id}', tags = ['score'], response_model=BaseResponse)
 def delete_scores():
     pass
+
+@rScore.post('/{team_id}', tags = ['score'], response_model=BaseResponse)
+def upload_score():
+    co.createEmptyScore(f"{os.getcwd()}/scoreRecognition/Output/img/emptyScore.png")
+    up.upload_file_to_s3(f"{os.getcwd()}/scoreRecognition/Output/img/emptyScore.png", "emptyScore.png")
+
+    return CommonResponse(
+        True,
+        {
+            "message":"빈 악보 생성"   
+        },
+        200, "빈 악보 생성 성공!"
+        )

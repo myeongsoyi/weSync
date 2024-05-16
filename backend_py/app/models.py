@@ -24,7 +24,7 @@ class Score(Base, BaseTimeEntity):
     team_id = Column(Integer, ForeignKey("team.team_id"))
     team = relationship("Team", back_populates="scores")
     title = Column(String(30), nullable=False)
-    url = Column(String(255), nullable=False)
+    score_url = Column(String(255), nullable=False)
     accompainment = relationship("Accompainment", back_populates="score", uselist=False)
 
 
@@ -35,7 +35,7 @@ class Accompainment(Base, BaseTimeEntity):
     score_id = Column(Integer, ForeignKey("score.score_id"))
     score = relationship("Score", back_populates="accompainment")
     title = Column(String(255), nullable=False)
-    url = Column(String(255), nullable=False)
+    accompainment_url = Column(String(255), nullable=False)
 
 class Position(Base, BaseTimeEntity):
     __tablename__ = "position"
