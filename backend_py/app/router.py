@@ -48,9 +48,20 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
         .filter(Score.team_id==team_id)\
         .all()
     
+    score_dicts = []
+    for row in scoreData:
+        # 각 row를 딕셔너리로 변환
+        row_dict = {
+            "score_url": row[0],
+            "accompaniment_url": row[1],
+            "position_name": row[2],
+            "color_code": row[3]
+        }
+        score_dicts.append(row_dict)
+
     return CommonResponse(
         True,
-        {"Data": [dict(row) for row in scoreData]},
+        {"Data": score_dicts},
         200, "조회 성공!"
         )
 
