@@ -10,6 +10,7 @@ export default function Loading() {
           width={450}
           height={450}
           style={{ margin: 'auto' }}
+          unoptimized
         ></Image>
         <h2 className="text-center mt-10">싱크 맞추는 중</h2>
       </div>
