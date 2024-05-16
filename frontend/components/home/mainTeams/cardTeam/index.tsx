@@ -41,17 +41,17 @@ function useViewportWidth() {
 export default function CardTeams() {
   const [memNum, setMemNum] = useState(5); // 너비에 따른 멤버 수 상태 변수
   const width = useViewportWidth(); // 너비 상태 변수
-  const [success, setSuccess] = useState<MainActiveTeams["success"]>(true); // 성공 상태 변수
-  const [data, setData] = useState<MainActiveTeams["data"]>([]); // 데이터 상태 변수
-  const [error, setError] = useState<MainActiveTeams["error"]>(null); // 에러 상태 변수
+  const [success, setSuccess] = useState<MainActiveTeams['success']>(true); // 성공 상태 변수
+  const [data, setData] = useState<MainActiveTeams['data']>([]); // 데이터 상태 변수
+  const [error, setError] = useState<MainActiveTeams['error']>(null); // 에러 상태 변수
 
   useEffect(() => {
     const fetchMainTeams = async () => {
       const teams = await getMainTeams();
-    setSuccess(teams.success); // 성공 상태 변수 업데이트
-    setData(teams.data); // 데이터 상태 변수 업데이트
-    setError(teams.error); // 에러 상태 변수 업데이트
-    }
+      setSuccess(teams.success); // 성공 상태 변수 업데이트
+      setData(teams.data); // 데이터 상태 변수 업데이트
+      setError(teams.error); // 에러 상태 변수 업데이트
+    };
     fetchMainTeams();
   }, []);
 
@@ -59,9 +59,9 @@ export default function CardTeams() {
     if (width < 920) {
       // 너비가 920px 미만일 때
       setMemNum(4); // 멤버 수를 4명으로 설정
-    // } else if (width < 840) {
-    //   // 너비가 840px 미만일 때
-    //   setMemNum(4); // 멤버 수를 4명으로 설정
+      // } else if (width < 840) {
+      //   // 너비가 840px 미만일 때
+      //   setMemNum(4); // 멤버 수를 4명으로 설정
     } else {
       // 일반 데스크탑 화면일 때
       setMemNum(5); // 멤버 수를 5명으로 설정
@@ -70,7 +70,11 @@ export default function CardTeams() {
 
   if (!success) {
     // api 요청 실패했을 경우...
-    return <div><p>{error?.errorMessage}</p></div>;
+    return (
+      <div>
+        <p>{error?.errorMessage}</p>
+      </div>
+    );
   }
 
   return (
@@ -112,30 +116,36 @@ export default function CardTeams() {
               hoverable
             >
               <div className="flex mb-2 justify-between">
-                <Image src="svgs/note.svg" width={16} height={16} alt="음표" className='h-auto' />
+                <Image
+                  src="svgs/note.svg"
+                  width={16}
+                  height={16}
+                  alt="음표"
+                  className="h-auto"
+                />
                 <p className="flex w-full">
                   <span className="m-auto pr-4">{team.songName ?? '미정'}</span>
                 </p>
               </div>
               {team.myPosition && (
-              <p>
-                <Tag
-                  style={{
-                    border: `1px solid #${team.positionCode}`,
-                    color: `#${team.positionCode}`,
-                    margin: '0.75rem 0',
-                  }}
-                  bordered={false}
-                >
-                  {team.myPosition}
-                </Tag>
-              </p>
+                <p>
+                  <Tag
+                    style={{
+                      border: `1px solid #${team.positionCode}`,
+                      color: `#${team.positionCode}`,
+                      margin: '0.75rem 0',
+                    }}
+                    bordered={false}
+                  >
+                    {team.myPosition}
+                  </Tag>
+                </p>
               )}
               <Avatar
                 src={team.teamProfileUrl}
                 alt="팀"
                 size={80}
-                style={{ borderColor: '#FFC500', marginBottom : '0.5rem' }}
+                style={{ borderColor: '#FFC500', marginBottom: '0.5rem' }}
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
@@ -153,7 +163,11 @@ export default function CardTeams() {
                       offset={[-18, -5]}
                       key={i}
                     >
-                      <Tooltip placement="top" title={member.nickName} arrow={true}>
+                      <Tooltip
+                        placement="top"
+                        title={member.nickName}
+                        arrow={true}
+                      >
                         <Avatar
                           src={member.userProfileUrl}
                           alt={member.nickName}

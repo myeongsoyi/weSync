@@ -5,7 +5,6 @@ export const kakaoLoginAPI = async (code: string) => {
   try {
     const res = await fetch(`${baseURL}/users?code=${code}`);
     const obj = await res.json();
-    console.log(obj);
     if (obj.success) {
       return obj.data;
     } else {

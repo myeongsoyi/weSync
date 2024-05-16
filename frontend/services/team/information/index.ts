@@ -9,6 +9,7 @@ export async function getTeamMembers(teamId: string) {
 
   return response;
 }
+
 export async function deleteTeamMember(teamUserId: number) {
   const response = await APIModule({
     action: `/team/${teamUserId}`,
@@ -30,7 +31,7 @@ export async function getPositionColors() {
 }
 
 export async function getTeamPosition(teamId: string) {
-  const query = `id=${teamId}`;
+  const query = `teamId=${teamId}`;
   const response = await APIModule({
     action: `/team/position?${query}`,
     method: 'GET',
@@ -46,11 +47,12 @@ export async function postTeamPosition(
   colorId: number,
 ) {
   const data = {
-    teamId, positionName, colorId,
+    teamId,
+    positionName,
+    colorId,
   };
   // data를 먼저 확인해보자
-  console.log('data:', data);
-  
+  // console.log('data:', data);
 
   const response = await APIModule({
     action: '/team/position',
@@ -61,13 +63,27 @@ export async function postTeamPosition(
   return response;
 }
 
-export async function putTeamPosition(positionId: number, positionName: string, colorId: number) {
+export async function deleteTeamPosition(positionId: number) {
+  const data = { positionId };
+  const response = await APIModule({
+    action: `/team/position`,
+    method: 'DELETE',
+    data: data,
+  });
+
+  return response;
+}
+
+export async function putTeamPosition(
+  positionId: number,
+  positionName: string,
+  colorId: number,
+) {
   const data = {
     positionId,
     positionName,
     colorId,
   };
-
   const response = await APIModule({
     action: '/team/position',
     method: 'PUT',
@@ -77,14 +93,17 @@ export async function putTeamPosition(positionId: number, positionName: string, 
   return response;
 }
 
-export async function putMemberPosition(teamUserId: number, positionId: number) {
+export async function putMemberPosition(
+  teamUserId: number,
+  positionId: number,
+) {
   const data = {
     teamUserId,
     positionId,
   };
 
   const response = await APIModule({
-    action: '/team/position',
+    action: '/team/team-position',
     method: 'PUT',
     data: data,
   });
