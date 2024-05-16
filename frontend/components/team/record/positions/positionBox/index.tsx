@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -6,23 +6,28 @@ import styles from './index.module.scss';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Slider, Tag } from 'antd';
 import { IRecord } from '@/services/team/record';
-import PositionModal from '@/components/team/information/members/positionmodal/changemodal';
+import ScorePositionModal from './scorePositionModal';
+// import { getTeamMembers } from '@/services/team/information';
+// import { TeamMembers } from '@/types/teamDetail';
 
 interface IParams {
   teamId: string;
   position: IRecord;
 }
 
-export default function PositionBox({ teamId, position: initialPosition }: IParams) {
+export default function PositionBox({
+  teamId,
+  position: initialPosition,
+}: IParams) {
   const [isMute, setIsMute] = useState(false);
   const [volume, setVolume] = useState(30);
   const [savedVolume, setSavedVolume] = useState(30);
   const [position, setPosition] = useState<IRecord>(initialPosition);
   const [positionModalOpen, setPositionModalOpen] = useState(false);
+  
   // TODO: 팀원 선택이 가능하도록 수정 필요
-  const selectedMemberId = 1;
+  const selectedMemberId = teamId ? parseInt(teamId) : null;
 
-  console.log(teamId);
   const handlePositionSelect = (selectedPosition: IRecord) => {
     setPosition(selectedPosition);
     closePositionModal();
@@ -60,16 +65,42 @@ export default function PositionBox({ teamId, position: initialPosition }: IPara
 
   return (
     <div className={styles.controller}>
-      <Button onClick={clickMute} type="text" style={{ padding: '1px', width: '20%', margin: 'auto', height: 'auto' }}>
+      <Button
+        onClick={clickMute}
+        type="text"
+        style={{ padding: '1px', width: '20%', margin: 'auto', height: 'auto' }}
+      >
         {!isMute ? (
-          <Image src={'/svgs/volume_on.svg'} alt="Volume On" width={50} height={50} />
+          <Image
+            src={'/svgs/volume_on.svg'}
+            alt="Volume On"
+            width={50}
+            height={50}
+          />
         ) : (
-          <Image src={'/svgs/volume_mute.svg'} alt="Volume Off" width={50} height={50} />
+          <Image
+            src={'/svgs/volume_mute.svg'}
+            alt="Volume Off"
+            width={50}
+            height={50}
+          />
         )}
       </Button>
       <div className={styles.box_slider}>
         {position.name ? (
-          <Tag style={{ color: position.color || 'defaultColor', borderColor: position.color || 'defaultBorderColor', fontSize: 15, width: '100%', padding: 4, textAlign: 'center', marginTop: 10 }}>
+          <Tag
+            onClick={openPositionModal}
+            style={{
+              color: position.color || 'defaultColor',
+              borderColor: position.color || 'defaultBorderColor',
+              fontSize: 15,
+              width: '100%',
+              padding: 4,
+              textAlign: 'center',
+              marginTop: 10,
+              cursor: 'pointer',
+            }}
+          >
             {position.name}
           </Tag>
         ) : (
@@ -79,7 +110,12 @@ export default function PositionBox({ teamId, position: initialPosition }: IPara
         )}
         <Slider defaultValue={30} value={volume} onChange={changeVolume} />
       </div>
-      <PositionModal open={positionModalOpen} onOk={handleOk} onCancel={closePositionModal} selectedMemberId={selectedMemberId}/>
+      <ScorePositionModal
+        open={positionModalOpen}
+        onOk={handleOk}
+        onCancel={closePositionModal}
+        selectedMemberId={selectedMemberId}
+      />
     </div>
   );
 }
