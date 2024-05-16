@@ -1,9 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Avatar, Table, Tag, message } from 'antd';
+import Swal from 'sweetalert2';
+import { Avatar, Button, Table, Tag, Tooltip, message } from 'antd';
 import { MainRecords } from '@/types/homeMain';
 import { getMainRecords } from '@/services/home';
+import { putChangeRecordPublic, deleteRecord } from '@/services/team/record';
+import {
+  CloseCircleOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 
 export default function ListRecord() {
   const [success, setSuccess] = useState<MainRecords['success']>(true);
@@ -12,21 +19,22 @@ export default function ListRecord() {
 
   const { Column } = Table;
 
-  useEffect(() => {
-    const fetchRecords = async () => {
-      try {
-        const response = await getMainRecords();
-        if (response.success) {
-          setRecords(response.data);
-          setSuccess(true);
-        } else {
-          setError(response.error);
-          setSuccess(false);
-        }
-      } catch (err) {
-        message.error('데이터를 불러오는데 실패했습니다.');
+  const fetchRecords = async () => {
+    try {
+      const response = await getMainRecords();
+      if (response.success) {
+        setRecords(response.data);
+        setSuccess(true);
+      } else {
+        setError(response.error);
+        setSuccess(false);
       }
-    };
+    } catch (err) {
+      message.error('데이터를 불러오는데 실패했습니다.');
+    }
+  };
+
+  useEffect(() => {
     fetchRecords();
   }, []);
 
@@ -34,20 +42,89 @@ export default function ListRecord() {
   //   setRecords([
   //     {
   //       recordId: 1,
-  //       title: '안녕',
+  //       title: '안녕akfaefaslkdjaslkdaskldj',
   //       isPublic: true,
-  //       recordUrl: 'https://we-sync.s3.ap-southeast-2.amazonaws.com/record/m2.mp3',
+  //       recordUrl:
+  //         'https://we-sync.s3.ap-southeast-2.amazonaws.com/record/m2.mp3',
   //       teamId: 1,
-  //       teamUrl: 'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/3d-render-of-red-paper-clipboard-with-cross-mark.png',
+  //       teamUrl:
+  //         'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/3d-render-of-red-paper-clipboard-with-cross-mark.png',
   //       songName: '노래1',
   //       positionName: '포지션1',
   //       colorCode: 'FFE27F',
   //       startAt: 1.5,
-  //       endAt: 12.5,
+  //       endAt: 13,
   //       createAt: '2024-05-12T02:45:33.926036',
   //     },
   //   ]);
   // }, []);
+
+  const handlePublic = async (recordId: number, isPublic: boolean) => {
+    Swal.fire({
+      title: isPublic ? '공유를 취소합니다.' : '공유를 시작합니다.',
+      text: isPublic
+        ? '다른 사용자가 이 녹음을 볼 수 없습니다.'
+        : '다른 사용자가 이 녹음을 볼 수 있습니다.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await putChangeRecordPublic(recordId);
+          if (response.success) {
+            const msg = isPublic
+              ? '공유가 취소되었습니다.'
+              : '공유가 시작되었습니다.';
+            message.success(msg);
+            fetchRecords();
+          } else {
+            message.error(response.error?.errorMessage);
+          }
+        } catch (err) {
+          message.error('공유 상태 변경에 실패했습니다.');
+        }
+        // const newRecords = records.map((record) => {
+        //   if (record.recordId === recordId) {
+        //     return { ...record, isPublic: !record.isPublic };
+        //   }
+        //   return record;
+        // });
+        // const msg = isPublic ? '공유가 취소되었습니다.' : '공유가 시작되었습니다.';
+        // message.success(msg);
+        // setRecords(newRecords);
+      }
+    });
+  };
+
+  const handleDelete = async (recordId: number, songName: string | null) => {
+    Swal.fire({
+      title: '이 녹음을 삭제합니다.',
+      text: songName ?? '',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: 'grey',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await deleteRecord(recordId);
+          if (response.success) {
+            message.success('녹음이 삭제되었습니다.');
+            fetchRecords();
+          } else {
+            // message.error(response.error?.errorMessage);
+            message.error('녹음 삭제에 실패했습니다.');
+          }
+        } catch (err) {
+          message.error('녹음 삭제에 실패했습니다.');
+        }
+      }
+    });
+  };
 
   if (!success) {
     return (
@@ -60,15 +137,23 @@ export default function ListRecord() {
 
   return (
     <Table dataSource={records} pagination={false} rowKey="recordId">
-      <Column title="노래" dataIndex="songName" key="songName" 
-      render={(songName, record: MainRecords['data'][number]) => 
-        <>
-        <Avatar src={record.teamUrl}  alt="팀"
-        size={40}
-        style={{ borderColor: '#FFC500', marginRight: '1rem' }} />
-        <span>{songName}</span>
-        </>
-      } />
+      <Column
+        title="팀"
+        dataIndex="songName"
+        key="songName"
+        render={(songName, record: MainRecords['data'][number]) => (
+          <a href={`/team/${record.teamId}/workspace`}>
+            <Tooltip placement="top" title={songName} arrow={true}>
+              <Avatar
+                src={record.teamUrl}
+                alt="팀"
+                size={45}
+                style={{ borderColor: '#FFC500' }}
+              />
+            </Tooltip>
+          </a>
+        )}
+      />
       <Column
         title="포지션"
         key="positionName"
@@ -111,19 +196,65 @@ export default function ListRecord() {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-            timeZone: 'Asia/Seoul'
+            timeZone: 'Asia/Seoul',
           });
           const formattedTime = date.toLocaleTimeString('ko-KR', {
             hour: 'numeric',
             minute: '2-digit',
             // second: '2-digit',
-            timeZone: 'Asia/Seoul'
+            timeZone: 'Asia/Seoul',
           });
           return (
             <>
               <Tag color="blue">{formattedDate}</Tag>
+              <br />
               <Tag color="green">{formattedTime}</Tag>
             </>
+          );
+        }}
+      />
+      <Column
+        title="비고"
+        dataIndex="isPublic"
+        key="isPublic"
+        render={(isPublic, record: MainRecords['data'][number]) => {
+          return (
+            <div className="flex">
+              <Tooltip
+                placement="top"
+                title={isPublic ? '공유 취소' : '공유하기'}
+                arrow={true}
+              >
+                <Button
+                  type="text"
+                  onClick={() => handlePublic(record.recordId, isPublic)}
+                >
+                  {isPublic ? (
+                    <DownloadOutlined
+                      style={{
+                        color: 'green',
+                        fontSize: '1.2rem',
+                        margin: 'auto',
+                      }}
+                    />
+                  ) : (
+                    <UploadOutlined
+                      style={{ color: 'blue', fontSize: '1.2rem' }}
+                    />
+                  )}
+                </Button>
+              </Tooltip>
+              <Tooltip placement="top" title={'삭제'} arrow={true}>
+                <Button
+                  type="text"
+                  onClick={() => handleDelete(record.recordId, record.songName)}
+                >
+                  <CloseCircleOutlined
+                    style={{ color: 'red', fontSize: '1.2rem' }}
+                  />
+                </Button>
+              </Tooltip>
+            </div>
           );
         }}
       />

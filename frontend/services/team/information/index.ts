@@ -30,7 +30,7 @@ export async function getPositionColors() {
 }
 
 export async function getTeamPosition(teamId: string) {
-  const query = `id=${teamId}`;
+  const query = `teamId=${teamId}`;
   const response = await APIModule({
     action: `/team/position?${query}`,
     method: 'GET',
