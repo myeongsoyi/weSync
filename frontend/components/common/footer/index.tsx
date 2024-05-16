@@ -61,7 +61,7 @@ export default function Footer() {
             width={150}
             height={100}
             className="m-auto h-auto"
-            onClick={() => alert('자율 프로젝트 A310')}
+            onClick={() => alert('SSAFY 자율 프로젝트 A310')}
             style={{ cursor: 'pointer' }}
             priority
           />

@@ -11,7 +11,7 @@ export default function TestComponent() {
   useEffect(() => {
     const interval = setInterval(() => {
       setDots((prevDots) => (prevDots.length < 3 ? prevDots + '.' : ''));
-    }, 500);
+    }, 300);
 
     return () => clearInterval(interval);
   }, []);
