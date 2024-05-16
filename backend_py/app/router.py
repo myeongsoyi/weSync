@@ -50,7 +50,7 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
     
     return CommonResponse(
         True,
-        {"Data": dict(scoreData)},
+        {"Data": [dict(row) for row in scoreData]},
         200, "조회 성공!"
         )
 
