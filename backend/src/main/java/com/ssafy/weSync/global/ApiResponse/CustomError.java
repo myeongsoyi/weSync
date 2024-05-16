@@ -17,6 +17,9 @@ public enum CustomError {
     // TeamUser
     NO_TEAMUSER(400, "존재하지 않는 팀원입니다."),
 
+    // Invitation
+    EXPIRED_INVITATION(400, "유효기간이 지난 주소입니다."),
+
     // Position
     NO_POSITION(400, "존재하지 않는 포지션입니다."),
     DUPLICATE_POSITION(400, "중복된 포지션입니다."),
