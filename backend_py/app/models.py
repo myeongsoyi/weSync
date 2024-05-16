@@ -32,7 +32,7 @@ class Accompainment(Base, BaseTimeEntity):
     __tablename__ = "accompainment"
 
     accompainment_id = Column(BigInteger, primary_key=True)
-    score_id = Column(Integer, ForeignKey("score.score_id"))
+    score_id = Column(BigInteger, ForeignKey("score.score_id"))
     score = relationship("Score", back_populates="accompainment")
     accompainment_url = Column(String(255), nullable=False)
 
