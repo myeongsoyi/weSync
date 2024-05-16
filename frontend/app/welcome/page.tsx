@@ -41,7 +41,6 @@ export default function welcome() {
                       layout="responsive"
                       width={1000}
                       height={400}
-                      objectFit="cover"
                     />
                   </div>
                   <div>
@@ -51,7 +50,6 @@ export default function welcome() {
                       layout="responsive"
                       width={1000}
                       height={400}
-                      objectFit="cover"
                     />
                   </div>
                   <div>
@@ -61,7 +59,6 @@ export default function welcome() {
                       layout="responsive"
                       width={1000}
                       height={400}
-                      objectFit="cover"
                     />
                   </div>
                   <div>
@@ -71,7 +68,6 @@ export default function welcome() {
                       layout="responsive"
                       width={1000}
                       height={400}
-                      objectFit="cover"
                     />
                   </div>
                 </Carousel>

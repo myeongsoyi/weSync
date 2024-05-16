@@ -48,9 +48,9 @@ export default function CardTeams() {
   useEffect(() => {
     const fetchMainTeams = async () => {
       const teams = await getMainTeams();
-    setSuccess(teams.success); // 성공 상태 변수 업데이트
-    setData(teams.data); // 데이터 상태 변수 업데이트
-    setError(teams.error); // 에러 상태 변수 업데이트
+      setSuccess(teams.success); // 성공 상태 변수 업데이트
+      setData(teams.data); // 데이터 상태 변수 업데이트
+      setError(teams.error); // 에러 상태 변수 업데이트
     }
     fetchMainTeams();
   }, []);
@@ -59,9 +59,6 @@ export default function CardTeams() {
     if (width < 920) {
       // 너비가 920px 미만일 때
       setMemNum(4); // 멤버 수를 4명으로 설정
-    // } else if (width < 840) {
-    //   // 너비가 840px 미만일 때
-    //   setMemNum(4); // 멤버 수를 4명으로 설정
     } else {
       // 일반 데스크탑 화면일 때
       setMemNum(5); // 멤버 수를 5명으로 설정
@@ -75,15 +72,16 @@ export default function CardTeams() {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4 mt-4 ">
+      <div className="grid grid-cols-3 gap-4 mt-4">
         <Card
           style={{
-            // width: '32%',
-            // marginTop: 16,
             textAlign: 'center',
             borderRadius: '10px',
             border: '3px solid #FFC500',
             minHeight: '230px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
           className="flex justify-center text-center cursor-pointer"
           hoverable
@@ -100,25 +98,24 @@ export default function CardTeams() {
           <Link href={`/team/${team.teamId}/information`} key={i}>
             <Card
               style={{
-                //   width: '32%',
-                // marginTop: 16,
                 height: '100%',
                 textAlign: 'center',
                 borderRadius: '10px',
                 border: '3px solid #FFC500',
                 backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)' : 'white'}`,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
-              title={team.teamName}
               hoverable
             >
-              <div className="flex mb-2 justify-between">
-                <Image src="svgs/note.svg" width={16} height={16} alt="음표" className='h-auto' />
-                <p className="flex w-full">
-                  <span className="m-auto pr-4">{team.songName ?? '미정'}</span>
-                </p>
+              <h3>{team.teamName}</h3>
+              <div className="flex justify-center items-center mb-2 w-full">
+                <Image src="svgs/note.svg" width={16} height={16} alt="음표" className='h-auto mr-2' />
+                <p className="m-0">{team.songName ?? '미정'}</p>
               </div>
               {team.myPosition && (
-              <p>
                 <Tag
                   style={{
                     border: `1px solid #${team.positionCode}`,
@@ -129,13 +126,12 @@ export default function CardTeams() {
                 >
                   {team.myPosition}
                 </Tag>
-              </p>
               )}
               <Avatar
                 src={team.teamProfileUrl}
                 alt="팀"
                 size={80}
-                style={{ borderColor: '#FFC500', marginBottom : '0.5rem' }}
+                style={{ borderColor: '#FFC500', marginBottom: '0.5rem' }}
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
