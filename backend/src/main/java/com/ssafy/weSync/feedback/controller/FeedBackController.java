@@ -48,4 +48,12 @@ public class FeedBackController {
         Response<UpdateResponse> response = new Response<>(true, updateResponse, null);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{feedbackId}")
+    public ResponseEntity<?> deleteFeedback(@PathVariable Long feedbackId){
+        Long userId = accessTokenValidationAspect.getUserId();
+        feedBackService.deleteFeedback(userId, feedbackId);
+        Response<?> response = new Response<>(true, null, null);
+        return ResponseEntity.ok(response);
+    }
 }

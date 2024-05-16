@@ -154,4 +154,15 @@ public class RecordService {
         Record newRecord = recordRepository.save(record);
         return UpdateResponse.toDto(newRecord.isPublic());
     }
+
+    public void deleteRecord(Long userId, Long recordId) {
+        Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+
+        // 권한 체크
+        if (record.getTeamUser().getUser().getUserId() != userId) {
+            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
+        }
+
+        recordRepository.deleteById(recordId);
+    }
 }

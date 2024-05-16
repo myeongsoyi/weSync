@@ -40,7 +40,7 @@ public class NoticeService {
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
-            throw new GlobalException(CustomError.NO_TEAM_LEADER);
+            throw new GlobalException(CustomError.NOT_TEAM_LEADER);
         }
 
         createRequest.setTeam(team);
@@ -73,7 +73,7 @@ public class NoticeService {
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
-            throw new GlobalException(CustomError.NO_TEAM_LEADER);
+            throw new GlobalException(CustomError.NOT_TEAM_LEADER);
         }
 
         notice.updateIsFixed();
@@ -95,7 +95,7 @@ public class NoticeService {
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
-            throw new GlobalException(CustomError.NO_TEAM_LEADER);
+            throw new GlobalException(CustomError.NOT_TEAM_LEADER);
         }
 
         notice.updateContent(updateRequest.getContent());
@@ -110,7 +110,7 @@ public class NoticeService {
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
-            throw new GlobalException(CustomError.NO_TEAM_LEADER);
+            throw new GlobalException(CustomError.NOT_TEAM_LEADER);
         }
 
         noticeRepository.deleteById(noticeId);

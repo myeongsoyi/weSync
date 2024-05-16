@@ -61,4 +61,15 @@ public class FeedBackService {
         FeedBack newFeedBack = feedBackRepository.save(feedBack);
         return UpdateResponse.toDto(newFeedBack);
     }
+
+    public void deleteFeedback(Long userId, Long feedbackId) {
+        FeedBack feedBack = feedBackRepository.findById(feedbackId).orElseThrow(() -> new GlobalException(CustomError.NO_FEEDBACK));
+
+        // 권한 체크
+        if (feedBack.getTeamUser().getUser().getUserId() != userId){
+            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
+        }
+
+        feedBackRepository.deleteById(feedbackId);
+    }
 }
