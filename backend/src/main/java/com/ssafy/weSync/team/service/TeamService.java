@@ -199,7 +199,7 @@ public class TeamService {
         List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(userId).get());
         for(TeamUser teamUser : teamUserList){
             Team team = teamUser.getTeam();
-            if(team!=null && !team.getIsFinished() && !team.isDeleted()){
+            if(team!=null && !team.getIsFinished() && !team.isDeleted() && !teamUser.getIsBanned()){
                 ShortActiveTeamInfoDto shortActiveTeamInfoDto = new ShortActiveTeamInfoDto();
                 shortActiveTeamInfoDto.setTeamId(team.getTeamId());
                 shortActiveTeamInfoDto.setTeamName(team.getTeamName());
