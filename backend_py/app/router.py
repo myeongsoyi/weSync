@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Depends
+from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
 from app.response import BaseResponse
 from sqlalchemy.orm import Session
 from app.response import CommonResponse
@@ -84,7 +84,13 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
         
         db.add(score)
     
-    db.commit()
+    try:
+        db.commit()  # 트랜잭션 커밋
+    except Exception as e:
+        db.rollback()  # 예외 발생 시 롤백
+        print(e.args)
+        raise HTTPException(status_code=500, detail="데이터베이스 커밋 실패")
+
     
     return CommonResponse(
         True,
