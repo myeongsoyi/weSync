@@ -116,7 +116,7 @@ def recognition(file: UploadFile):
 
                 ly_to_png( f'{output_path}/lily/{file_name}_part{i}.ly',  f'{output_path}/img/{file_name}_part{i}')
 
-                up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}/{file_name}_part{i}.png', "scoreOutput/png/", f"{file_name}_part{i}.png")
+                up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}.png', "scoreOutput/png/", f"{file_name}_part{i}.png")
         except Exception as e:
             print(e.args) # 오류
         finally:
