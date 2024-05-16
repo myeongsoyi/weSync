@@ -23,4 +23,7 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
 
     @Query("SELECT tu FROM TeamUser tu JOIN tu.team t JOIN tu.user u WHERE u.userId = :userId And t.teamId = :teamId")
     TeamUser findByUserIdAndTeamId(@Param("userId") Long userId, @Param("teamId") Long teamId);
+
+    @Query("SELECT tu FROM TeamUser tu JOIN tu.notices n JOIN tu.user u WHERE n.noticeId =:noticeId AND u.userId = :userId")
+    TeamUser findByUserIdAndNoticeId(@Param("userId") Long userId, @Param("noticeId") Long noticeId);
 }
