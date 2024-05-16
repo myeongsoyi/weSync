@@ -20,13 +20,14 @@ export default function TeamMemberList({ teamId }: IParams) {
   const [members, setMembers] = useState<TeamMembers['data']>([]);
   const [error, setError] = useState<TeamMembers['error']>(null);
 
+  const fetchMembers = async () => {
+    const members = await getTeamMembers(teamId);
+    setSuccess(members.success);
+    setMembers(members.data);
+    setError(members.error);
+  };
+
   useEffect(() => {
-    const fetchMembers = async () => {
-      const members = await getTeamMembers(teamId);
-      setSuccess(members.success);
-      setMembers(members.data);
-      setError(members.error);
-    };
     fetchMembers();
   }, []);
 
@@ -192,6 +193,7 @@ export default function TeamMemberList({ teamId }: IParams) {
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         selectedMemberId={selectedMemberId}
+        fetchMembers={fetchMembers}
       />
     </div>
   );
