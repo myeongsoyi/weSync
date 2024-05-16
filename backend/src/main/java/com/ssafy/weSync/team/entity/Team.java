@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class Team extends BaseTime {
     private Long teamId;
 
     //팀명
-    @Column(name = "team_name")
+    @Column(name = "team_name", nullable = false)
     private String teamName;
 
     //곡명
@@ -35,11 +36,11 @@ public class Team extends BaseTime {
     private String profileUrl;
 
     //완료여부
-    @Column(name = "is_finished")
+    @Column(name = "is_finished", nullable = false)
     private Boolean isFinished;
 
     //팀리더id
-    @Column(name = "team_leader_id")
+    @Column(name = "team_leader_id", nullable = false)
     private Long teamLeaderId;
 
     //팀원
