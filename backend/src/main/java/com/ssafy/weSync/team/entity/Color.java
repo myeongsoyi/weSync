@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Data
@@ -22,9 +23,9 @@ public class Color extends BaseTime {
     @Column(name = "color_id")
     private Long colorId;
 
-    @Column(name = "color_name")
+    @Column(name = "color_name", nullable = false)
     private String colorName;
 
-    @Column(name = "color_code")
+    @Column(name = "color_code", nullable = false)
     private String colorCode;
 }

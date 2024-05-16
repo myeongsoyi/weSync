@@ -1,14 +1,10 @@
 package com.ssafy.weSync.record.dto.response;
 
 import com.ssafy.weSync.record.entity.Record;
-import com.ssafy.weSync.record.entity.Status;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

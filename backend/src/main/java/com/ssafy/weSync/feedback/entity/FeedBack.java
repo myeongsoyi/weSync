@@ -26,8 +26,7 @@ public class FeedBack extends BaseTime {
     @Column(name = "feedback_id")
     private Long feedBackId;
 
-    @Column(name = "content")
-    @NotNull
+    @Column(name = "content", nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

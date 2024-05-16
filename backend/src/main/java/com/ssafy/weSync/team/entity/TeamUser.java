@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,6 @@ public class TeamUser extends BaseTime {
     @OneToMany(mappedBy = "teamUser")
     private List<FeedBack> feedBacks;
 
-    @Column(name = "is_banned")
+    @Column(name = "is_banned", nullable = false)
     private Boolean isBanned;
 }

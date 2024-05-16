@@ -1,5 +1,6 @@
 package com.ssafy.weSync.team.entity;
 
+import com.ssafy.weSync.global.entity.Accompaniment;
 import com.ssafy.weSync.global.entity.BaseTime;
 import com.ssafy.weSync.record.entity.Record;
 import jakarta.persistence.*;
@@ -11,7 +12,6 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,16 +32,13 @@ public class Score extends BaseTime {
     @JoinColumn(name = "position_id")
     private Position position;
 
-    @JoinColumn(name = "part_num")
-    @NotNull
+    @JoinColumn(name = "part_num", nullable = false)
     private int partNum;
 
-    @Column(name = "title")
-    @NotNull
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "score_url")
-    @NotNull
+    @Column(name = "score_url", nullable = false)
     private String scoreUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,4 +47,7 @@ public class Score extends BaseTime {
 
     @OneToMany(mappedBy = "score")
     private List<Record> records;
+
+    @OneToMany(mappedBy = "score")
+    private List<Accompaniment> accompaniments;
 }
