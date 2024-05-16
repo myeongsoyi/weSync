@@ -129,7 +129,7 @@ def recognition(file: UploadFile, team_id: int, db: Session):
 
                 up.upload_file_to_s3(f'{output_path}/accom/{file_name}_part{i}.wav', "scoreOutput/wav/", f"{file_name}_part{i}.wav")
 
-                db_accom = Accompainment(score_id = db_img.score_id, title = file_name, \
+                db_accom = Accompainment(score_id = db_img.score_id, \
                                          accompainment_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv("cloud_aws_region_static")}.amazonaws.com/{"scoreOutput/wav/"}{file_name}_part{i}.wav')
                 try:
                     db.add(db_accom)
