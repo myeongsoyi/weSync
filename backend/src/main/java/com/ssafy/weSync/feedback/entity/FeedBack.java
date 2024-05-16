@@ -38,5 +38,8 @@ public class FeedBack extends BaseTime {
     @JoinColumn(name = "team_user_id")
     private TeamUser teamUser;
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
 
 }
