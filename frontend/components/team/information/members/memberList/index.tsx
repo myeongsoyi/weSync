@@ -123,7 +123,7 @@ export default function TeamMemberList({ teamId }: IParams) {
                     items: [
                       {
                         key: 'change_position',
-                        label: '포지션 변경',
+                        label: '포지션 할당',
                         onClick: () =>
                           handleMenuClick(
                             teamUserId,
