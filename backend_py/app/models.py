@@ -34,7 +34,6 @@ class Accompainment(Base, BaseTimeEntity):
     accompainment_id = Column(Integer, primary_key=True)
     score_id = Column(Integer, ForeignKey("score.score_id"))
     score = relationship("Score", back_populates="accompainment")
-    title = Column(String(255), nullable=False)
     accompainment_url = Column(String(255), nullable=False)
 
 class Position(Base, BaseTimeEntity):
