@@ -56,13 +56,13 @@ export default function Footer() {
       <div className={`${styles.flex1} ${styles.justifyStart}`}>
         <div className={`bg-white p-2 rounded-xl ${styles.logo}`}>
           <Image
-            src={'/svgs/logo.svg'}
+            src={'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/%EC%9B%90%ED%95%A0%EB%AA%A8%EB%8B%88.png'}
             alt="로고"
-            width={150}
-            height={100}
+            width={60}
+            height={0}
             className="m-auto h-auto"
             onClick={() => alert('SSAFY 자율 프로젝트 A310')}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', borderRadius: '50%' }}
             priority
           />
         </div>
