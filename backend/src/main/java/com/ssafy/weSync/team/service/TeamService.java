@@ -14,6 +14,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -304,6 +306,14 @@ public class TeamService {
         }
 
         Invitation invitation = invitationRepository.findByLink(link).get();
+
+        LocalDateTime createdAt = invitation.getCreatedAt();
+        LocalDateTime now = LocalDateTime.now();
+
+        long daysDifference = ChronoUnit.DAYS.between(createdAt.toLocalDate(), now.toLocalDate());
+        if (daysDifference >= 8) {
+            throw new GlobalException(CustomError.EXPIRED_INVITATION);
+        }
 
         //이미 존재하는 회원인지 확인
         List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(id).get());
