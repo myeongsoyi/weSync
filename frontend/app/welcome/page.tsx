@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import styles from './index.module.scss';
-import { Carousel, ConfigProvider } from 'antd';
+import { Carousel } from 'antd';
 import React from 'react';
 import LoginComponent from '@/components/common/login';
 import Link from 'next/link';
