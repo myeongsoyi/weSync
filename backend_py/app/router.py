@@ -59,6 +59,9 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
         }
         score_dicts.append(row_dict)
 
+    if score_dicts == []:
+        return CommonResponse(False, None, 400, "조회된 악보가 없습니다.")
+
     return CommonResponse(
         True,
         {"Data": score_dicts},
@@ -68,12 +71,17 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
 @rScore.delete('/{team_id}', tags = ['score'], response_model=BaseResponse)
 def delete_scores(team_id: int, db: Session = Depends(get_db)):
     scores = db.query(Score).filter(Score.team_id == team_id).all()
+
     if not scores:
         return CommonResponse(False, None, 400, "조회된 악보가 없습니다.")
     
     for score in scores:
+        print(score)
         score.is_deleted = True
 
+        if score.accompaniment:
+            score.accompaniment.is_deleted = True
+    
     db.commit()
     
     return CommonResponse(
