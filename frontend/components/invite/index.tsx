@@ -12,7 +12,7 @@ export default function InviteComponent({ code }: { code: string }) {
   useEffect(() => {
     const fetchTeamInviteAccept = async () => {
       const res = await getTeamInviteAccept(code);
-      console.log(res);
+      // console.log(res);
       if (res.success) {
         setSuccess(res.success);
         router.push(`/team/${res.data.teamId}/information`);
@@ -36,6 +36,7 @@ export default function InviteComponent({ code }: { code: string }) {
             width={450}
             height={450}
             style={{ margin: 'auto' }}
+            unoptimized
             priority
           ></Image>
           <h2 className="text-center mt-10">잠시만</h2>
@@ -51,6 +52,7 @@ export default function InviteComponent({ code }: { code: string }) {
             width={500}
             height={500}
             style={{ margin: 'auto' }}
+            unoptimized
             priority
           ></Image>
           <h2 className="text-center mt-10">요청이 실패했습니다.</h2>

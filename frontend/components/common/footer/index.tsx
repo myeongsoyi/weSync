@@ -64,6 +64,7 @@ export default function Footer() {
             onClick={() => alert('SSAFY 자율 프로젝트 A310')}
             style={{ cursor: 'pointer', borderRadius: '50%' }}
             priority
+            unoptimized
           />
         </div>
       </div>

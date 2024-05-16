@@ -35,11 +35,18 @@ export const isLogin = async () => {
   return null;
 };
 
-export const getAccessToken = async () => {
-  const token = await isLogin();
-  if (!token && typeof window !== "undefined") {
-    alert("로그인이 필요합니다.");
-    window.location.href = "/welcome";
+export async function getAccessToken() {
+  // 클라이언트 전용 코드
+  if (typeof window !== "undefined") {
+    // const { setIsLogin } = useLoginStore();
+    const token = await isLogin();
+    // console.log("token", token)
+    if (!token) {
+      // setIsLogin(false);
+      window.location.href = "/welcome";
+    }
+    return token;
   }
-  return token;
-};
+  // 서버에서는 토큰을 반환하지 않음
+  return null;
+}
