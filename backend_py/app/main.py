@@ -17,13 +17,6 @@ app.add_middleware(
 
 app.include_router(rScore)
 
-def get_db():
-    db = database.SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 @app.on_event("startup")
 def startup_event():
     database.create_tables()
