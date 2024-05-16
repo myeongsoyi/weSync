@@ -49,6 +49,10 @@ export default function TeamPage() {
         timer: 10000,
         timerProgressBar: true,
         willClose: () => router.replace('/'),
+        // 빌드를 위해 추가한 코드
+        didOpen: () => {
+          console.warn(error);
+        }
       });
     }
   };

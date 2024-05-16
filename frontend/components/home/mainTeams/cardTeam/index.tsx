@@ -51,7 +51,6 @@ export default function CardTeams() {
       setSuccess(teams.success); // 성공 상태 변수 업데이트
       setData(teams.data); // 데이터 상태 변수 업데이트
       setError(teams.error); // 에러 상태 변수 업데이트
-      console.log('teams:', teams); // teams 데이터 확인(콘솔
     };
     fetchMainTeams();
   }, []);
