@@ -57,4 +57,12 @@ public class RecordController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{recordId}")
+    public ResponseEntity<?> deleteRecord(@PathVariable Long recordId){
+        Long userId = accessTokenValidationAspect.getUserId();
+        recordService.deleteRecord(userId, recordId);
+        Response<?> response = new Response(true, null, null);
+        return ResponseEntity.ok(response);
+    }
+
 }

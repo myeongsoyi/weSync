@@ -22,14 +22,14 @@ public class Accompaniment extends BaseTime{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "accompaniment_id")
-    Long accompanimentId;
+    private Long accompanimentId;
 
     @Column(name = "accompaniment_url")
     @NonNull
-    String accompanimentUrl;
+    private String accompanimentUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "score_id")
-    Score score;
+    private Score score;
 
 }

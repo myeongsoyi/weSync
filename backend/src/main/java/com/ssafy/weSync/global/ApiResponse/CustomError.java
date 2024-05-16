@@ -29,7 +29,7 @@ public enum CustomError {
 
     // Notice
     NO_NOTICE(400, "존재하지 않는 공지입니다."),
-    NO_TEAM_LEADER(401, "팀장이 아닙니다."),
+    NOT_TEAM_LEADER(401, "팀장이 아닙니다."),
 
     // Record
     WRONG_TIME_FORMAT(400, "잘못된 시간 형식입니다."),
