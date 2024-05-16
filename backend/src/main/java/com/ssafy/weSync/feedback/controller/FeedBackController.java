@@ -2,12 +2,15 @@ package com.ssafy.weSync.feedback.controller;
 
 import com.ssafy.weSync.feedback.dto.request.CreateRequest;
 import com.ssafy.weSync.feedback.dto.response.CreateResponse;
+import com.ssafy.weSync.feedback.dto.response.GetAllResponse;
 import com.ssafy.weSync.feedback.service.FeedBackService;
 import com.ssafy.weSync.global.ApiResponse.AccessTokenValidationAspect;
 import com.ssafy.weSync.global.ApiResponse.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +28,13 @@ public class FeedBackController {
         Long userId = accessTokenValidationAspect.getUserId();
         CreateResponse createResponse = feedBackService.createFeedBack(createRequest, userId, teamId, recordId);
         Response<CreateResponse> response = new Response<>(true, createResponse, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{recordId}")
+    public ResponseEntity<Response<List<GetAllResponse>>> getAllFeedbacks(@PathVariable Long recordId){
+        List<GetAllResponse> getAllResponse = feedBackService.getAllFeedbacks(recordId);
+        Response<List<GetAllResponse>> response = new Response<>(true, getAllResponse, null);
         return ResponseEntity.ok(response);
     }
 }
