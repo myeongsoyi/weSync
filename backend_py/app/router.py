@@ -1,11 +1,20 @@
-from fastapi import APIRouter, File, UploadFile, BackgroundTasks
+from fastapi import APIRouter, File, UploadFile, Depends
 from app.response import BaseResponse
+from sqlalchemy.orm import Session
 from app.response import CommonResponse
 from scoreRecognition.scoreRecognition import recognition
 from scoreRecognition.createOutput import co
 import scoreRecognition.upload as up
+from app import database
 
 import os
+
+def get_db():
+    db = database.SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 rScore = APIRouter(prefix="/py-api/score")
 
@@ -30,12 +39,38 @@ def upload_score(file: UploadFile = File(...)):
         )
 
 @rScore.get('/{team_id}', tags = ['score'], response_model=BaseResponse)
-def get_scores():
-    pass
+def get_scores(team_id: int, db: Session = Depends(get_db)):
+    scoreData = db.query(Score.score_url, Accompainment.accompainment_url, Position.position_name, Color.color_code)\
+        .join(Accompainment, Score.score_id == Accompainment.score_id)\
+        .join(Position, Score.position_id == Position.position_id)\
+        .join(Color, Position.color_id == Color.color_id)\
+        .filter(Score.team_id==team_id)\
+        .all()
+    
+    return CommonResponse(
+        True,
+        scoreData,
+        200, "조회 성공!"
+        )
 
 @rScore.delete('/{team_id}', tags = ['score'], response_model=BaseResponse)
-def delete_scores():
-    pass
+def delete_scores(team_id: int, db: Session = Depends(get_db)):
+    scores = db.query(Score).filter(Score.team_id == team_id).all()
+    if not scores:
+        return CommonResponse(False, None, 400, "조회된 악보가 없습니다.")
+    
+    for score in scores:
+        score.is_deleted = True
+
+    db.commit()
+    
+    return CommonResponse(
+        True,
+        {
+            "message":"악보 삭제 성공"   
+        },
+        200, "악보 삭제 성공!"
+        )
 
 @rScore.post('/{team_id}', tags = ['score'], response_model=BaseResponse)
 def upload_score():
