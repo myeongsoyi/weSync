@@ -23,7 +23,7 @@ class Score(Base, BaseTimeEntity):
     position = relationship("Position", back_populates="score")
     team_id = Column(BigInteger, ForeignKey("team.team_id"))
     team = relationship("Team", back_populates="scores")
-    title = Column(String(30), nullable=False)
+    title = Column(String(30), nullable=True)
     score_url = Column(String(255), nullable=False)
     accompainment = relationship("Accompainment", back_populates="score", uselist=False)
 
