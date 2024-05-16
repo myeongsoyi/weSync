@@ -13,15 +13,7 @@ const carouselSettings = {
 
 export default function welcome() {
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Carousel: {
-            arrowSize: 40,
-          },
-        },
-      }}
-    >
+
       <div>
         <div className={`${styles.welcome} welcome`}>
           <div className={styles.content}>
@@ -99,6 +91,5 @@ export default function welcome() {
           </div>
         </div>
       </div>
-    </ConfigProvider>
   );
 }
