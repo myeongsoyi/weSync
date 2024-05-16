@@ -2,6 +2,7 @@ package com.ssafy.weSync.feedback.service;
 
 import com.ssafy.weSync.feedback.dto.request.CreateRequest;
 import com.ssafy.weSync.feedback.dto.response.CreateResponse;
+import com.ssafy.weSync.feedback.dto.response.GetAllResponse;
 import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.feedback.repository.FeedBackRepository;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
@@ -15,6 +16,10 @@ import com.ssafy.weSync.team.repository.TeamUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +38,12 @@ public class FeedBackService {
 
         FeedBack feedBack = feedBackRepository.save(createRequest.toEntity(record, teamUser));
         return CreateResponse.toDto(feedBack);
+    }
+
+    public List<GetAllResponse> getAllFeedbacks(Long recordId) {
+        List<FeedBack> feedbacks = feedBackRepository.findAllByRecordId(recordId);
+        return feedbacks.stream()
+                .map(GetAllResponse::toDto)
+                .collect(Collectors.toList());
     }
 }
