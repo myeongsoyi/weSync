@@ -28,10 +28,11 @@ export default function RecordScore({ teamId }: IParams) {
   const [error, setError] = useState<ScoreResponse['error']>(null);
   const [scoreUrl, setScoreUrl] = useState<string>('');
 
-  const { scoreIndex } = useRecordAudioStore((state) => ({
+  const { scoreIndex, setScoreIndex } = useRecordAudioStore((state) => ({
     scoreIndex: state.scoreIndex,
+    setScoreIndex: state.setScoreIndex,
   }));
-  
+
   useEffect(() => {
     const fetchScore = async () => {
       const response = await getScoreData(teamId);
@@ -49,12 +50,20 @@ export default function RecordScore({ teamId }: IParams) {
   }, [teamId]);
 
   useEffect(() => {
-    if (score[scoreIndex]?.score_url) {
-      setScoreUrl(score[scoreIndex].score_url);
+    if (score !== undefined && score.length > 0) {
+      console.log(score[scoreIndex], score);
+      if (score[scoreIndex]?.score_url) {
+        setScoreUrl(score[scoreIndex].score_url);
+      } else {
+        message.warning('악보가 없습니다.');
+        if (!scoreUrl) {
+          setScoreUrl('/svgs/score.svg');
+        }
+      }
     } else {
-      message.warning('악보가 없습니다.');
+      setScoreUrl('/svgs/score.svg');
     }
-  }, [scoreIndex]);
+  }, [scoreIndex, score]);
 
   const handleUpload = async () => {
     Swal.fire({
@@ -149,7 +158,13 @@ export default function RecordScore({ teamId }: IParams) {
         <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
       ) : (
         <>
-          <Image src={scoreUrl} alt="악보" width={1000} height={1000} style={{width: '100%'}}/>
+          <Image
+            src={scoreUrl}
+            alt="악보"
+            width={1000}
+            height={1000}
+            style={{ width: '100%' }}
+          />
         </>
       )}
     </div>
