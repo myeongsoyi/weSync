@@ -90,60 +90,6 @@ export default function welcome() {
                   />
                 </Link>
               </div>
-              <div className={styles.kakao}>
-                <LoginComponent />
-              </div>
-              <div className={styles.carouselWrapper}>
-                <Carousel>
-                  <div>
-                    <Image
-                      src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG1.png"
-                      alt="Carousel Image 1"
-                      layout="responsive"
-                      width={1000}
-                      height={400}
-                    />
-                  </div>
-                  <div>
-                    <Image
-                      src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG2.png"
-                      alt="Carousel Image 2"
-                      layout="responsive"
-                      width={1000}
-                      height={400}
-                    />
-                  </div>
-                  <div>
-                    <Image
-                      src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG3.png"
-                      alt="Carousel Image 3"
-                      layout="responsive"
-                      width={1000}
-                      height={400}
-                    />
-                  </div>
-                  <div>
-                    <Image
-                      src="https://we-sync.s3.ap-southeast-2.amazonaws.com/front/infoIMG4.png"
-                      alt="Carousel Image 4"
-                      layout="responsive"
-                      width={1000}
-                      height={400}
-                    />
-                  </div>
-                </Carousel>
-                <div className={styles.floatingButton}>
-                  <Link href="/">
-                    <Image
-                      src={'/svgs/start.svg'}
-                      alt="시작하기"
-                      width={200}
-                      height={100}
-                      className={styles.startButton}
-                    />
-                  </Link>
-                </div>
-              </div>
             </div>
           </div>
         </div>
