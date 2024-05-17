@@ -28,7 +28,7 @@ class Score(Base, BaseTimeEntity):
     accompaniment = relationship("Accompaniment", back_populates="score", uselist=False)
 
     def __str__(self):
-        return f"Score ID: {self.score_id}, Title: {self.title}, URL: {self.score_url}"
+        return f"Score ID: {self.score_id}, is_deleted: {self.is_deleted}, URL: {self.score_url}"
 
 
 class Accompaniment(Base, BaseTimeEntity):

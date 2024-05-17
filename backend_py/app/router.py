@@ -46,11 +46,11 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
         .outerjoin(Position, Score.position_id == Position.position_id)\
         .outerjoin(Color, Position.color_id == Color.color_id)\
         .filter(Score.team_id==team_id)\
+        .filter(Score.is_deleted==False)\
         .all()
     
     score_dicts = []
     for row in scoreData:
-        # 각 row를 딕셔너리로 변환
         row_dict = {
             "score_url": row[0],
             "accompaniment_url": row[1],
@@ -76,9 +76,9 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
         return CommonResponse(False, None, 400, "조회된 악보가 없습니다.")
     
     for score in scores:
-        print(score)
+        print("**before: ", score)
         score.is_deleted = True
-
+        print("**after: ", score)
         if score.accompaniment:
             score.accompaniment.is_deleted = True
         
@@ -86,9 +86,10 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
     
     try:
         db.commit()  # 트랜잭션 커밋
+        print("Transaction committed successfully")
     except Exception as e:
         db.rollback()  # 예외 발생 시 롤백
-        print(e.args)
+        print(f"Transaction failed: {e}")
         raise HTTPException(status_code=500, detail="데이터베이스 커밋 실패")
 
     
@@ -101,13 +102,8 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
         )
 
 @rScore.post('/{team_id}/empty', tags = ['score'], response_model=BaseResponse)
-def upload_score(team_id: int, db: Session = Depends(get_db)):
-    co.createEmptyScore(f"{os.getcwd()}/scoreRecognition/Output/img/emptyScore.png")
-    up.upload_file_to_s3(f"{os.getcwd()}/scoreRecognition/Output/img/emptyScore.png", "emptyScore.png")
-    db_img = Score(part_num = i, position_id = None, title = None, \
-                                score_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv("cloud_aws_region_static")}.amazonaws.com/{"scoreOutput/png/"}emptyScore.png', team_id = team_id )
-    db.add(db_img)
-    db.commit()
+def create_new_score(team_id: int, db: Session = Depends(get_db)):
+    
     return CommonResponse(
         True,
         {
