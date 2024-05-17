@@ -62,7 +62,7 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
     if score_dicts == []:
         return CommonResponse(True, {"data": []}, 400, "조회된 악보가 없습니다.")
 
-    return CommonResponse(True, {"data": score_dicts}, 200, "조회 성공!")
+    return CommonResponse(True, score_dicts, 200, "조회 성공!")
 
 @rScore.delete('/{team_id}', tags=['score'], response_model=BaseResponse)
 def delete_scores(team_id: int, db: Session = Depends(get_db)):
