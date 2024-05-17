@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, List, Tag, Button, message, Tooltip } from 'antd';
 import { ExclamationCircleOutlined, PlusCircleOutlined, FormOutlined, DeleteOutlined, CheckOutlined } from '@ant-design/icons';
-import { getTeamPosition, deleteTeamPosition } from '@/services/team/information';
+import { getTeamPosition, deleteTeamPosition, putMemberPosition } from '@/services/team/information';
 import { usePathname } from 'next/navigation';
 import UpdatePositionModal from '@/components/team/information/members/positionmodal/updatepositionmodal';
 import NewPositionModal from '@/components/team/information/members/positionmodal/newpositionmodal';
@@ -20,7 +20,7 @@ export default function PositionModal({
   open,
   onOk,
   onCancel,
-  selectedMemberId,
+  selectedMemberId
 }: {
   open: boolean;
   onOk: (positionName: string, color: string) => void;
@@ -119,18 +119,26 @@ export default function PositionModal({
     </div>
   );
 
-  const handleOk = () => {
+  const handleOk = async () => {
     if (!selectedPosition) {
       message.error('포지션을 선택해 주세요.');
       return;
+    } else if (selectedMemberId !== null) {
+      const response = await putMemberPosition(selectedMemberId, selectedPosition.positionId);
+      if (response.success) {
+        message.success('포지션 변경이 완료되었습니다.');
+        onOk(selectedPosition.positionName, `#${selectedPosition.colorCode}`);
+      } else {
+        message.error('포지션 변경에 실패했습니다.');
+      }
     } else {
-      onOk(selectedPosition.positionName, `#${selectedPosition.colorCode}`);
+      message.error('멤버를 다시 선택해 주세요.');
     }
   };
 
   return (
     <Modal
-      title={<div style={{ textAlign: 'center', fontSize: '20px' }}>포지션 할당하기</div>}
+      title={<div style={{ textAlign: 'center', fontSize: '20px' }}>포지션 변경하기</div>}
       open={open}
       onOk={handleOk}
       onCancel={onCancel}
@@ -220,7 +228,6 @@ export default function PositionModal({
           size="small"
           split={false}
         />
-        {/* 새 포지션 생성 */}
         <Button
           type="link"
           onClick={() => setNewPositionVisible(true)}
