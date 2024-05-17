@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Slider } from 'antd';
+import { Button, Slider, Tag } from 'antd';
+import PositionModal from '../positionBox/scorePositionModal'; // PositionModal import
 
 // 포지션 타입 정의
 interface IPosition {
@@ -12,12 +13,17 @@ interface IPosition {
   isMute: boolean;
   volume: number;
   savedVolume: number;
+  positionName?: string;
+  color?: string;
 }
 
-// export default function RecordPositions({ teamId }: IParams) {
 export default function PositionAdd() {
-  const [count, setCount] = useState<number>(0);
-  const [positions, setPositions] = useState<IPosition[]>([]);
+  const [count, setCount] = useState<number>(1); // 초기 값을 1로 설정하여 기본 포지션 할당 버튼 생성
+  const [positions, setPositions] = useState<IPosition[]>([
+    { id: 0, isMute: false, volume: 30, savedVolume: 0 },
+  ]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedPositionId, setSelectedPositionId] = useState<number | null>(null);
 
   // 카운트 증가 및 포지션 추가 함수
   const handleIncreaseCount = () => {
@@ -32,21 +38,49 @@ export default function PositionAdd() {
   const togglePosition = (id: number) => {
     setPositions((prev) =>
       prev.map((pos) =>
-        pos.id === id ? pos.isMute
-          ? {
-              ...pos,
-              isMute: !pos.isMute,
-              volume: pos.savedVolume,
-              savedVolume: 0,
-            }
-          : {
-            ...pos,
-            isMute: !pos.isMute,
-            volume: pos.savedVolume,
-            savedVolume: pos.volume,
-          } : pos,
+        pos.id === id
+          ? pos.isMute
+            ? {
+                ...pos,
+                isMute: !pos.isMute,
+                volume: pos.savedVolume,
+                savedVolume: 0,
+              }
+            : {
+                ...pos,
+                isMute: !pos.isMute,
+                volume: pos.savedVolume,
+                savedVolume: pos.volume,
+              }
+          : pos,
       ),
     );
+  };
+
+  // 모달 열기 함수
+  const openModal = (positionId: number) => {
+    setSelectedPositionId(positionId);
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPositionId(null);
+  };
+
+  // 포지션 선택 핸들러
+  const handlePositionSelect = (positionName: string, color: string) => {
+    if (selectedPositionId !== null) {
+      setPositions((prev) =>
+        prev.map((pos) =>
+          pos.id === selectedPositionId
+            ? { ...pos, positionName, color }
+            : pos,
+        ),
+      );
+    }
+    closeModal();
   };
 
   return (
@@ -80,9 +114,41 @@ export default function PositionAdd() {
             )}
           </Button>
           <div className={styles.box_slider}>
-            <p className="text-center">
-              <EditOutlined /> 포지션 할당
-            </p>
+            {position.positionName ? (
+              <Tag
+                onClick={() => openModal(position.id)}
+                style={{
+                  color: position.color || 'defaultColor',
+                  borderColor: position.color || 'defaultBorderColor',
+                  fontSize: 17,
+                  width: 'auto',
+                  padding: '2px 4px',
+                  textAlign: 'center',
+                  marginTop: 10,
+                  cursor: 'pointer',
+                }}
+              >
+                {position.positionName}
+              </Tag>
+            ) : (
+              <Button
+                type="text"
+                onClick={() => openModal(position.id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 17,
+                  fontWeight: 'bold',
+                  width: 'auto',
+                  padding: '4px 8px',
+                  marginTop: 10,
+                }}
+              >
+                <EditOutlined />
+                <span>포지션 할당</span>
+              </Button>
+            )}
             <Slider
               defaultValue={30}
               value={position.volume}
@@ -95,8 +161,8 @@ export default function PositionAdd() {
                   ),
                 );
               }}
-            ></Slider>
-            {/* <span>{position.id} {position.savedVolume} {position.volume} {`${position.isMute}`}</span> */}
+              style={{ width: '100%', marginTop: '10px' }}
+            />
           </div>
         </div>
       ))}
@@ -110,6 +176,13 @@ export default function PositionAdd() {
           <h1>Count: {count}</h1>
         </Button>
       </div>
+
+      <PositionModal
+        open={isModalOpen}
+        onOk={handlePositionSelect}
+        onCancel={closeModal}
+        selectedMemberId={null}
+      />
     </>
   );
 }
