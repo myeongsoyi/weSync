@@ -5,27 +5,23 @@ import Image from 'next/image';
 import styles from './index.module.scss';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Slider, Tag } from 'antd';
-import PositionModal from '../positionBox/scorePositionModal'; // PositionModal import
+import PositionModal from '../positionBox/scorePositionModal';
 
-// 포지션 타입 정의
-interface IPosition {
+interface IRecord {
   id: number;
+  name?: string;
+  color?: string;
   isMute: boolean;
   volume: number;
   savedVolume: number;
-  positionName?: string;
-  color?: string;
 }
 
 export default function PositionAdd() {
-  const [count, setCount] = useState<number>(1); // 초기 값을 1로 설정하여 기본 포지션 할당 버튼 생성
-  const [positions, setPositions] = useState<IPosition[]>([
-    { id: 0, isMute: false, volume: 30, savedVolume: 0 },
-  ]);
+  const [count, setCount] = useState<number>(0);
+  const [positions, setPositions] = useState<IRecord[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedPositionId, setSelectedPositionId] = useState<number | null>(null);
 
-  // 카운트 증가 및 포지션 추가 함수
   const handleIncreaseCount = () => {
     setCount(count + 1);
     setPositions((prev) => [
@@ -34,7 +30,6 @@ export default function PositionAdd() {
     ]);
   };
 
-  // 포지션 할당 상태 토글 함수
   const togglePosition = (id: number) => {
     setPositions((prev) =>
       prev.map((pos) =>
@@ -57,25 +52,22 @@ export default function PositionAdd() {
     );
   };
 
-  // 모달 열기 함수
   const openModal = (positionId: number) => {
     setSelectedPositionId(positionId);
     setIsModalOpen(true);
   };
 
-  // 모달 닫기 함수
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedPositionId(null);
   };
 
-  // 포지션 선택 핸들러
   const handlePositionSelect = (positionName: string, color: string) => {
     if (selectedPositionId !== null) {
       setPositions((prev) =>
         prev.map((pos) =>
           pos.id === selectedPositionId
-            ? { ...pos, positionName, color }
+            ? { ...pos, name: positionName, color }
             : pos,
         ),
       );
@@ -85,7 +77,7 @@ export default function PositionAdd() {
 
   return (
     <>
-      {positions.map((position: IPosition) => (
+      {positions.map((position) => (
         <div className={styles.controller} key={position.id}>
           <Button
             onClick={() => togglePosition(position.id)}
@@ -114,7 +106,7 @@ export default function PositionAdd() {
             )}
           </Button>
           <div className={styles.box_slider}>
-            {position.positionName ? (
+            {position.name ? (
               <Tag
                 onClick={() => openModal(position.id)}
                 style={{
@@ -128,7 +120,7 @@ export default function PositionAdd() {
                   cursor: 'pointer',
                 }}
               >
-                {position.positionName}
+                {position.name}
               </Tag>
             ) : (
               <Button
