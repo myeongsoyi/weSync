@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import RecordAudioPlayer from '@/components/common/RecordAudioPlayer';
 
 export default function TestComponent() {
   const [dots, setDots] = useState('');
@@ -28,6 +29,7 @@ export default function TestComponent() {
         ></Image>
         <h2 className="text-center mt-10">싱크 맞추는 중{dots}</h2>
       </div>
+      <RecordAudioPlayer />
     </div>
   );
 }

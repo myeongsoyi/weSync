@@ -436,13 +436,12 @@ ${response.data.url}</textarea>
                 size={55}
                 src={teamDetail?.teamProfileUrl}
                 style={{
-                  marginRight: '10px',
                   border: '3px solid #FFC500',
                 }}
               />{' '}
               {/* 간격 추가 */}
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center ml-3 mr-1">
               <Link href={`/team/${teamId}/information`}>
                 <p
                   className="text-4xl text-gray-700 font-bold"
