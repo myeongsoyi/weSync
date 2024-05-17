@@ -60,7 +60,7 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
         score_dicts.append(row_dict)
 
     if score_dicts == []:
-        return CommonResponse(False, None, 400, "조회된 악보가 없습니다.")
+        return CommonResponse(True, {"data": []}, 400, "조회된 악보가 없습니다.")
 
     return CommonResponse(
         True,
@@ -73,7 +73,7 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
     scores = db.query(Score).filter(Score.team_id == team_id).filter(Score.is_deleted == False).all()
 
     if not scores:
-        return CommonResponse(True, {"data": []}, 400, "삭제할 악보가 없습니다.")
+        return CommonResponse(False, None, 400, "삭제할 악보가 없습니다.")
     
     try:
         for score in scores:
