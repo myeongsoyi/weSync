@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { Modal, Input, Button, Select, message, Tag } from 'antd';
 import { getPositionColors, putTeamPosition } from '@/services/team/information';
 
@@ -53,6 +53,9 @@ const UpdatePositionModal: React.FC<UpdatePositionModalProps> = ({
   const [selectedColorName, setSelectedColorName] = useState<string>('');
 
   useEffect(() => {
+    setPositionName(currentName);
+    setSelectedColorId(currentColorId);
+    setSelectedColorCode(currentColorCode);
     const fetchColors = async () => {
       const response = await getPositionColors();
       if (response.success) {
@@ -64,7 +67,7 @@ const UpdatePositionModal: React.FC<UpdatePositionModalProps> = ({
       }
     };
     fetchColors();
-  }, [currentColorId]);
+  }, [positionId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
