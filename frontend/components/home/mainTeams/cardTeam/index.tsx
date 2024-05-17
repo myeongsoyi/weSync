@@ -148,7 +148,6 @@ export default function CardTeams() {
                 alt="팀"
                 size={80}
                 style={{ borderColor: '#FFC500', marginBottom: '0.5rem' }}
-                style={{ borderColor: '#FFC500', marginBottom: '0.5rem' }}
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
