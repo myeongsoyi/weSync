@@ -1,15 +1,13 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Slider, Tag, Radio } from 'antd';
-import type { RadioChangeEvent } from 'antd';
-import { getScoreData } from '@/services/team/record';
+import { Button, Slider, Tag, message } from 'antd';
+import { getScoreData, postAddScorePosition } from '@/services/team/record';
 import { ScoreResponse } from '@/types/record';
 import { useRecordAudioStore } from '@/store/recordAudioStore';
-import { stat } from 'fs';
 
 interface IParams {
   teamId: string;
@@ -78,6 +76,15 @@ export default function scoreBox({ teamId }: IParams) {
       return newVolume;
     });
   }
+
+  const clickAddPosition = async (teamId: string, partNum: number) => {
+    const response = await postAddScorePosition(teamId, partNum);
+    if (response.success) {
+      window.location.reload();
+    } else {
+      message.error('포지션 추가에 실패했습니다.');
+    }
+  };
 
   if (!success) {
     return <p>{error?.errorMessage}</p>;
@@ -166,6 +173,17 @@ export default function scoreBox({ teamId }: IParams) {
           </div>
         </div>
       ))}
+      <>
+      <div className={styles.add_controller}>
+        <Button
+          onClick={()=>clickAddPosition(teamId, score.length)}
+          type="text"
+          style={{ height: 'auto', padding: '0.5rem auto' }}
+        >
+          <h2>포지션 추가</h2>
+        </Button>
+      </div>
+      </>
     </div>
   );
 }
