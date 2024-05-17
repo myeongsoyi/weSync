@@ -37,8 +37,8 @@
 }
 
 .kakao {
-  margin-top: 4vh;
-  margin-bottom: 3vh;
+  margin-top: 3vh;
+  margin-bottom: 2vh;
   display: flex;
   justify-content: center;
   align-items: center; /* 중앙 정렬을 위한 속성 추가 */
@@ -50,7 +50,8 @@
 
 .carouselWrapper {
   margin: 0 auto; /* 중앙 정렬을 위해 auto 마진 */
-  width: 80%; /* 전체 너비의 80%로 설정 */
+  width: 90%; /* 전체 너비의 80%로 설정 */
   max-width: 1200px; /* 최대 너비 설정 */
   position: relative; /* 플로팅 버튼을 내부에 배치하기 위해 상대적 위치 설정 */
+  margin-bottom: 2rem; /* 캐러셀과 푸터 사이에 공간 추가 */
 }

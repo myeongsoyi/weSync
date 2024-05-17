@@ -1,31 +1,34 @@
 .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1.5rem;
-    background-color: rgb(90, 90, 90);
-    overflow-x: hidden;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  background-color: rgb(90, 90, 90);
+  overflow-x: hidden;
+  color: white;
+
   .flex1 {
     flex: 1;
   }
-  
+
   .justifyStart {
     display: flex;
     justify-content: flex-start;
   }
-  
+
   .justifyCenter {
     display: flex;
     justify-content: center;
+    flex-direction: column; /* 수직 정렬 */
+    align-items: center; /* 중앙 정렬 */
+    min-width: 1000px; /* 중앙 요소의 최소 너비 */
   }
-  
+
   .justifyEnd {
     display: flex;
     justify-content: flex-end;
   }
-  
+
   .logo {
     border-radius: 50%;
     background-color: rgb(90, 90, 90);
@@ -34,14 +37,14 @@
       transform: scale(1.1);
     }
   }
-  
+
   .center {
     display: relative;
     left: 50%;
     margin: auto;
     color: white;
   }
-  
+
   .icon {
     background-color: white;
     border-radius: 50%;
@@ -50,7 +53,31 @@
       animation: rotateAndScale 1s linear infinite; /* 회전 애니메이션 */
     }
   }
-  
+
+  .links {
+    margin-top: 0.5rem; /* 위와의 간격 */
+    text-align: center;
+    a {
+      font-size: 15px;
+      color: lightgray;
+      text-decoration: none;
+      margin: 0 0.5rem;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    span {
+      margin: 0 0.5rem;
+    }
+  }
+
+  .separator {
+    margin: 0 0.5rem;
+    color: lightgray;
+    font-size: 15px;
+  }
+
   @keyframes rotateAndScale {
     0% {
       transform: rotate(0deg) scale(1); /* 시작과 끝에서 원래 크기와 회전각 */
@@ -62,4 +89,16 @@
       transform: rotate(360deg) scale(1);
     }
   }
-  
+
+  @media (max-width: 768px) {
+    .justifyCenter {
+      min-width: 300px; /* 중앙 요소의 최소 너비 조정 */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .justifyCenter {
+      min-width: 200px; /* 중앙 요소의 최소 너비 조정 */
+    }
+  }
+}
