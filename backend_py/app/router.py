@@ -68,37 +68,37 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
         200, "조회 성공!"
         )
 
-@rScore.delete('/{team_id}', tags = ['score'], response_model=BaseResponse)
+@rScore.delete('/{team_id}', tags=['score'], response_model=BaseResponse)
 def delete_scores(team_id: int, db: Session = Depends(get_db)):
-    scores = db.query(Score).filter(Score.team_id == team_id).filter(Score.is_deleted==False).all()
+    scores = db.query(Score).filter(Score.team_id == team_id).filter(Score.is_deleted == False).all()
 
     if not scores:
         return CommonResponse(False, None, 400, "삭제할 악보가 없습니다.")
     
-    for score in scores:
-        print("*before => ",score)
-        score.is_deleted = True
-        if score.accompaniment:
-            score.accompaniment.is_deleted = True
-        print("  *after => ", score)
-        db.add(score)
-    
-        try:
-            db.commit()  # 트랜잭션 커밋
-            print("Transaction committed successfully")
-        except Exception as e:
-            db.rollback()  # 예외 발생 시 롤백
-            print(f"Transaction failed: {e}")
-            raise HTTPException(status_code=500, detail="데이터베이스 커밋 실패")
+    try:
+        for score in scores:
+            print("*before => ", score)
+            score.is_deleted = True
+            if score.accompaniment:
+                score.accompaniment.is_deleted = True
+            print("  *after => ", score)
+        
+        db.commit()
+        print("Transaction committed successfully")
+    except Exception as e:
+        db.rollback()  # 예외 발생 시 롤백
+        print(f"Transaction failed: {e}")
+        raise HTTPException(status_code=500, detail="데이터베이스 커밋 실패")
+    finally:
+        db.close()
 
-    
     return CommonResponse(
         True,
         {
-            "message":"악보 삭제 성공"   
+            "message": "악보 삭제 성공"
         },
         200, "악보 삭제 성공!"
-        )
+    )
 
 @rScore.post('/{team_id}/empty', tags = ['score'], response_model=BaseResponse)
 def create_new_score(team_id: int, db: Session = Depends(get_db)):
