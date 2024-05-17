@@ -117,9 +117,10 @@ export default function RecordScore({ teamId }: IParams) {
         <FloatButton icon={<CloudUploadOutlined />} onClick={handleUpload} />
       </FloatButton.Group>
       {score.length === 0 ? (
-      <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
+      <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.{score.length}</h2>
       ) : (<>
       <Image src={'/svgs/score.svg'} alt='악보' width={200} height={200}/>
+      {score ? '1' : '2'}
       </>)}
     </div>
   );
