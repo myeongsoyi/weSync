@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Button, Dropdown, Tooltip } from 'antd';
 import {
+  DeleteOutlined,
   PauseCircleFilled,
   UnorderedListOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import Image from 'next/image';
+import { useRecordAudioStore } from '@/store/recordAudioStore';
+
 
 interface AudioBlobUrl {
   blob: Blob;
@@ -18,7 +21,6 @@ interface AudioBlobUrl {
 }
 
 export default function RecordAudioController() {
-  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null,
   );
@@ -26,6 +28,9 @@ export default function RecordAudioController() {
   const [items, setItems] = useState<MenuProps['items']>([]);
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const { tracks, isPlaying, isRecording, setIsRecording, setTracks, toggleTrack, setIsPlaying } =
+    useRecordAudioStore();
 
   useEffect(() => {
     async function getMedia() {
@@ -70,6 +75,13 @@ export default function RecordAudioController() {
                 />
               </Button>
             </Tooltip>
+            <Tooltip title="삭제" placement="top">
+              <Button type="text" onClick={() => uploadAudio(recording.blob)}>
+              <DeleteOutlined
+                  style={{ fontSize: 20, fontWeight: 'bold', margin: 'auto', color: 'red' }}
+                />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       ),
@@ -102,7 +114,8 @@ export default function RecordAudioController() {
       body: formData,
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
+    // return data;
   };
 
   // mm:ss 포맷으로 시간 변환
