@@ -42,7 +42,7 @@ def upload_score(team_id: int, file: UploadFile = File(...), db: Session = Depen
 @rScore.get('/{team_id}', tags = ['score'], response_model=BaseResponse)
 def get_scores(team_id: int, db: Session = Depends(get_db)):
     scoreData = db.query(Score.score_url, Accompaniment.accompaniment_url, Position.position_name, Color.color_code)\
-        .join(Accompaniment, Score.score_id == Accompaniment.score_id)\
+        .outerjoin(Accompaniment, Score.score_id == Accompaniment.score_id)\
         .outerjoin(Position, Score.position_id == Position.position_id)\
         .outerjoin(Color, Position.color_id == Color.color_id)\
         .filter(Score.team_id==team_id)\
@@ -62,11 +62,7 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
     if score_dicts == []:
         return CommonResponse(True, {"data": []}, 400, "조회된 악보가 없습니다.")
 
-    return CommonResponse(
-        True,
-        {"data": score_dicts},
-        200, "조회 성공!"
-        )
+    return CommonResponse(True, {"data": score_dicts}, 200, "조회 성공!")
 
 @rScore.delete('/{team_id}', tags=['score'], response_model=BaseResponse)
 def delete_scores(team_id: int, db: Session = Depends(get_db)):
@@ -84,11 +80,9 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
             print("  *after => ", score)
         
         db.commit()
-        print("Transaction committed successfully")
     except Exception as e:
         db.rollback()  # 예외 발생 시 롤백
-        print(f"Transaction failed: {e}")
-        raise HTTPException(status_code=500, detail="데이터베이스 커밋 실패")
+        return CommonResponse(False, None, 400, "DB commit에 실패했습니다. 다시 시도해 주세요.")
     finally:
         db.close()
 
@@ -108,16 +102,8 @@ def create_new_score(team_id: int, part_num: int, db: Session = Depends(get_db))
                 team_id = team_id )
     try:
         db.add(db_img)
-        print("db.add passed")
         db.commit()
-        print("db.commit passed")
     except Exception as e:
         print(f"Exception: {e}")
 
-    return CommonResponse(
-        True,
-        {
-            "message":"빈 악보 생성"   
-        },
-        200, "빈 악보 생성 성공!"
-        )
+    return CommonResponse( True, {"message":"빈 악보 생성"}, 200, "빈 악보 생성 성공!" )
