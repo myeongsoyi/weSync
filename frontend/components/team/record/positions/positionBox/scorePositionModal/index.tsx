@@ -1,29 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { Modal, List, Tag, Button, message, Tooltip } from 'antd';
-import {
-  ExclamationCircleOutlined,
-  PlusCircleOutlined,
-  FormOutlined,
-  DeleteOutlined,
-  CheckOutlined,
-} from '@ant-design/icons';
+import { ExclamationCircleOutlined, PlusCircleOutlined, FormOutlined, DeleteOutlined, CheckOutlined } from '@ant-design/icons';
+import { getTeamPosition, deleteTeamPosition } from '@/services/team/information';
+import { usePathname } from 'next/navigation';
 import UpdatePositionModal from '@/components/team/information/members/positionmodal/updatepositionmodal';
 import NewPositionModal from '@/components/team/information/members/positionmodal/newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
-import {
-    getTeamPosition,
-    putMemberPosition,
-    deleteTeamPosition,
-} from '@/services/team/information';
 
 interface Position {
-    positionId: number;
-    positionName: string;
-    colorCode: string;
-    colorId: number;
+  positionId: number;
+  positionName: string;
+  colorCode: string;
+  colorId: number;
 }
 
 export default function PositionModal({
@@ -33,24 +23,19 @@ export default function PositionModal({
   selectedMemberId,
 }: {
   open: boolean;
-  onOk: () => void;
+  onOk: (positionName: string, color: string) => void;
   onCancel: () => void;
   selectedMemberId: number | null;
 }) {
-  const [selectedPosition, setSelectedPosition] = useState<Position | null>(
-    null,
-  );
+  const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
   const [newPositionVisible, setNewPositionVisible] = useState<boolean>(false);
-  const [updatePositionVisible, setUpdatePositionVisible] =
-    useState<boolean>(false);
+  const [updatePositionVisible, setUpdatePositionVisible] = useState<boolean>(false);
 
-  const { positions, setPositions, getPositions } = useTeamPositionStore(
-    (state) => ({
-      positions: state.positions,
-      setPositions: state.setPositions,
-      getPositions: state.getPositions,
-    }),
-  );
+  const { positions, setPositions, getPositions } = useTeamPositionStore((state) => ({
+    positions: state.positions,
+    setPositions: state.setPositions,
+    getPositions: state.getPositions,
+  }));
 
   const teamId = usePathname().split('/')[2];
 
@@ -61,8 +46,9 @@ export default function PositionModal({
         setPositions(positions.data);
       }
     };
-    fetchPositions();
-    // fetchMembers();
+    if (open) {
+      fetchPositions();
+    }
   }, [open]);
 
   const handlePositionSelect = (position: Position): void => {
@@ -82,7 +68,6 @@ export default function PositionModal({
         if (response.success) {
           message.success(`${positionName}이(가) 삭제되었습니다.`);
           getPositions(teamId);
-        //   fetchMembers();
         } else {
           message.error('포지션 삭제에 실패했습니다.');
         }
@@ -109,16 +94,11 @@ export default function PositionModal({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          marginRight: '8px', // 버튼 사이 간격
-          borderColor: '#1890ff', // 테두리 색상을 흰색으로 설정
+          marginRight: '8px',
+          borderColor: '#1890ff',
         }}
         onClick={() =>
-          handleUpdatePosition(
-            position.positionId,
-            position.positionName,
-            position.colorCode,
-            position.colorId,
-          )
+          handleUpdatePosition(position.positionId, position.positionName, position.colorCode, position.colorId)
         }
       >
         <FormOutlined style={{ fontSize: '15px', color: '#1890ff' }} />
@@ -139,33 +119,18 @@ export default function PositionModal({
     </div>
   );
 
-  const handleOk = async () => {
+  const handleOk = () => {
     if (!selectedPosition) {
       message.error('포지션을 선택해 주세요.');
       return;
-    } else if (selectedMemberId) {
-      const response = await putMemberPosition(
-        selectedMemberId,
-        selectedPosition.positionId,
-      );
-      if (response.success) {
-        message.success('포지션 변경이 완료되었습니다.');
-        onOk();
-      } else {
-        message.error('포지션 변경에 실패했습니다.');
-      }
     } else {
-      message.error('멤버를 다시 선택해 주세요.');
+      onOk(selectedPosition.positionName, `#${selectedPosition.colorCode}`);
     }
   };
 
   return (
     <Modal
-      title={
-        <div style={{ textAlign: 'center', fontSize: '20px' }}>
-          포지션 변경하기
-        </div>
-      }
+      title={<div style={{ textAlign: 'center', fontSize: '20px' }}>포지션 할당하기</div>}
       open={open}
       onOk={handleOk}
       onCancel={onCancel}
@@ -194,13 +159,7 @@ export default function PositionModal({
         </div>
       }
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <List
           dataSource={positions}
           renderItem={(position: Position) => (
@@ -227,15 +186,9 @@ export default function PositionModal({
                 <Tag
                   style={{
                     cursor: 'pointer',
-                    padding:
-                      selectedPosition?.positionId === position.positionId
-                        ? '4px 8px'
-                        : '1px 5px',
+                    padding: selectedPosition?.positionId === position.positionId ? '4px 8px' : '1px 5px',
                     fontSize: `calc(15px * ${selectedPosition?.positionId === position.positionId ? '1.5' : '1'})`,
-                    fontWeight:
-                      selectedPosition?.positionId === position.positionId
-                        ? 'bold'
-                        : 'normal',
+                    fontWeight: selectedPosition?.positionId === position.positionId ? 'bold' : 'normal',
                     borderWidth: `calc(1px * ${selectedPosition?.positionId === position.positionId ? '3' : '1'})`,
                     margin: `calc(0px + ${selectedPosition?.positionId === position.positionId ? '8px' : '0px'}) auto`,
                     borderColor: `#${position.colorCode}`,
@@ -243,23 +196,19 @@ export default function PositionModal({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    position: 'relative', // 위치 조정을 위해 relative 설정
+                    position: 'relative',
                   }}
-                  className={
-                    selectedPosition?.positionId === position.positionId
-                      ? 'selectedTag'
-                      : ''
-                  }
+                  className={selectedPosition?.positionId === position.positionId ? 'selectedTag' : ''}
                 >
                   {selectedPosition?.positionId === position.positionId && (
                     <CheckOutlined
                       style={{
                         position: 'absolute',
-                        left: '-30px', // 체크 아이콘 위치 조정
+                        left: '-30px',
                         top: '50%',
                         transform: 'translateY(-50%)',
                         fontSize: '20px',
-                        color: 'green', // 체크 아이콘 색상
+                        color: 'green',
                       }}
                     />
                   )}
