@@ -103,3 +103,61 @@ export async function deleteRecord(recordId: number) {
         error: null,
     };
 }
+
+// 악보 업로드 파트
+export async function postUploadScore(teamId: string, formData: FormData) {
+  const accessToken = await getAccessToken();
+  const response = await fetch(`https://wesync.co.kr/py-api/score/${teamId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: accessToken ?? '',
+    },
+    body: formData,
+  });
+
+  // json 파싱 분기 처리
+  try {
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
+  }
+}
+
+export async function getScoreData(teamId: string) {
+  const accessToken = await getAccessToken();
+  const response = await fetch(`https://wesync.co.kr/py-api/score/${teamId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: accessToken ?? '',
+    },
+    body: null,
+  });
+
+  // json 파싱 분기 처리
+  try {
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
+  }
+}
+
+export async function deleteScore(teamId:string) {
+  const accessToken = await getAccessToken();
+  const response = await fetch(`https://wesync.co.kr/py-api/score/${teamId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: accessToken ?? '',
+    },
+    body: null,
+  });
+
+  // json 파싱 분기 처리
+  try {
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
+  }
+}

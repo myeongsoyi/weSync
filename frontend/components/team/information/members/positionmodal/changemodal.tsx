@@ -69,7 +69,7 @@ export default function PositionModal({
 
   const handlePositionSelect = (position: Position): void => {
     setSelectedPosition(position);
-    console.log('selectedPosition:', position);
+    // console.log('selectedPosition:', position);
   };
 
   const handleDelete = (positionId: number, positionName: string): void => {
@@ -147,8 +147,8 @@ export default function PositionModal({
       message.error('포지션을 선택해 주세요.');
       return;
     } else if (selectedMemberId) {
-      console.log('selectedMemberId:', selectedMemberId);
-      console.log('selectedPosition:', selectedPosition);
+      // console.log('selectedMemberId:', selectedMemberId);
+      // console.log('selectedPosition:', selectedPosition);
       const response = await putMemberPosition(
         selectedMemberId,
         selectedPosition.positionId,

@@ -19,12 +19,17 @@ interface ITrack {
 export default function MultiAudioPlayer() {
   const [longestTrack, setLongestTrack] = useState<ITrack>();
   const [volume, setVolume] = useState<number>(0.3);
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<boolean>(false);
 
-  const { tracks, isPlaying, toggleTrack, setIsPlaying } =
-    useRecordAudioStore();
-
-  const setTracks = useRecordAudioStore((state) => state.setTracks);
+  const {
+    tracks,
+    isPlaying,
+    isRecording,
+    setIsRecording,
+    setTracks,
+    toggleTrack,
+    setIsPlaying,
+  } = useRecordAudioStore();
 
   const playersRef = useRef<{ [key: number]: HTMLAudioElement }>({});
 
@@ -86,6 +91,7 @@ export default function MultiAudioPlayer() {
 
   const handlePlayPause = (isPlaying: boolean) => {
     setIsPlaying(isPlaying);
+    setIsRecording(isPlaying);
     Object.values(playersRef.current).forEach((audio) => {
       if (
         isPlaying &&
@@ -109,16 +115,24 @@ export default function MultiAudioPlayer() {
   };
 
   const handleSeek = (time: number) => {
+    if (isRecording) return;
+
     Object.values(playersRef.current).forEach((audio) => {
       audio.currentTime = time;
-      if (longestTrack?.url !== audio.src.split('3000').pop()) audio.play();
+      if (longestTrack?.url !== audio.src.split('3000').pop()) {
+        if (isPlaying) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      }
     });
   };
 
   const headerTracks = (
     <>
       {tracks.length === 0 ? (
-        <Button onClick={() => setCount(count + 1)}>Reset</Button>
+        <Button onClick={() => setCount(!count)}>Reset</Button>
       ) : (
         <>
           {tracks.map((track) => (
