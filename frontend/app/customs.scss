@@ -1,3 +1,15 @@
+// ant design float button
+.ant-float-btn {
+  width: rem(50) !important;
+  height: rem(50) !important;
+  .ant-float-btn-body {
+    width: rem(50) !important;
+    height: rem(50) !important;
+  }
+}
+
+
+
 // sweet alert
 .swal-confirm-button {
   margin: auto 10px;

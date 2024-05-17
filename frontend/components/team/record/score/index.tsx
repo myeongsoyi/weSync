@@ -1,16 +1,143 @@
+'use client';
+
 import Image from 'next/image';
 import styles from './index.module.scss';
+import { useEffect, useState } from 'react';
+import {
+  postUploadScore,
+  getScoreData,
+  deleteScore,
+} from '@/services/team/record';
+import Swal from 'sweetalert2';
+import { ScoreResponse } from '@/types/record';
+import { FloatButton } from 'antd';
+import {
+  CloudUploadOutlined,
+  DeleteOutlined,
+  MenuOutlined,
+} from '@ant-design/icons';
 
 interface IParams {
-    teamId : string
+  teamId: string;
 }
 
-export default function RecordScore({teamId} :IParams) {
-  
+export default function RecordScore({ teamId }: IParams) {
+  const [success, setSuccess] = useState<ScoreResponse['success']>(false);
+  const [score, setScore] = useState<ScoreResponse['data']>([]);
+  const [error, setError] = useState<ScoreResponse['error']>(null);
+
+  useEffect(() => {
+    const fetchScore = async () => {
+      const response = await getScoreData(teamId);
+      console.log(response);
+      if (response.success) {
+        setSuccess(response.success);
+        setScore(response.data);
+        setError(response.error);
+      } else {
+        setSuccess(response.success);
+        setError(response.error);
+      }
+    };
+    fetchScore();
+  }, [teamId]);
+
+  const handleUpload = async () => {
+    Swal.fire({
+      title: '악보를 업로드 해주세요',
+      input: 'file',
+      inputAttributes: {
+        accept: 'application/pdf',
+        'aria-label': '악보 업로드',
+      },
+      showCancelButton: true,
+      confirmButtonText: '업로드',
+      cancelButtonText: '취소',
+      preConfirm: (file) => {
+        if (!file) {
+          Swal.showValidationMessage('파일을 선택해 주세요');
+          return false;
+        } else {
+          return file;
+        }
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed && result.value) {
+        const file = result.value;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await postUploadScore(teamId, formData);
+        console.log('업로드 시도', response);
+        if (response.success) {
+          Swal.fire({
+            icon: 'success',
+            title: '악보 업로드 성공',
+            text: '작업이 완료될 때까지 잠시만 기다려주세요.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: '악보 업로드 실패',
+            text: response.error?.errorMessage,
+          });
+        }
+      }
+    });
+  };
+
+  async function handleDelete(teamId: string) {
+    const response = await deleteScore(teamId);
+    console.log(response);
+    if (response.success) {
+      Swal.fire({
+        icon: 'success',
+        title: '악보 삭제 성공',
+        text: '작업이 완료될 때까지 잠시만 기다려주세요.',
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '악보 삭제 실패',
+        text: response.error?.errorMessage,
+      });
+    }
+  }
+
+  if (!success) {
     return (
-      <div className={styles.section}>
-        <p className='hidden'>{teamId}</p>
-        <Image className='p-20 m-auto' src={'/svgs/score.svg'} alt="record_score" width={600} height={600} />
+      <div>
+        <p>{error?.errorMessage}</p>
       </div>
     );
   }
+
+  return (
+    <div className={styles.section}>
+      <FloatButton.Group
+        trigger="click"
+        type="primary"
+        style={{ right: 24, bottom: '18vh', zIndex: 3000 }}
+        icon={<MenuOutlined />}
+      >
+        <FloatButton
+          icon={
+            <DeleteOutlined
+              style={{ color: 'red' }}
+              onClick={() => handleDelete(teamId)}
+            />
+          }
+        />
+        <FloatButton icon={<CloudUploadOutlined />} onClick={handleUpload} />
+      </FloatButton.Group>
+      {score.length === 0 ? (
+        <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
+      ) : (
+        <>
+          <Image src={'/svgs/score.svg'} alt="악보" width={200} height={200} />
+        </>
+      )}
+    </div>
+  );
+}
