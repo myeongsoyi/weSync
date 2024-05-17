@@ -3,11 +3,19 @@
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { useEffect, useState } from 'react';
-import { postUploadScore, getScoreData, deleteScore } from '@/services/team/record';
+import {
+  postUploadScore,
+  getScoreData,
+  deleteScore,
+} from '@/services/team/record';
 import Swal from 'sweetalert2';
 import { ScoreResponse } from '@/types/record';
 import { FloatButton } from 'antd';
-import { CloudUploadOutlined, DeleteOutlined, MenuOutlined } from '@ant-design/icons';
+import {
+  CloudUploadOutlined,
+  DeleteOutlined,
+  MenuOutlined,
+} from '@ant-design/icons';
 
 interface IParams {
   teamId: string;
@@ -50,7 +58,7 @@ export default function RecordScore({ teamId }: IParams) {
           Swal.showValidationMessage('파일을 선택해 주세요');
           return false;
         } else {
-          return file
+          return file;
         }
       },
     }).then(async (result) => {
@@ -59,7 +67,7 @@ export default function RecordScore({ teamId }: IParams) {
 
         const formData = new FormData();
         formData.append('file', file);
- 
+
         const response = await postUploadScore(teamId, formData);
         console.log('업로드 시도', response);
         if (response.success) {
@@ -113,15 +121,23 @@ export default function RecordScore({ teamId }: IParams) {
         style={{ right: 24, bottom: '18vh', zIndex: 3000 }}
         icon={<MenuOutlined />}
       >
-        <FloatButton icon={<DeleteOutlined style={{ color: 'red' }} onClick={()=>handleDelete(teamId)} />} />
+        <FloatButton
+          icon={
+            <DeleteOutlined
+              style={{ color: 'red' }}
+              onClick={() => handleDelete(teamId)}
+            />
+          }
+        />
         <FloatButton icon={<CloudUploadOutlined />} onClick={handleUpload} />
       </FloatButton.Group>
       {score.length === 0 ? (
-      <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.{score.length}</h2>
-      ) : (<>
-      <Image src={'/svgs/score.svg'} alt='악보' width={200} height={200}/>
-      {score ? '1' : '2'}
-      </>)}
+        <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
+      ) : (
+        <>
+          <Image src={'/svgs/score.svg'} alt="악보" width={200} height={200} />
+        </>
+      )}
     </div>
   );
 }

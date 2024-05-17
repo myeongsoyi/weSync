@@ -29,7 +29,8 @@ export default function RecordAudioController() {
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const { tracks, isPlaying, isRecording, setIsRecording, setTracks, toggleTrack, setIsPlaying } =
+  // const { tracks, isPlaying, isRecording, setIsRecording, setTracks, toggleTrack, setIsPlaying } =
+  const { isRecording, setIsRecording } =
     useRecordAudioStore();
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function RecordAudioController() {
       body: formData,
     });
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     // return data;
   };
 
