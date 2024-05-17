@@ -23,12 +23,12 @@ public class RecordController {
 
     private final RecordService recordService;
 
-    @PostMapping("/{scoreId}/{teamUserId}")
+    @PostMapping("/{scoreId}")
     public ResponseEntity<Response<CreateResponse>> createRecord(@RequestPart(value = "data") CreateRequest createRequest,
                                                                  @RequestPart(value = "file") MultipartFile file,
-                                                                 @PathVariable Long scoreId,
-                                                                 @PathVariable Long teamUserId) throws IOException {
-        CreateResponse createResponse = recordService.createRecord(createRequest, file, scoreId, teamUserId);
+                                                                 @PathVariable Long scoreId) throws IOException {
+        Long userId = accessTokenValidationAspect.getUserId();
+        CreateResponse createResponse = recordService.createRecord(createRequest, file, scoreId, userId);
         Response<CreateResponse> response = new Response<>(true, createResponse, null);
         return ResponseEntity.ok(response);
     }

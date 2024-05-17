@@ -34,7 +34,7 @@ public class FeedBackService {
 
     public CreateResponse createFeedBack(CreateRequest createRequest, Long userId, Long teamId, Long recordId) {
         Team team =  teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, team.getTeamId());
+        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, team.getTeamId()).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
 
         FeedBack feedBack = feedBackRepository.save(createRequest.toEntity(record, teamUser));
