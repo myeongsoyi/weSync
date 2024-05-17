@@ -161,3 +161,22 @@ export async function deleteScore(teamId:string) {
     return response;
   }
 }
+
+export async function postAddScorePosition(teamId: string, partNum: number) {
+  const accessToken = await getAccessToken();
+  const response = await fetch(`https://wesync.co.kr/py-api/score/${teamId}/${partNum}`, {
+    method: 'POST',
+    headers: {
+      Authorization: accessToken ?? '',
+    },
+    body: null,
+  });
+
+  // json 파싱 분기 처리
+  try {
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
+  }
+}

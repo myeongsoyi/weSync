@@ -10,7 +10,7 @@ import {
 } from '@/services/team/record';
 import Swal from 'sweetalert2';
 import { ScoreResponse } from '@/types/record';
-import { FloatButton } from 'antd';
+import { FloatButton, message } from 'antd';
 import {
   CloudUploadOutlined,
   DeleteOutlined,
@@ -26,6 +26,7 @@ export default function RecordScore({ teamId }: IParams) {
   const [success, setSuccess] = useState<ScoreResponse['success']>(false);
   const [score, setScore] = useState<ScoreResponse['data']>([]);
   const [error, setError] = useState<ScoreResponse['error']>(null);
+  const [scoreUrl, setScoreUrl] = useState<string>('');
 
   const { scoreIndex } = useRecordAudioStore((state) => ({
     scoreIndex: state.scoreIndex,
@@ -46,6 +47,14 @@ export default function RecordScore({ teamId }: IParams) {
     };
     fetchScore();
   }, [teamId]);
+
+  useEffect(() => {
+    if (score[scoreIndex]?.score_url) {
+      setScoreUrl(score[scoreIndex].score_url);
+    } else {
+      message.warning('악보가 없습니다.');
+    }
+  }, [scoreIndex]);
 
   const handleUpload = async () => {
     Swal.fire({
@@ -140,7 +149,7 @@ export default function RecordScore({ teamId }: IParams) {
         <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
       ) : (
         <>
-          <Image src={score[scoreIndex].score_url} alt="악보" width={1000} height={1000} style={{width: '100%'}}/>
+          <Image src={scoreUrl} alt="악보" width={1000} height={1000} style={{width: '100%'}}/>
         </>
       )}
     </div>
