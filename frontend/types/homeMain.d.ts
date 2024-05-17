@@ -56,7 +56,7 @@ export interface MainRecords {
     endAt: number;
     teamId: number;
     teamUrl: string;
-    songName: string;
+    songName: string|null;
     positionName: string;
     colorCode: string;
   }[];

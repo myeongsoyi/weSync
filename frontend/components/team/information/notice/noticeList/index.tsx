@@ -55,7 +55,6 @@ export default function NoticeList({ teamId }: { teamId: string }) {
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete(noticeId);
-        message.success('삭제되었습니다.');
       }
     });
   };
@@ -63,6 +62,7 @@ export default function NoticeList({ teamId }: { teamId: string }) {
   const handleDelete = async (noticeId: number) => {
     const response = await deleteNotice(noticeId);
     if (response.success) {
+      message.success('삭제되었습니다.');
       fetchNotices();
     } else {
       message.error(response.error.errorMessage);

@@ -9,6 +9,7 @@
         "svgs",
         "Swal",
         "sweetalert",
+        "updatepositionmodal",
         "zustand"
     ]
 }
