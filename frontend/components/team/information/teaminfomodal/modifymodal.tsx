@@ -54,7 +54,7 @@ export default async function TeamModify(
         display: inline-block;
         width: 60px;
         height: 34px;
-        margin-top: 20px;
+        margin-top: 30px;
       }
       .toggle-switch input { 
         opacity: 0;
@@ -93,8 +93,8 @@ export default async function TeamModify(
         font-weight: bold;
       }
     </style>
-    <input id="swal-input1" class="swal2-input" type="text" placeholder="팀 이름을 입력하세요" value="${teamName}" required>
-    <input id="swal-input2" class="swal2-input" type="text" placeholder="곡명을 입력하세요" value="${teamSong}">
+    <input id="swal-input1" class="swal2-input" type="text" placeholder="팀 이름 (최대 30자)" maxlength="30" value="${teamName}" required>
+    <input id="swal-input2" class="swal2-input" type="text" placeholder="곡명 (최대 40자)" maxlength="40" value="${teamSong}">
     <input id="swal-input3" class="file-input" type="file" accept="image/*">
     <label for="swal-input3" class="file-input-label">프로필 사진 변경</label>
     <img id="image-preview" class="image-preview" src="${teamImage}" alt="이미지 미리보기">
@@ -121,6 +121,16 @@ export default async function TeamModify(
 
       if (!input1.value) {
         Swal.showValidationMessage('팀 이름은 필수값입니다.');
+        return false;
+      }
+
+      if (input1.value.length > 30) {
+        Swal.showValidationMessage('팀 이름은 최대 30자까지 입력 가능합니다.');
+        return false;
+      }
+
+      if (input1.value.length > 40) {
+        Swal.showValidationMessage('곡명은 최대 40자까지 입력 가능합니다.');
         return false;
       }
 

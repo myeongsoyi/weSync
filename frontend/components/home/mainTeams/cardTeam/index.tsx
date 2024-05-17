@@ -79,15 +79,16 @@ export default function CardTeams() {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4 mt-4 ">
+      <div className="grid grid-cols-3 gap-4 mt-4">
         <Card
           style={{
-            // width: '32%',
-            // marginTop: 16,
             textAlign: 'center',
             borderRadius: '10px',
             border: '3px solid #FFC500',
             minHeight: '230px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
           className="flex justify-center text-center cursor-pointer"
           hoverable
@@ -104,17 +105,19 @@ export default function CardTeams() {
           <Link href={`/team/${team.teamId}/information`} key={i}>
             <Card
               style={{
-                //   width: '32%',
-                // marginTop: 16,
                 height: '100%',
                 textAlign: 'center',
                 borderRadius: '10px',
                 border: '3px solid #FFC500',
                 backgroundColor: `${i % 2 === 0 ? 'rgb(255 251 235)' : 'white'}`,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
-              title={team.teamName}
               hoverable
             >
+              <h3>{team.teamName}</h3>
               <div className="flex mb-2 justify-between">
                 <Image
                   src="svgs/note.svg"

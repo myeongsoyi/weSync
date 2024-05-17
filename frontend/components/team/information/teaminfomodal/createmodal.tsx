@@ -45,8 +45,8 @@ export default async function TeamCreate() {
             display: none;
           }
         </style>
-        <input id="swal-input1" class="swal2-input" type="text" placeholder="팀 이름 (최대 20자)" maxlength="20" required>
-        <input id="swal-input2" class="swal2-input" type="text" placeholder="곡명 (최대 20자)" maxlength="20">
+        <input id="swal-input1" class="swal2-input" type="text" placeholder="팀 이름 (최대 30자)" maxlength="30" required>
+        <input id="swal-input2" class="swal2-input" type="text" placeholder="곡명 (최대 40자)" maxlength="40">
         <input id="swal-input3" class="file-input" type="file" accept="image/*">
         <label for="swal-input3" class="file-input-label">프로필 사진 선택</label>
         <img id="image-preview" class="image-preview" src="" alt="이미지 미리보기">
@@ -69,8 +69,13 @@ export default async function TeamCreate() {
         return false;
       }
 
-      if (input1.value.length > 20 || input2.value.length > 20) {
-        Swal.showValidationMessage('팀 이름과 곡명은 각각 최대 20자까지 입력 가능합니다.');
+      if (input1.value.length > 30) {
+        Swal.showValidationMessage('팀 이름은 최대 30자까지 입력 가능합니다.');
+        return false;
+      }
+
+      if (input1.value.length > 40) {
+        Swal.showValidationMessage('곡명은 최대 40자까지 입력 가능합니다.');
         return false;
       }
 
