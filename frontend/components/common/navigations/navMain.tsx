@@ -16,7 +16,7 @@ export default function HomePage() {
       <Header className={styles.header} style={{height: '12vh', minHeight: '90px'}}>
         <div className={styles.leftSection}>
           <Link href="/welcome" className={styles.introLink}>
-            <DoubleLeftOutlined className={styles.icon} /> INFO
+            <DoubleLeftOutlined className={styles.icon} /> INTRO
           </Link>
         </div>
         <div className={styles.centerSection}>

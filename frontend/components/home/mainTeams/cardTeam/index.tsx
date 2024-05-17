@@ -117,6 +117,7 @@ export default function CardTeams() {
               }}
               hoverable
             >
+              <h3>{team.teamName}</h3>
               <div className="flex mb-2 justify-between">
                 <Image
                   src="svgs/note.svg"
