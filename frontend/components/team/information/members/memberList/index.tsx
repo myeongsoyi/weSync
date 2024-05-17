@@ -20,13 +20,14 @@ export default function TeamMemberList({ teamId }: IParams) {
   const [members, setMembers] = useState<TeamMembers['data']>([]);
   const [error, setError] = useState<TeamMembers['error']>(null);
 
+  const fetchMembers = async () => {
+    const members = await getTeamMembers(teamId);
+    setSuccess(members.success);
+    setMembers(members.data);
+    setError(members.error);
+  };
+
   useEffect(() => {
-    const fetchMembers = async () => {
-      const members = await getTeamMembers(teamId);
-      setSuccess(members.success);
-      setMembers(members.data);
-      setError(members.error);
-    };
     fetchMembers();
   }, []);
 
@@ -52,9 +53,10 @@ export default function TeamMemberList({ teamId }: IParams) {
 
       if (result.isConfirmed) {
         const response = await deleteTeamMember(memberId);
-        console.log(response);
+        // console.log(response);
         if (response.success) {
           message.success('멤버가 강퇴되었습니다.');
+          fetchMembers();
         } else {
           message.error('멤버 강퇴에 실패했습니다.');
         }
@@ -192,6 +194,7 @@ export default function TeamMemberList({ teamId }: IParams) {
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         selectedMemberId={selectedMemberId}
+        fetchMembers={fetchMembers}
       />
     </div>
   );

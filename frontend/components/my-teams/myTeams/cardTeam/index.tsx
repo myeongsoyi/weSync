@@ -60,7 +60,6 @@ export default function CardTeams() {
     }
   }, [width]);
 
-
   if (!success) {
     return (
       <div>
@@ -120,9 +119,12 @@ export default function CardTeams() {
                     className="h-auto"
                   />
                   <p className="flex w-full">
-                    <span className="m-auto pr-4">{team.songName ?? '미정'}</span>
+                    <span className="m-auto pr-4">
+                      {team.songName ?? '미정'}
+                    </span>
                   </p>
                 </div>
+
                 {team.myPosition && (
                   <p>
                     <Tag
@@ -141,7 +143,10 @@ export default function CardTeams() {
                   src={team.teamProfileUrl}
                   alt="팀"
                   size={80}
-                  style={{ border: '3px solid #FFC500', marginBottom: '0.5rem' }}
+                  style={{
+                    border: '3px solid #FFC500',
+                    marginBottom: '0.5rem',
+                  }}
                 />
                 <div className="flex mt-4 justify-center gap-1">
                   <Group>
@@ -149,7 +154,9 @@ export default function CardTeams() {
                       <Badge
                         count={
                           member.leader ? (
-                            <CrownFilled style={{ color: 'orange', fontSize: '24px' }} />
+                            <CrownFilled
+                              style={{ color: 'orange', fontSize: '24px' }}
+                            />
                           ) : (
                             0
                           )
@@ -157,7 +164,11 @@ export default function CardTeams() {
                         offset={[-18, -5]}
                         key={i}
                       >
-                        <Tooltip placement="top" title={member.nickName} arrow={true}>
+                        <Tooltip
+                          placement="top"
+                          title={member.nickName}
+                          arrow={true}
+                        >
                           <Avatar
                             src={member.userProfileUrl}
                             alt={member.nickName}

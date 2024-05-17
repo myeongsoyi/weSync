@@ -16,6 +16,7 @@ const nextConfig = {
         hostname: "**",
       },
     ],
+    domains: ['we-sync.s3.ap-southeast-2.amazonaws.com'],
   },
   webpack(config) {
     config.module.rules.push({
