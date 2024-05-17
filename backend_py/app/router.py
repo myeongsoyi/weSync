@@ -100,9 +100,20 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
         200, "악보 삭제 성공!"
     )
 
-@rScore.post('/{team_id}/empty', tags = ['score'], response_model=BaseResponse)
-def create_new_score(team_id: int, db: Session = Depends(get_db)):
-    
+@rScore.post('/{team_id}/{part_num}', tags = ['score'], response_model=BaseResponse)
+def create_new_score(team_id: int, part_num: int, db: Session = Depends(get_db)):
+
+    db_img = Score(part_num = part_num, position_id = None, title = None, \
+                score_url = None,\
+                team_id = team_id )
+    try:
+        db.add(db_img)
+        print("db.add passed")
+        db.commit()
+        print("db.commit passed")
+    except Exception as e:
+        print(f"Exception: {e}")
+
     return CommonResponse(
         True,
         {
