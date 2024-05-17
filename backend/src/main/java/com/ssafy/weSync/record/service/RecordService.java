@@ -44,11 +44,9 @@ public class RecordService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
 
-    public CreateResponse createRecord(CreateRequest createRequest, MultipartFile file, Long scoreId, Long teamUserId) throws IOException {
-        System.out.println(createRequest.toString());
+    public CreateResponse createRecord(CreateRequest createRequest, MultipartFile file, Long scoreId, Long userId) throws IOException {
         Score score = scoreRepository.findByScoreId(scoreId).orElseThrow(() -> new GlobalException(CustomError.NO_SCORE));
-        TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
-
+        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, score.getTeam().getTeamId()).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         String url = s3Service.upload(file, "record");
 
         Record record = createRequest.toEntity(url, score, teamUser);
