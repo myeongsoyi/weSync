@@ -36,7 +36,7 @@ public class NoticeService {
 
     public CreateResponse createNotice(CreateRequest createRequest, Long teamId, Long userId) {
         Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, teamId);
+        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -68,7 +68,7 @@ public class NoticeService {
      */
     public FixUpdateResponse updateNotice(Long noticeId, Long userId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId);
+        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         Team team = teamUser.getTeam();
 
         // 권한체크
@@ -90,7 +90,7 @@ public class NoticeService {
      */
     public ContentUpdateResponse updateNotice(UpdateRequest updateRequest, Long noticeId, Long userId){
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId);
+        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         Team team = teamUser.getTeam();
 
         // 권한체크
@@ -105,7 +105,7 @@ public class NoticeService {
 
     public void deleteNotice(Long noticeId, Long userId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId);
+        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
         Team team = teamUser.getTeam();
 
         // 권한체크
