@@ -16,6 +16,7 @@ import {
   DeleteOutlined,
   MenuOutlined,
 } from '@ant-design/icons';
+import { useRecordAudioStore } from '@/store/recordAudioStore';
 
 interface IParams {
   teamId: string;
@@ -26,6 +27,10 @@ export default function RecordScore({ teamId }: IParams) {
   const [score, setScore] = useState<ScoreResponse['data']>([]);
   const [error, setError] = useState<ScoreResponse['error']>(null);
 
+  const { scoreIndex } = useRecordAudioStore((state) => ({
+    scoreIndex: state.scoreIndex,
+  }));
+  
   useEffect(() => {
     const fetchScore = async () => {
       const response = await getScoreData(teamId);
@@ -135,7 +140,7 @@ export default function RecordScore({ teamId }: IParams) {
         <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
       ) : (
         <>
-          <Image src={'/svgs/score.svg'} alt="악보" width={200} height={200} />
+          <Image src={score[scoreIndex].score_url} alt="악보" width={1000} height={1000} style={{width: '100%'}}/>
         </>
       )}
     </div>

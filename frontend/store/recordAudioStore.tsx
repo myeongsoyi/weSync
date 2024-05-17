@@ -12,6 +12,7 @@ interface TrackState {
   isPlaying: boolean;
   isRecording: boolean;
   isPlayable: boolean;
+  scoreIndex: number;
   currentTime: number;
   toggleTrack: (id: number, url: string, name: string) => void;
   togglePlayPauseOne: (id: number) => void;
@@ -29,6 +30,7 @@ interface TrackState {
     playing: boolean;
     volume: number;
   }>) => void;
+  setScoreIndex: (index: number) => void;
   setCurrentTime: (time : number) => void;
 }
 
@@ -37,6 +39,7 @@ export const useRecordAudioStore = create<TrackState>((set, get) => ({
   isPlaying: false,
   isRecording: false,
   isPlayable: false,
+  scoreIndex: 0,
   currentTime: 0,
   toggleTrack: (id: number, url: string, name: string) => {
     // tracks에 id가 있는지 확인하고 있으면 제거하고 없으면 추가
@@ -77,6 +80,9 @@ export const useRecordAudioStore = create<TrackState>((set, get) => ({
   },
   setIsPlayable: isPlayable => {
     set({ isPlayable });
+  },
+  setScoreIndex: index => {
+    set({ scoreIndex: index });
   },
   setCurrentTime: time => {
     set({ currentTime: time });
