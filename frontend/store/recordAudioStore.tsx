@@ -14,6 +14,7 @@ interface TrackState {
   isPlayable: boolean;
   scoreIndex: number;
   currentTime: number;
+  scoreId: number;
   toggleTrack: (id: number, url: string, name: string) => void;
   togglePlayPauseOne: (id: number) => void;
   setVolume: (id: number, volume: number) => void;
@@ -32,6 +33,7 @@ interface TrackState {
   }>) => void;
   setScoreIndex: (index: number) => void;
   setCurrentTime: (time : number) => void;
+  setScoreId: (id: number) => void;
 }
 
 export const useRecordAudioStore = create<TrackState>((set, get) => ({
@@ -41,6 +43,7 @@ export const useRecordAudioStore = create<TrackState>((set, get) => ({
   isPlayable: false,
   scoreIndex: 0,
   currentTime: 0,
+  scoreId: 0,
   toggleTrack: (id: number, url: string, name: string) => {
     // tracks에 id가 있는지 확인하고 있으면 제거하고 없으면 추가
     const newTracks = get().tracks.some(track => track.id === id)
@@ -91,5 +94,8 @@ export const useRecordAudioStore = create<TrackState>((set, get) => ({
   },
   setTracks: tracks => {
     set({ tracks: tracks });
+  },
+  setScoreId: id => {
+    set({ scoreId: id });
   },
 }));

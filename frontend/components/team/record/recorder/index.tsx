@@ -12,6 +12,8 @@ import {
 import type { MenuProps } from 'antd';
 import Image from 'next/image';
 import { useRecordAudioStore } from '@/store/recordAudioStore';
+import { postSaveRecord } from '@/services/team/record';
+import Swal from 'sweetalert2';
 
 
 interface AudioBlobUrl {
@@ -33,7 +35,7 @@ export default function RecordAudioController() {
   const [endAt, setEndAt] = useState<number>(0);
 
   // const { tracks, isPlaying, isRecording, setIsRecording, setTracks, toggleTrack, setIsPlaying } =
-  const { isRecording, setIsRecording, currentTime } =
+  const { isRecording, setIsRecording, currentTime, scoreId } =
     useRecordAudioStore();
 
   useEffect(() => {
@@ -73,14 +75,14 @@ export default function RecordAudioController() {
               {recording.timestamp}
             </span>
             <Tooltip title="My Space에 업로드" placement="top">
-              <Button type="text" onClick={() => uploadAudio(recording.blob)}>
+              <Button type="text" onClick={() => uploadAudio(recording.blob, recording.timestamp)}>
                 <UploadOutlined
                   style={{ fontSize: 20, fontWeight: 'bold', margin: 'auto' }}
                 />
               </Button>
             </Tooltip>
             <Tooltip title="삭제" placement="top">
-              <Button type="text" onClick={() => uploadAudio(recording.blob)}>
+              <Button type="text" onClick={() => deleteAudio(recording.blob)}>
               <DeleteOutlined
                   style={{ fontSize: 20, fontWeight: 'bold', margin: 'auto', color: 'red' }}
                 />
@@ -114,16 +116,50 @@ export default function RecordAudioController() {
     setRecordingTime(0);
   };
 
-  const uploadAudio = async (blob: Blob) => {
-    const formData = new FormData();
-    formData.append('audioFile', blob);
-    const response = await fetch('YOUR_SERVER_ENDPOINT', {
-      method: 'POST',
-      body: formData,
-    });
-    const data = await response.json();
-    console.log(data);
-    // return data;
+  const uploadAudio = async (blob: Blob, timestamp: string) => {
+    Swal.fire({
+      title: '녹음 파일 업로드',
+      text: '녹음 파일을 My Space에 업로드하시겠습니까?',
+      icon: 'question',
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonText: '업로드',
+      cancelButtonText: '취소',
+      inputValue: timestamp,
+      inputValidator: (value) => {
+        if (!value) {
+          return '파일 이름을 입력해주세요.';
+        }
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed && result.value) {
+        const file = new File([blob], `${result.value}.mp4`, { type: blob.type });
+        const response = await postSaveRecord(scoreId, result.value, startAt, endAt, file);
+        if (response.success) {
+          console.log('업로드 성공', response);
+          Swal.fire({
+            icon: 'success',
+            title: '녹음 파일 업로드 성공',
+            text: '작업이 완료될 때까지 잠시만 기다려주세요.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: '녹음 파일 업로드 실패',
+            text: response.error?.errorMessage ?? '업로드 중 오류가 발생했습니다.',
+          });
+          console.error(response)
+        }
+      }
+    }
+    );
+  }
+
+  const deleteAudio = (blob: Blob) => {
+    const newRecordings = recordings.filter(
+      (recording) => recording.blob !== blob,
+    );
+    setRecordings(newRecordings);
   };
 
   // mm:ss 포맷으로 시간 변환
