@@ -1,47 +1,27 @@
 import APIModule from '@/utils/apiModule';
-import LocalStorage from '@/utils/localStorage';
 import { getAccessToken } from '@/utils/getAccessToken';
-
-export async function getTeamRecordPositions() {
-  const positions = [
-    {
-      id: 1,
-      name: '테너',
-      color: 'red',
-    },
-    {
-      id: 2,
-      name: '베이스',
-      color: 'blue',
-    },
-    {
-      id: 3,
-      name: '퍼커션',
-      color: 'green',
-    },
-    {
-      id: 4,
-      name: '알토',
-      color: 'hotpink',
-    },
-    {
-      id: 5,
-      name: '소프라노',
-      color: 'purple',
-    },
-    {
-      id: 6,
-      name: null,
-      color: null,
-    },
-  ];
-  return positions;
-}
 
 export interface IRecord {
   id: number;
   name: string | null;
   color: string | null;
+}
+function formatNumber(num: number): string {
+  // 숫자를 문자열로 변환
+  const numString = num.toString();
+
+  // 소수점 위치 찾기
+  const decimalIndex = numString.indexOf('.');
+
+  // 소수점이 있는 경우
+  if (decimalIndex !== -1) {
+    const integerPart = numString.substring(0, decimalIndex); // 정수 부분
+    const decimalPart = numString.substring(decimalIndex + 1); // 소수 부분
+    return `${integerPart}:${decimalPart}`;
+  } else {
+    // 소수점이 없는 경우 ':0' 추가
+    return `${numString}:0`;
+  }
 }
 
 export async function postSaveRecord(
@@ -51,18 +31,26 @@ export async function postSaveRecord(
   endAt: number,
   file: File,
 ) {
-  const teamUserId = LocalStorage.getItem('memberId');
+  const newStartAt = formatNumber(startAt);
+  const newEndAt = formatNumber(endAt);
+
+  const data = {
+    title,
+    startAt: newStartAt,
+    endAt: newEndAt,
+  };
+
   const formData = new FormData();
   const baseURL = process.env.NEXT_PUBLIC_API_URL;
-  formData.append('title', title);
-  formData.append('startAt', startAt.toString());
-  formData.append('endAt', endAt.toString());
+
+  formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
+
   if (file) {
     formData.append('file', file);
   }
 
   const accessToken = await getAccessToken();
-  const response = await fetch(`${baseURL}/records/${scoreId}/${teamUserId}`, {
+  const response = await fetch(`${baseURL}/records/${scoreId}`, {
     method: 'POST',
     headers: {
       // "content-type": "multipart/form-data",
@@ -77,11 +65,13 @@ export async function postSaveRecord(
   } catch (error) {
     return response;
   }
+  // console.log('postSaveRecord', scoreId, title, startAt, endAt, file);
+  // return {success: true, data: [], error: {errorCode: '', errorMessage: ''}};
 }
 
 export async function putChangeRecordPublic(recordId: number) {
   const response = await APIModule({
-    action: `/records/${recordId}/`,
+    action: `/records/${recordId}`,
     method: 'PUT',
     data: null,
   });
@@ -90,19 +80,29 @@ export async function putChangeRecordPublic(recordId: number) {
 }
 
 export async function deleteRecord(recordId: number) {
-//   const response = await APIModule({
-//     action: `/records/${recordId}/`,
-//     method: 'DELETE',
-//     data: null,
-//   });
+  const response = await APIModule({
+    action: `/records/${recordId}/`,
+    method: 'DELETE',
+    data: null,
+  });
 
-//   return response;
-    return {
-        success: true,
-        data: [],
-        error: null,
-    };
+  return response;
 }
+
+export async function postScoreGetPosition(scoreId: number, positionId: number) {
+  const data = {
+    scoreId,
+    positionId,
+  }
+  const response = await APIModule({
+    action: `/team/score-position`,
+    method: 'POST',
+    data: data,
+  });
+
+  return response;
+}
+
 
 // 악보 업로드 파트
 export async function postUploadScore(teamId: string, formData: FormData) {
@@ -147,6 +147,25 @@ export async function deleteScore(teamId:string) {
   const accessToken = await getAccessToken();
   const response = await fetch(`https://wesync.co.kr/py-api/score/${teamId}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: accessToken ?? '',
+    },
+    body: null,
+  });
+
+  // json 파싱 분기 처리
+  try {
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
+  }
+}
+
+export async function postAddScorePosition(teamId: string, partNum: number) {
+  const accessToken = await getAccessToken();
+  const response = await fetch(`https://wesync.co.kr/py-api/score/${teamId}/${partNum}`, {
+    method: 'POST',
     headers: {
       Authorization: accessToken ?? '',
     },

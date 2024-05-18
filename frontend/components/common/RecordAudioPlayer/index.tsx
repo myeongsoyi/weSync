@@ -4,8 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRecordAudioStore } from '@/store/recordAudioStore';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import { Button } from 'antd';
-import { DeleteTwoTone } from '@ant-design/icons';
 import Recorder from '@/components/team/record/recorder';
 
 interface ITrack {
@@ -16,42 +14,20 @@ interface ITrack {
   volume: number;
 }
 
-export default function MultiAudioPlayer() {
+export default function RecordAudioPlayer() {
   const [longestTrack, setLongestTrack] = useState<ITrack>();
-  const [volume, setVolume] = useState<number>(0.3);
-  const [count, setCount] = useState<boolean>(false);
+  const [volume, setVolume] = useState<number>(0.5);
 
   const {
     tracks,
     isPlaying,
-    isRecording,
-    setIsRecording,
-    setTracks,
-    toggleTrack,
+    // isRecording,
+    // toggleTrack,
     setIsPlaying,
+    setCurrentTime,
   } = useRecordAudioStore();
 
   const playersRef = useRef<{ [key: number]: HTMLAudioElement }>({});
-
-  useEffect(() => {
-    setTracks([
-      // { id: number; url: string; name: string; playing: boolean; volume: number; }
-      {
-        id: 1,
-        name: 'track1',
-        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-        playing: false,
-        volume: 0.3,
-      },
-      {
-        id: 2,
-        name: 'track2',
-        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-        playing: false,
-        volume: 0.3,
-      },
-    ]);
-  }, [count]);
 
   useEffect(() => {
     let maxDuration = 0;
@@ -91,12 +67,12 @@ export default function MultiAudioPlayer() {
 
   const handlePlayPause = (isPlaying: boolean) => {
     setIsPlaying(isPlaying);
-    setIsRecording(isPlaying);
+    // setIsRecording(isPlaying);
     Object.values(playersRef.current).forEach((audio) => {
       if (
         isPlaying &&
-        tracks.find((track) => track.url === audio.src.split('3000').pop()) &&
-        longestTrack?.url !== audio.src.split('3000').pop()
+        tracks.find((track) => track.url === audio.src) &&
+        longestTrack?.url !== audio.src
       ) {
         // console.log('play', audio.src.split('3000').pop(), longestTrack?.url);
         audio.play();
@@ -115,11 +91,9 @@ export default function MultiAudioPlayer() {
   };
 
   const handleSeek = (time: number) => {
-    if (isRecording) return;
-
     Object.values(playersRef.current).forEach((audio) => {
       audio.currentTime = time;
-      if (longestTrack?.url !== audio.src.split('3000').pop()) {
+      if (longestTrack?.url !== audio.src) {
         if (isPlaying) {
           audio.play();
         } else {
@@ -129,30 +103,27 @@ export default function MultiAudioPlayer() {
     });
   };
 
-  const headerTracks = (
-    <>
-      {tracks.length === 0 ? (
-        <Button onClick={() => setCount(!count)}>Reset</Button>
-      ) : (
-        <>
-          {tracks.map((track) => (
-            <Button
-              key={track.id}
-              onClick={() => toggleTrack(track.id, track.url, track.name)}
-              disabled={isPlaying}
-              style={{ marginRight: '8px' }}
-            >
-              <span>{track.name}</span>
-              <DeleteTwoTone
-                twoToneColor={'#FF1616'}
-                style={{ opacity: isPlaying ? 0.4 : 1 }}
-              />
-            </Button>
-          ))}
-        </>
-      )}
-    </>
-  );
+  // const headerTracks = (
+  //   <>
+  //     <Button onClick={() => console.log(tracks)}>console.log(tracks)</Button>
+  //     <>
+  //       {tracks.map((track) => (
+  //         <Button
+  //           key={track.id}
+  //           onClick={() => toggleTrack(track.id, track.url, track.name)}
+  //           disabled={isPlaying}
+  //           style={{ marginRight: '8px' }}
+  //         >
+  //           <span>{track.name}</span>
+  //           <DeleteTwoTone
+  //             twoToneColor={'#FF1616'}
+  //             style={{ opacity: isPlaying ? 0.4 : 1 }}
+  //           />
+  //         </Button>
+  //       ))}
+  //     </>
+  //   </>
+  // );
 
   return (
     <div
@@ -180,8 +151,8 @@ export default function MultiAudioPlayer() {
       >
         <Recorder />
         <AudioPlayer
-          header={headerTracks}
-          style={{ height: '100%', display: 'block' }}
+          // header={headerTracks}
+          style={{ height: '100%', display: 'block', minHeight: '100px' }}
         />
       </div>
       <div
@@ -210,11 +181,14 @@ export default function MultiAudioPlayer() {
             onSeeked={(e) =>
               handleSeek((e.target as HTMLAudioElement).currentTime)
             }
-            header={headerTracks}
+            // header={headerTracks}
             style={
               track.id === longestTrack?.id
-                ? { height: '100%', display: 'block' }
+                ? { height: '100%', display: 'block', minHeight: '100px' }
                 : { height: '100%', display: 'none' }
+            }
+            onListen={(e) =>
+              setCurrentTime((e.target as HTMLAudioElement).currentTime)
             }
           />
         ))}
