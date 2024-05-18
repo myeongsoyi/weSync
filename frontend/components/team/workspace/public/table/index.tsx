@@ -1,7 +1,7 @@
 'use client';
 
 // import React, { useEffect } from 'react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Tag, Button, Checkbox } from 'antd';
 import { useSingleAudioStore } from '@/store/singleAudioStore';
 import { useMultiAudioStore } from '@/store/multiAudioStore';
@@ -11,66 +11,43 @@ import {
   CommentOutlined,
 } from '@ant-design/icons';
 import CommentModal from '../../comment';
+import { useParams } from 'next/navigation';
+import { getTeamRecordsAll } from '@/services/team/workspace';
+import { RecordAll } from '@/types/record';
 
-interface IParams {
-  records: {
-    id: number;
-    song: {
-      id: number;
-      name: string;
-      url: string;
-    };
-    singer: string;
-    position: {
-      name: string;
-      color: string;
-    };
-    title: string;
-    runTime: number;
-    dateTime: {
-      date: string;
-      time: string;
-    };
-  }[];
-}
 
-interface IRecord {
-    id: number;
-    song: {
-      id: number;
-      name: string;
-      url: string;
-    };
-    singer: string;
-    position: {
-      name: string;
-      color: string;
-    };
-    title: string;
-    runTime: number;
-    dateTime: {
-      date: string;
-      time: string;
-    };
-}
+export default function PublicListRecord() {
+  const [success, setSuccess] = useState<RecordAll['success']>(true);
+  const [records, setRecords] = useState<RecordAll['data']>([]);
+  const [error, setError] = useState<RecordAll['error']>(null);
+  const { teamId } = useParams();
 
-interface ISong {
-  id: number;
-  name: string;
-  url: string;
-}
+  useEffect(() => {
+    const fetchRecords = async () => {
+      const response = await getTeamRecordsAll(teamId as string);
+      console.log(response);
+      if (response.success) {
+        setSuccess(response.success);
+        setRecords(response.data);
+        setError(response.error);
+      } else {
+        setSuccess(response.success);
+        setError(response.error);
+      }
+    };
+    fetchRecords();
+  }, [teamId]);
 
-export default function PublicListRecord({ records }: IParams) {
   const { tracks, toggleTrack, isPlaying } = useMultiAudioStore();
   const { currentId, playing, togglePlayPause, setCurrentTrack, stopTrack } =
     useSingleAudioStore();
+
   const { Column } = Table;
-  // const { Column, ColumnGroup } = Table;
-  // console.log(records);
-  function togglePlay(song: ISong) {
+
+  function togglePlay(song: RecordAll['data'][number]) {
     setCurrentTrack('', 0);
-    if (currentId !== song.id) {
-      setCurrentTrack(song.url, song.id);
+    if (currentId !== song.recordId) {
+      setCurrentTrack(song.recordUrl, song.recordId);
     } else {
       togglePlayPause();
     }
@@ -91,36 +68,51 @@ export default function PublicListRecord({ records }: IParams) {
 
   // 포지션 필터링 임시 함수
   const positionFilters = Array.from(
-    new Set(records.map((record) => record.position.name)),
+    new Set(records?.map((record) => record.positionName)),
   ).map((position) => ({
     text: position,
     value: position,
   }));
+
+  if (!success) {
+    return (
+      <div>
+        <h2>에러 발생</h2>
+        <h3>{error?.errorMessage}</h3>
+      </div>
+    );
+  } else if (records === null) {
+    return (
+      <div>
+        <h2>데이터가 없습니다.</h2>
+      </div>
+    );
+  }
 
   return (
     <>
 <Table dataSource={records} pagination={false} rowKey="id">
   <Column
     title=""
-    dataIndex="song"
-    key="song"
-    render={(song: ISong, record: IRecord) => (  // record 매개변수 추가
+    dataIndex="recordId"
+    key="recordId"
+    render={(recordId, record:  RecordAll['data'][number]) => (  // record 매개변수 추가
       <div className="flex items-center">
         <Checkbox
           onChange={() => [
-            toggleTrack(song.id, song.url, song.name),
+            toggleTrack(recordId, record.recordUrl, record.title),
             stopTrack(),
           ]}
-          checked={tracks.some((t) => t.id === song.id)}
+          checked={tracks.some((t) => t.id === recordId)}
           style={{ marginRight: '8px' }}
           disabled={isPlaying}
         />
         <Button
-          onClick={() => togglePlay(song)}
+          onClick={() => togglePlay(record)}
           className="m-auto"
           type="text"
           icon={
-            currentId === song.id && playing ? (
+            currentId === recordId && playing ? (
               <PauseCircleOutlined style={{ fontSize: 28 }} />
             ) : (
               <PlayCircleOutlined style={{ fontSize: 28 }} />
@@ -129,7 +121,7 @@ export default function PublicListRecord({ records }: IParams) {
           style={{ height: '36px', width: '36px' }}
         />
         <Button
-          onClick={() => handleOpenCommentModal(song.id, record.title)}
+          onClick={() => handleOpenCommentModal(recordId, record.title)}
           className="m-auto"
           type="text"
           icon={<CommentOutlined style={{ fontSize: 28 }} />}
@@ -140,23 +132,23 @@ export default function PublicListRecord({ records }: IParams) {
         />
         <Column
           title="이름"
-          dataIndex="singer"
+          dataIndex="nickname"
           key="이름"
-          sorter={(a: { singer: string }, b: { singer: string }) =>
-            a.singer.localeCompare(b.singer)
+          sorter={(a: { nickname: string }, b: { nickname: string }) =>
+            a.nickname.localeCompare(b.nickname)
           }
           render={(singer) => <p className="whitespace-nowrap">{singer}</p>}
         />
         <Column
           title="포지션"
-          dataIndex="position"
+          dataIndex="positionName"
           key="포지션"
           sorter={(
-            a: { position: { name: string } },
-            b: { position: { name: string } },
-          ) => a.position.name.localeCompare(b.position.name)}
+            a: { positionName: string },
+            b: { positionName: string },
+          ) => a.positionName.localeCompare(b.positionName)}
           filters={positionFilters}
-          onFilter={(value, record) => record.position.name === value}
+          onFilter={(value, record) => record.positionName === value}
           render={(position) => (
             <>
               <Tag
@@ -174,10 +166,10 @@ export default function PublicListRecord({ records }: IParams) {
         <Column title="제목" dataIndex="title" key="title" />
         <Column
           title="길이"
-          dataIndex="runTime"
-          key="runTime"
-          sorter={(a: { runTime: number }, b: { runTime: number }) =>
-            a.runTime - b.runTime
+          dataIndex="startAt"
+          key="startAt"
+          sorter={(a: { startAt: number, endAt: number }, b: { startAt: number, endAt: number }) =>
+            (a.endAt - a.startAt) - (b.endAt - b.startAt)
           }
           render={(runTime) => {
             const minutes = Math.floor(runTime / 60);
@@ -194,12 +186,13 @@ export default function PublicListRecord({ records }: IParams) {
         />
         <Column
           title="일시"
-          dataIndex="dateTime"
-          key="dateTime"
-          render={(dateTime) => (
+          dataIndex="createAt"
+          key="createAt"
+          render={(createAt) => (
+            // 향후 포매팅 예정
             <>
-              <Tag color="blue">{dateTime.date}</Tag>
-              <Tag color="green">{dateTime.time}</Tag>
+              <Tag color="blue">{createAt}</Tag>
+              <Tag color="green">{createAt}</Tag>
             </>
           )}
         />
