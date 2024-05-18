@@ -41,7 +41,7 @@ def upload_score(team_id: int, file: UploadFile = File(...), db: Session = Depen
 
 @rScore.get('/{team_id}', tags = ['score'], response_model=BaseResponse)
 def get_scores(team_id: int, db: Session = Depends(get_db)):
-    scoreData = db.query(Score.score_url, Accompaniment.accompaniment_url, Position.position_name, Color.color_code)\
+    scoreData = db.query(Score.score_id, Score.score_url, Accompaniment.accompaniment_url, Position.position_name, Color.color_code)\
         .outerjoin(Accompaniment, Score.score_id == Accompaniment.score_id)\
         .outerjoin(Position, Score.position_id == Position.position_id)\
         .outerjoin(Color, Position.color_id == Color.color_id)\
@@ -52,10 +52,11 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
     score_dicts = []
     for row in scoreData:
         row_dict = {
-            "score_url": row[0],
-            "accompaniment_url": row[1],
-            "position_name": row[2],
-            "color_code": row[3]
+            "score_id": row[0],
+            "score_url": row[1],
+            "accompaniment_url": row[2],
+            "position_name": row[3],
+            "color_code": row[4]
         }
         score_dicts.append(row_dict)
 
