@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, List, Tag, Button, message, Tooltip } from 'antd';
 import { ExclamationCircleOutlined, PlusCircleOutlined, FormOutlined, DeleteOutlined, CheckOutlined } from '@ant-design/icons';
-import { getTeamPosition, deleteTeamPosition, putMemberPosition } from '@/services/team/information';
+import { getTeamPosition, deleteTeamPosition, 
+  // putMemberPosition 
+} from '@/services/team/information';
 import { usePathname } from 'next/navigation';
 import UpdatePositionModal from '@/components/team/information/members/positionmodal/updatepositionmodal';
 import NewPositionModal from '@/components/team/information/members/positionmodal/newpositionmodal';
