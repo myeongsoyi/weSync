@@ -4,8 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRecordAudioStore } from '@/store/recordAudioStore';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import { Button } from 'antd';
-import { DeleteTwoTone } from '@ant-design/icons';
 import Recorder from '@/components/team/record/recorder';
 
 interface ITrack {
@@ -23,8 +21,8 @@ export default function RecordAudioPlayer() {
   const {
     tracks,
     isPlaying,
-    isRecording,
-    toggleTrack,
+    // isRecording,
+    // toggleTrack,
     setIsPlaying,
     setCurrentTime,
   } = useRecordAudioStore();

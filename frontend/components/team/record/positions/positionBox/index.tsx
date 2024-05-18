@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
