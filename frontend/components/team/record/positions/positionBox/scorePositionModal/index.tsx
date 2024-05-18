@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import UpdatePositionModal from '@/components/team/information/members/positionmodal/updatepositionmodal';
 import NewPositionModal from '@/components/team/information/members/positionmodal/newpositionmodal';
 import { useTeamPositionStore } from '@/store/teamPositionStore';
+import { postScoreGetPosition } from '@/services/team/record';
 
 interface Position {
   positionId: number;
@@ -124,21 +125,22 @@ export default function PositionModal({
       message.error('포지션을 선택해 주세요.');
       return;
     } else if (selectedMemberId !== null) {
-      const response = await putMemberPosition(selectedMemberId, selectedPosition.positionId);
+      console.warn(selectedMemberId, selectedPosition.positionId)
+      const response = await postScoreGetPosition(selectedMemberId, selectedPosition.positionId);
       if (response.success) {
-        message.success('포지션 변경이 완료되었습니다.');
+        message.success('포지션 할당이 완료되었습니다.');
         onOk(selectedPosition.positionName, `#${selectedPosition.colorCode}`);
       } else {
-        message.error('포지션 변경에 실패했습니다.');
+        message.error('포지션 할당에 실패했습니다.');
       }
     } else {
-      message.error('멤버를 다시 선택해 주세요.');
+      message.error('악보를 다시 선택해 주세요.');
     }
   };
 
   return (
     <Modal
-      title={<div style={{ textAlign: 'center', fontSize: '20px' }}>포지션 변경하기</div>}
+      title={<div style={{ textAlign: 'center', fontSize: '20px' }}>포지션 할당하기</div>}
       open={open}
       onOk={handleOk}
       onCancel={onCancel}
