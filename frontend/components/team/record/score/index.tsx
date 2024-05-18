@@ -10,7 +10,7 @@ import {
 } from '@/services/team/record';
 import Swal from 'sweetalert2';
 import { ScoreResponse } from '@/types/record';
-import { FloatButton, message } from 'antd';
+import { FloatButton, Tooltip, message } from 'antd';
 import {
   CloudUploadOutlined,
   DeleteOutlined,
@@ -28,7 +28,7 @@ export default function RecordScore({ teamId }: IParams) {
   const [error, setError] = useState<ScoreResponse['error']>(null);
   const [scoreUrl, setScoreUrl] = useState<string>('');
 
-  const { scoreIndex, setScoreIndex } = useRecordAudioStore((state) => ({
+  const { scoreIndex } = useRecordAudioStore((state) => ({
     scoreIndex: state.scoreIndex,
     setScoreIndex: state.setScoreIndex,
   }));
@@ -141,9 +141,11 @@ export default function RecordScore({ teamId }: IParams) {
       <FloatButton.Group
         trigger="click"
         type="primary"
-        style={{ right: 24, bottom: '18vh', zIndex: 3000 }}
+        style={{ right: 32, bottom: '18vh', zIndex: 3000 }}
         icon={<MenuOutlined />}
       >
+        {score.length > 0 && (
+          <Tooltip title="악보 삭제">
         <FloatButton
           icon={
             <DeleteOutlined
@@ -152,10 +154,14 @@ export default function RecordScore({ teamId }: IParams) {
             />
           }
         />
+      </Tooltip>
+        )}
+        <Tooltip title="악보 업로드">
         <FloatButton icon={<CloudUploadOutlined />} onClick={handleUpload} />
+      </Tooltip>
       </FloatButton.Group>
       {score.length === 0 ? (
-        <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
+        <h2>우측 하단 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
       ) : (
         <>
           <Image

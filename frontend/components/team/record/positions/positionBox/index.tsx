@@ -8,6 +8,7 @@ import { Button, Slider, Tag, message } from 'antd';
 import { getScoreData, postAddScorePosition } from '@/services/team/record';
 import { ScoreResponse } from '@/types/record';
 import { useRecordAudioStore } from '@/store/recordAudioStore';
+import ScorePositionModal from './scorePositionModal';
 
 interface IParams {
   teamId: string;
@@ -20,11 +21,13 @@ interface IVolume {
 }
 
 export default function scoreBox({ teamId }: IParams) {
-  // const [isMute, setIsMute] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [volume, setVolume] = useState<IVolume[]>([]);
   const [success, setSuccess] = useState<ScoreResponse['success']>(false);
   const [score, setScore] = useState<ScoreResponse['data']>([]);
   const [error, setError] = useState<ScoreResponse['error']>(null);
+  const [scorePosition, setScorePosition] = useState<number|null>(null);
+
   const { scoreIndex, setScoreIndex } = useRecordAudioStore((state) => ({
     scoreIndex: state.scoreIndex,
     setScoreIndex: state.setScoreIndex,
@@ -55,9 +58,9 @@ export default function scoreBox({ teamId }: IParams) {
     fetchScore();
   }, []);
 
-  useEffect(() => {
-    console.log(scoreIndex);
-  }, [scoreIndex]);
+  // useEffect(() => {
+  //   console.log(scoreIndex);
+  // }, [scoreIndex]);
 
   function changeVolume(index: number, value: number) {
     setVolume((prev) => {
@@ -86,8 +89,23 @@ export default function scoreBox({ teamId }: IParams) {
     }
   };
 
+  const handleModalOk = () => {
+    setModalVisible(false);
+  };
+
+  const handleModalCancel = () => {
+    setModalVisible(false);
+  };
+
+  const handleTagClick = (index: number) => {
+    setScorePosition(index);
+    setModalVisible(true);
+  }
+
   if (!success) {
     return <p>{error?.errorMessage}</p>;
+  } else if (score.length === 0) {
+    return <p></p>;
   }
 
   return (
@@ -157,11 +175,12 @@ export default function scoreBox({ teamId }: IParams) {
                   textAlign: 'center',
                   marginTop: 10,
                 }}
+                onClick={()=>handleTagClick(index)}
               >
                 {score.position_name}
               </Tag>
             ) : (
-              <p className="text-center">
+              <p className="text-center" onClick={()=>handleTagClick(index)}>
                 <EditOutlined /> 포지션 할당
               </p>
             )}
@@ -174,16 +193,22 @@ export default function scoreBox({ teamId }: IParams) {
         </div>
       ))}
       <>
-      <div className={styles.add_controller}>
-        <Button
-          onClick={()=>clickAddPosition(teamId, score.length)}
-          type="text"
-          style={{ height: 'auto', padding: '0.5rem auto' }}
-        >
-          <h2>포지션 추가</h2>
-        </Button>
-      </div>
+        <div className={styles.add_controller}>
+          <Button
+            onClick={() => clickAddPosition(teamId, score.length)}
+            type="text"
+            style={{ height: 'auto', padding: '0.5rem auto' }}
+          >
+            <h2>포지션 추가</h2>
+          </Button>
+        </div>
       </>
+      <ScorePositionModal
+        open={modalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        selectedMemberId={scoreIndex}
+      />
     </div>
   );
 }
