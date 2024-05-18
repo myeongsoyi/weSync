@@ -29,8 +29,11 @@ export default function RecordAudioController() {
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
+  const [startAt, setStartAt] = useState<number>(0);
+  const [endAt, setEndAt] = useState<number>(0);
+
   // const { tracks, isPlaying, isRecording, setIsRecording, setTracks, toggleTrack, setIsPlaying } =
-  const { isRecording, setIsRecording } =
+  const { isRecording, setIsRecording, currentTime } =
     useRecordAudioStore();
 
   useEffect(() => {
@@ -93,6 +96,7 @@ export default function RecordAudioController() {
   const startRecording = () => {
     mediaRecorder?.start();
     setIsRecording(true);
+    setStartAt(currentTime);
     const startTime = Date.now();
     const newTimer = setInterval(() => {
       setRecordingTime(Date.now() - startTime);
@@ -103,6 +107,9 @@ export default function RecordAudioController() {
   const stopRecording = () => {
     mediaRecorder?.stop();
     setIsRecording(false);
+    setEndAt(currentTime);
+    console.log('startAt:', startAt, 'endAt:', endAt);
+    console.log(currentTime)
     if (timer) clearInterval(timer);
     setRecordingTime(0);
   };

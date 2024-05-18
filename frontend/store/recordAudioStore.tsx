@@ -45,7 +45,9 @@ export const useRecordAudioStore = create<TrackState>((set, get) => ({
     // tracks에 id가 있는지 확인하고 있으면 제거하고 없으면 추가
     const newTracks = get().tracks.some(track => track.id === id)
       ? get().tracks.filter(track => track.id !== id)
-      : [...get().tracks, { id, url, name, playing: false, volume: 0.3 }];
+      : [...get().tracks, { id, url, name, playing: false, volume: 0.5 }];
+    // id로 newTracks를 정렬
+    newTracks.sort((a, b) => a.id - b.id);
     set({ tracks: newTracks });
   },
   togglePlayPauseOne: (id: number,) => {
