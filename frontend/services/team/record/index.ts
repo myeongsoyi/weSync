@@ -14,31 +14,33 @@ export async function postSaveRecord(
   endAt: number,
   file: File,
 ) {
-  const formData = new FormData();
-  const baseURL = process.env.NEXT_PUBLIC_API_URL;
-  formData.append('title', title);
-  formData.append('startAt', startAt.toString());
-  formData.append('endAt', endAt.toString());
-  if (file) {
-    formData.append('file', file);
-  }
+  // const formData = new FormData();
+  // const baseURL = process.env.NEXT_PUBLIC_API_URL;
+  // formData.append('title', title);
+  // formData.append('startAt', startAt.toString());
+  // formData.append('endAt', endAt.toString());
+  // if (file) {
+  //   formData.append('file', file);
+  // }
 
-  const accessToken = await getAccessToken();
-  const response = await fetch(`${baseURL}/records/${scoreId}/`, {
-    method: 'POST',
-    headers: {
-      // "content-type": "multipart/form-data",
-      Authorization: accessToken ?? '',
-    },
-    body: formData,
-  });
-  // json 파싱 분기 처리
-  try {
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    return response;
-  }
+  // const accessToken = await getAccessToken();
+  // const response = await fetch(`${baseURL}/records/${scoreId}/`, {
+  //   method: 'POST',
+  //   headers: {
+  //     // "content-type": "multipart/form-data",
+  //     Authorization: accessToken ?? '',
+  //   },
+  //   body: formData,
+  // });
+  // // json 파싱 분기 처리
+  // try {
+  //   const json = await response.json();
+  //   return json;
+  // } catch (error) {
+  //   return response;
+  // }
+  console.log('postSaveRecord', scoreId, title, startAt, endAt, file);
+  return {success: true, data: [], error: null};
 }
 
 export async function putChangeRecordPublic(recordId: number) {

@@ -1,6 +1,7 @@
 export interface ScoreResponse {
   success: boolean;
   data: {
+    score_id: number;
     score_url: string;
     accompaniment_url: string;
     position_name: string | null;

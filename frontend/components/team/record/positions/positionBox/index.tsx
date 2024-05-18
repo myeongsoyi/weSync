@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
@@ -18,6 +18,7 @@ interface IVolume {
   index: number;
   volume: number;
   isMute: boolean;
+  isAudio: boolean;
 }
 
 export default function scoreBox({ teamId }: IParams) {
@@ -28,9 +29,12 @@ export default function scoreBox({ teamId }: IParams) {
   const [error, setError] = useState<ScoreResponse['error']>(null);
   const [scorePosition, setScorePosition] = useState<number|null>(null);
 
-  const { scoreIndex, setScoreIndex } = useRecordAudioStore((state) => ({
+  const { scoreIndex, setScoreIndex, setTracks, toggleTrack, setVolumeTrack } = useRecordAudioStore((state) => ({
+    setTracks: state.setTracks,
     scoreIndex: state.scoreIndex,
     setScoreIndex: state.setScoreIndex,
+    toggleTrack: state.toggleTrack,
+    setVolumeTrack: state.setVolume,
   }));
 
   useEffect(() => {
@@ -43,10 +47,11 @@ export default function scoreBox({ teamId }: IParams) {
         setError(response.error);
         setVolume(
           response.data.map(
-            (_: ScoreResponse['data'][number], index: number) => ({
+            (res: ScoreResponse['data'][number], index: number) => ({
               index,
-              volume: 30,
-              isMute: false,
+              volume: res.accompaniment_url ? 50 : 0,
+              isMute: res.accompaniment_url ? false : true,
+              isAudio: res.accompaniment_url ? true : false,
             }),
           ),
         );
@@ -57,6 +62,21 @@ export default function scoreBox({ teamId }: IParams) {
     };
     fetchScore();
   }, []);
+
+  useEffect(() => {
+    // 나중에 index를 score_id로 변경할 것
+    const validScores = score.filter((item) => item.accompaniment_url !== null);
+
+    setTracks(
+      validScores.map((item, index) => ({
+        id: item.score_id as number,
+        url: item.accompaniment_url as string,
+        name: item.position_name ?? `미할당 ${index + 1}`,
+        playing: false,
+        volume: 0.5,
+      }))
+    );
+  }, [score]);
 
   // useEffect(() => {
   //   console.log(scoreIndex);
@@ -69,6 +89,8 @@ export default function scoreBox({ teamId }: IParams) {
       newVolume[index].isMute = false;
       return newVolume;
     });
+    const id = score[index].score_id;
+    setVolumeTrack(id, value/100);
   }
 
   function clickMute(index: number) {
@@ -78,6 +100,10 @@ export default function scoreBox({ teamId }: IParams) {
       newVolume[index].isMute = !isMute;
       return newVolume;
     });
+    const id = score[index].score_id;
+    const url = score[index].accompaniment_url;
+    const name = score[index].position_name ?? `미할당 ${index + 1}`;
+    toggleTrack(id, url, name);
   }
 
   const clickAddPosition = async (teamId: string, partNum: number) => {
@@ -97,8 +123,8 @@ export default function scoreBox({ teamId }: IParams) {
     setModalVisible(false);
   };
 
-  const handleTagClick = (index: number) => {
-    setScorePosition(index);
+  const handleTagClick = (score_id: number) => {
+    setScorePosition(score_id);
     setModalVisible(true);
   }
 
@@ -123,6 +149,7 @@ export default function scoreBox({ teamId }: IParams) {
                 height: 'auto',
                 zIndex: 10,
               }}
+              disabled={volume[index].isAudio ? false : true}
             >
               {!volume[index].isMute ? (
                 <Image
@@ -152,6 +179,7 @@ export default function scoreBox({ teamId }: IParams) {
                 height: 'auto',
                 zIndex: 10,
               }}
+              // disabled={volume[index].isAudio ? false : true}
             >
               <CheckCircleOutlined
                 style={
@@ -174,20 +202,22 @@ export default function scoreBox({ teamId }: IParams) {
                   padding: 4,
                   textAlign: 'center',
                   marginTop: 10,
+                  cursor: 'pointer',
                 }}
-                onClick={()=>handleTagClick(index)}
+                onClick={()=>handleTagClick(score.score_id)}
               >
                 {score.position_name}
               </Tag>
             ) : (
-              <p className="text-center" onClick={()=>handleTagClick(index)}>
+              <p className="text-center cursor-pointer hover:bg-slate-100" onClick={()=>handleTagClick(score.score_id)}>
                 <EditOutlined /> 포지션 할당
               </p>
             )}
             <Slider
-              defaultValue={30}
+              defaultValue={50}
               value={volume[index].isMute ? 0 : volume[index].volume}
               onChange={(value) => changeVolume(index, value)}
+              disabled={volume[index].isAudio ? false : true}
             ></Slider>
           </div>
         </div>
@@ -207,7 +237,7 @@ export default function scoreBox({ teamId }: IParams) {
         open={modalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
-        selectedMemberId={scoreIndex}
+        selectedMemberId={scorePosition}
       />
     </div>
   );

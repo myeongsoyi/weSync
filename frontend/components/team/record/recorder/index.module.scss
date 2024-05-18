@@ -19,6 +19,8 @@
 .container { /* 이 클래스는 .recorder의 부모에 추가 */
   display: flex;
   justify-content: center; /* 가로 중앙 정렬 */
+  background-color: rgba(0, 0, 0, 0.1);
+  // margin-bottom: rem(10);
 }
 
 .record__item {
