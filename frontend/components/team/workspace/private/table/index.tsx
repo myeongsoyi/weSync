@@ -2,45 +2,24 @@
 
 // import AudioPlayer from 'react-h5-audio-player';
 // import 'react-h5-audio-player/lib/styles.css';
-import { Table, Tag, Button } from 'antd';
+import { Table, Tag, Button, message } from 'antd';
 import { useSingleAudioStore } from '@/store/singleAudioStore';
 import {
   CommentOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons';
-// import H5AudioPlayer from 'react-h5-audio-player';
-// import { getMainRecords } from '@/services/home';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { getTeamRecordsMy } from '@/services/team/workspace';
+import { RecordMy } from '@/types/record';
 
-interface IParams {
-  records: {
-    id: number;
-    song: {
-      id: number;
-      name: string;
-      url: string;
-    };
-    singer: string;
-    position: {
-      name: string;
-      color: string;
-    };
-    title: string;
-    runTime: number;
-    dateTime: {
-      date: string;
-      time: string;
-    };
-  }[];
-}
+export default function PrivateListRecord() {
+  const [success, setSuccess] = useState<RecordMy['success']>(true);
+  const [records, setRecords] = useState<RecordMy['data']>([]);
+  const [error, setError] = useState<RecordMy['error']>(null);
+  const { teamId } = useParams();
 
-interface ISong {
-  id: number;
-  name: string;
-  url: string;
-}
-
-export default function PrivateListRecord({ records }: IParams) {
   // const { currentId, playing, togglePlayPause, setCurrentTrack } =
   //   useSingleAudioStore((state) => ({
   //     currentId: state.currentId,
@@ -51,13 +30,29 @@ export default function PrivateListRecord({ records }: IParams) {
   const { currentId, playing, togglePlayPause, setCurrentTrack } =
     useSingleAudioStore();
 
-  function togglePlay(song: ISong) {
-    if (currentId !== song.id) {
-      setCurrentTrack(song.url, song.id);
+  function togglePlay(song: RecordMy['data'][number]) {
+    if (currentId !== song.recordId) {
+      setCurrentTrack(song.recordUrl, song.recordId);
     } else {
       togglePlayPause();
     }
   }
+
+  useEffect(() => {
+    const fetchRecords = async () => {
+      const response = await getTeamRecordsMy(teamId as string);
+      console.log(response);
+      if (response.success) {
+        setSuccess(response.success);
+        setRecords(response.data);
+        setError(response.error);
+      } else {
+        setSuccess(response.success);
+        setError(response.error);
+      }
+    };
+    fetchRecords();
+  }, []);
 
   const { Column } = Table;
   // const { Column, ColumnGroup } = Table;
@@ -65,11 +60,26 @@ export default function PrivateListRecord({ records }: IParams) {
 
   // 포지션 필터링 임시 함수
   const positionFilters = Array.from(
-    new Set(records.map((record) => record.position.name)),
+    new Set(records?.map((record) => record.positionName)),
   ).map((position) => ({
     text: position,
     value: position,
   }));
+
+  if (!success) {
+    return (
+      <div>
+        <h2>에러 발생</h2>
+        <h3>{error?.errorMessage}</h3>
+      </div>
+    );
+  } else if (records === null) {
+    return (
+      <div>
+        <h2>데이터가 없습니다.</h2>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -131,7 +141,9 @@ export default function PrivateListRecord({ records }: IParams) {
           title="길이"
           dataIndex="runTime"
           key="runTime"
-          sorter={(a: { runTime: number }, b: { runTime: number }) => a.runTime - b.runTime}
+          sorter={(a: { runTime: number }, b: { runTime: number }) =>
+            a.runTime - b.runTime
+          }
           render={(runTime) => {
             const minutes = Math.floor(runTime / 60);
             const seconds = runTime % 60;

@@ -1,5 +1,4 @@
 import APIModule from '@/utils/apiModule';
-import LocalStorage from '@/utils/localStorage';
 import { getAccessToken } from '@/utils/getAccessToken';
 
 export interface IRecord {
@@ -15,7 +14,6 @@ export async function postSaveRecord(
   endAt: number,
   file: File,
 ) {
-  const teamUserId = LocalStorage.getItem('memberId');
   const formData = new FormData();
   const baseURL = process.env.NEXT_PUBLIC_API_URL;
   formData.append('title', title);
@@ -26,7 +24,7 @@ export async function postSaveRecord(
   }
 
   const accessToken = await getAccessToken();
-  const response = await fetch(`${baseURL}/records/${scoreId}/${teamUserId}`, {
+  const response = await fetch(`${baseURL}/records/${scoreId}/`, {
     method: 'POST',
     headers: {
       // "content-type": "multipart/form-data",
@@ -54,18 +52,13 @@ export async function putChangeRecordPublic(recordId: number) {
 }
 
 export async function deleteRecord(recordId: number) {
-//   const response = await APIModule({
-//     action: `/records/${recordId}/`,
-//     method: 'DELETE',
-//     data: null,
-//   });
+  const response = await APIModule({
+    action: `/records/${recordId}/`,
+    method: 'DELETE',
+    data: null,
+  });
 
-//   return response;
-    return {
-        success: true,
-        data: [],
-        error: null,
-    };
+  return response;
 }
 
 export async function postScoreGetPosition(scoreId: number, positionId: number) {
