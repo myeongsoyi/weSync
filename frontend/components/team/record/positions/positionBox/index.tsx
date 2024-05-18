@@ -29,12 +29,13 @@ export default function scoreBox({ teamId }: IParams) {
   const [error, setError] = useState<ScoreResponse['error']>(null);
   const [scorePosition, setScorePosition] = useState<number|null>(null);
 
-  const { scoreIndex, setScoreIndex, setTracks, toggleTrack, setVolumeTrack } = useRecordAudioStore((state) => ({
+  const { scoreIndex, setScoreIndex, setTracks, toggleTrack, setVolumeTrack, setScoreId } = useRecordAudioStore((state) => ({
     setTracks: state.setTracks,
     scoreIndex: state.scoreIndex,
     setScoreIndex: state.setScoreIndex,
     toggleTrack: state.toggleTrack,
     setVolumeTrack: state.setVolume,
+    setScoreId: state.setScoreId,
   }));
 
   useEffect(() => {
@@ -55,6 +56,7 @@ export default function scoreBox({ teamId }: IParams) {
             }),
           ),
         );
+        setScoreId(response.data[0].score_id);
       } else {
         setSuccess(response.success);
         setError(response.error);
@@ -170,7 +172,7 @@ export default function scoreBox({ teamId }: IParams) {
               )}
             </Button>
             <Button
-              onClick={() => setScoreIndex(index)}
+              onClick={() => [setScoreIndex(index),setScoreId(score.score_id)]}
               type="text"
               style={{
                 padding: '1px',

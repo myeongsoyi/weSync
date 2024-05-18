@@ -6,6 +6,23 @@ export interface IRecord {
   name: string | null;
   color: string | null;
 }
+function formatNumber(num: number): string {
+  // 숫자를 문자열로 변환
+  const numString = num.toString();
+
+  // 소수점 위치 찾기
+  const decimalIndex = numString.indexOf('.');
+
+  // 소수점이 있는 경우
+  if (decimalIndex !== -1) {
+    const integerPart = numString.substring(0, decimalIndex); // 정수 부분
+    const decimalPart = numString.substring(decimalIndex + 1); // 소수 부분
+    return `${integerPart}:${decimalPart}`;
+  } else {
+    // 소수점이 없는 경우 ':0' 추가
+    return `${numString}:0`;
+  }
+}
 
 export async function postSaveRecord(
   scoreId: number,
@@ -14,38 +31,47 @@ export async function postSaveRecord(
   endAt: number,
   file: File,
 ) {
-  // const formData = new FormData();
-  // const baseURL = process.env.NEXT_PUBLIC_API_URL;
-  // formData.append('title', title);
-  // formData.append('startAt', startAt.toString());
-  // formData.append('endAt', endAt.toString());
-  // if (file) {
-  //   formData.append('file', file);
-  // }
+  const newStartAt = formatNumber(startAt);
+  const newEndAt = formatNumber(endAt);
 
-  // const accessToken = await getAccessToken();
-  // const response = await fetch(`${baseURL}/records/${scoreId}/`, {
-  //   method: 'POST',
-  //   headers: {
-  //     // "content-type": "multipart/form-data",
-  //     Authorization: accessToken ?? '',
-  //   },
-  //   body: formData,
-  // });
-  // // json 파싱 분기 처리
-  // try {
-  //   const json = await response.json();
-  //   return json;
-  // } catch (error) {
-  //   return response;
-  // }
-  console.log('postSaveRecord', scoreId, title, startAt, endAt, file);
-  return {success: true, data: [], error: null};
+  const data = {
+    title,
+    startAt: newStartAt,
+    endAt: newEndAt,
+  };
+
+  const formData = new FormData();
+  const baseURL = process.env.NEXT_PUBLIC_API_URL;
+
+  formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
+
+  if (file) {
+    formData.append('file', file);
+  }
+
+  const accessToken = await getAccessToken();
+  const response = await fetch(`${baseURL}/records/${scoreId}`, {
+    method: 'POST',
+    headers: {
+      // "content-type": "multipart/form-data",
+      Authorization: accessToken ?? '',
+    },
+    body: formData,
+  });
+  // json 파싱 분기 처리
+  try {
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return response;
+  }
+  // console.log('postSaveRecord', scoreId, title, startAt, endAt, file);
+  // return {success: true, data: [], error: {errorCode: '', errorMessage: ''}};
 }
 
 export async function putChangeRecordPublic(recordId: number) {
   const response = await APIModule({
-    action: `/records/${recordId}/`,
+    action: `/records/${recordId}`,
     method: 'PUT',
     data: null,
   });
