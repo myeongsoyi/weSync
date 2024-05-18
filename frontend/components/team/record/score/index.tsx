@@ -10,12 +10,13 @@ import {
 } from '@/services/team/record';
 import Swal from 'sweetalert2';
 import { ScoreResponse } from '@/types/record';
-import { FloatButton } from 'antd';
+import { FloatButton, Tooltip, message } from 'antd';
 import {
   CloudUploadOutlined,
   DeleteOutlined,
   MenuOutlined,
 } from '@ant-design/icons';
+import { useRecordAudioStore } from '@/store/recordAudioStore';
 
 interface IParams {
   teamId: string;
@@ -25,6 +26,12 @@ export default function RecordScore({ teamId }: IParams) {
   const [success, setSuccess] = useState<ScoreResponse['success']>(false);
   const [score, setScore] = useState<ScoreResponse['data']>([]);
   const [error, setError] = useState<ScoreResponse['error']>(null);
+  const [scoreUrl, setScoreUrl] = useState<string>('');
+
+  const { scoreIndex } = useRecordAudioStore((state) => ({
+    scoreIndex: state.scoreIndex,
+    setScoreIndex: state.setScoreIndex,
+  }));
 
   useEffect(() => {
     const fetchScore = async () => {
@@ -41,6 +48,22 @@ export default function RecordScore({ teamId }: IParams) {
     };
     fetchScore();
   }, [teamId]);
+
+  useEffect(() => {
+    if (score !== undefined && score.length > 0) {
+      console.log(score[scoreIndex], score);
+      if (score[scoreIndex]?.score_url) {
+        setScoreUrl(score[scoreIndex].score_url);
+      } else {
+        message.warning('악보가 없습니다.');
+        if (!scoreUrl) {
+          setScoreUrl('/svgs/score.svg');
+        }
+      }
+    } else {
+      setScoreUrl('/svgs/score.svg');
+    }
+  }, [scoreIndex, score]);
 
   const handleUpload = async () => {
     Swal.fire({
@@ -118,9 +141,11 @@ export default function RecordScore({ teamId }: IParams) {
       <FloatButton.Group
         trigger="click"
         type="primary"
-        style={{ right: 24, bottom: '18vh', zIndex: 3000 }}
+        style={{ right: 32, bottom: '18vh', zIndex: 3000 }}
         icon={<MenuOutlined />}
       >
+        {score.length > 0 && (
+          <Tooltip title="악보 삭제">
         <FloatButton
           icon={
             <DeleteOutlined
@@ -129,13 +154,23 @@ export default function RecordScore({ teamId }: IParams) {
             />
           }
         />
+      </Tooltip>
+        )}
+        <Tooltip title="악보 업로드">
         <FloatButton icon={<CloudUploadOutlined />} onClick={handleUpload} />
+      </Tooltip>
       </FloatButton.Group>
       {score.length === 0 ? (
-        <h2>우측 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
+        <h2>우측 하단 버튼을 클릭하고 악보를 업로드 해주세요.</h2>
       ) : (
         <>
-          <Image src={'/svgs/score.svg'} alt="악보" width={200} height={200} />
+          <Image
+            src={scoreUrl}
+            alt="악보"
+            width={1000}
+            height={1000}
+            style={{ width: '100%' }}
+          />
         </>
       )}
     </div>

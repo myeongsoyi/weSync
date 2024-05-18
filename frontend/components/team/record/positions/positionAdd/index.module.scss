@@ -1,4 +1,4 @@
-.controller {
+.add_controller {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,14 +6,5 @@
     margin: 0 rem(4);
     border: 1.5px solid $color-gray;
     border-radius: rem(4);
-  }
-  
-  .box_slider {
-    width: 70%;
-    margin: auto 5%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 중앙 정렬 */
-    text-align: center; /* 텍스트 중앙 정렬 */
   }
   
