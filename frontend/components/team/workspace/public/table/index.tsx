@@ -207,6 +207,7 @@ export default function PublicListRecord() {
           }}
           songId={selectedSongId}
           songTitle={selectedSongTitle} // 제목을 전달
+          teamId={teamId as string}
         />
       )}
 
