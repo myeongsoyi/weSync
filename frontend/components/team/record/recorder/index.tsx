@@ -15,7 +15,6 @@ import { useRecordAudioStore } from '@/store/recordAudioStore';
 import { postSaveRecord } from '@/services/team/record';
 import Swal from 'sweetalert2';
 
-
 interface AudioBlobUrl {
   blob: Blob;
   url: string;
@@ -62,36 +61,61 @@ export default function RecordAudioController() {
   }, []);
 
   useEffect(() => {
-    const newItems = recordings.map((recording, index) => ({
-      key: index,
-      label: (
-        <div
-          className={styles.record__item}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <audio src={recording.url} controls />
-          <div className={styles.record__button}>
-            <span className={styles.record__timestamp}>
-              {recording.timestamp}
-            </span>
-            <Tooltip title="My Space에 업로드" placement="top">
-              <Button type="text" onClick={() => uploadAudio(recording.blob, recording.timestamp)}>
-                <UploadOutlined
-                  style={{ fontSize: 20, fontWeight: 'bold', margin: 'auto' }}
-                />
-              </Button>
-            </Tooltip>
-            <Tooltip title="삭제" placement="top">
-              <Button type="text" onClick={() => deleteAudio(recording.blob)}>
-              <DeleteOutlined
-                  style={{ fontSize: 20, fontWeight: 'bold', margin: 'auto', color: 'red' }}
-                />
-              </Button>
-            </Tooltip>
-          </div>
-        </div>
-      ),
-    }));
+    const newItems =
+      recordings.length === 0
+        ? [
+            {
+              key: 1,
+              label: <p className='p-1'>아직 녹음이 없습니다.</p>,
+            },
+          ]
+        : recordings.map((recording, index) => ({
+            key: index,
+            label: (
+              <div
+                className={styles.record__item}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <audio src={recording.url} controls />
+                <div className={styles.record__button}>
+                  <span className={styles.record__timestamp}>
+                    {recording.timestamp}
+                  </span>
+                  <Tooltip title="My Space에 업로드" placement="top">
+                    <Button
+                      type="text"
+                      onClick={() =>
+                        uploadAudio(recording.blob, recording.timestamp)
+                      }
+                    >
+                      <UploadOutlined
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          margin: 'auto',
+                        }}
+                      />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="삭제" placement="top">
+                    <Button
+                      type="text"
+                      onClick={() => deleteAudio(recording.blob)}
+                    >
+                      <DeleteOutlined
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          margin: 'auto',
+                          color: 'red',
+                        }}
+                      />
+                    </Button>
+                  </Tooltip>
+                </div>
+              </div>
+            ),
+          }));
     setItems(newItems);
   }, [recordings]);
 
@@ -111,7 +135,7 @@ export default function RecordAudioController() {
     setIsRecording(false);
     setEndAt(currentTime);
     console.log('startAt:', startAt, 'endAt:', endAt);
-    console.log(currentTime)
+    console.log(currentTime);
     if (timer) clearInterval(timer);
     setRecordingTime(0);
   };
@@ -133,8 +157,16 @@ export default function RecordAudioController() {
       },
     }).then(async (result) => {
       if (result.isConfirmed && result.value) {
-        const file = new File([blob], `${result.value}.mp4`, { type: blob.type });
-        const response = await postSaveRecord(scoreId, result.value, startAt, endAt, file);
+        const file = new File([blob], `${result.value}.mp4`, {
+          type: blob.type,
+        });
+        const response = await postSaveRecord(
+          scoreId,
+          result.value,
+          startAt,
+          endAt,
+          file,
+        );
         if (response.success) {
           console.log('업로드 성공', response);
           Swal.fire({
@@ -146,14 +178,14 @@ export default function RecordAudioController() {
           Swal.fire({
             icon: 'error',
             title: '녹음 파일 업로드 실패',
-            text: response.error?.errorMessage ?? '업로드 중 오류가 발생했습니다.',
+            text:
+              response.error?.errorMessage ?? '업로드 중 오류가 발생했습니다.',
           });
-          console.error(response)
+          console.error(response);
         }
       }
-    }
-    );
-  }
+    });
+  };
 
   const deleteAudio = (blob: Blob) => {
     const newRecordings = recordings.filter(
@@ -199,10 +231,10 @@ export default function RecordAudioController() {
         </Button>
         <Dropdown
           overlayClassName={`recordmodal ${styles.dropdownMenu}`}
-           menu={{ items }}
+          menu={{ items }}
           trigger={['click']}
           placement="topLeft"
-          disabled={recordings.length === 0}
+          // disabled={recordings.length === 0}
         >
           <Button
             style={{

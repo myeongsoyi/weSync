@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Input, List, Popconfirm, message, Space } from 'antd';
 import { FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import LocalStorage from '@/utils/localStorage';
 
 interface IComment {
   id: number;
@@ -13,6 +14,7 @@ interface ICommentModalProps {
   onClose: () => void;
   songId: number;
   songTitle: string; // 음원 제목을 포함하는 새로운 prop
+  teamId: string;
 }
 
 const initialComments: IComment[] = [
@@ -24,12 +26,15 @@ export default function CommentModal({
   open,
   onClose,
   songTitle,
+  teamId,
 }: ICommentModalProps) {
   const [comments, setComments] = useState<IComment[]>([]);
   const [editId, setEditId] = useState<number | null>(null);
   const [editText, setEditText] = useState<string>('');
   const [newCommentText, setNewCommentText] = useState('');
 
+  const myId = LocalStorage.getItem('memberId');
+  console.warn('myId: ', myId, 'teamId: ', teamId);
   const currentUser = '현재 사용자'; // 실제 애플리케이션에서는 로그인 된 사용자 정보를 사용해야 함
 
   useEffect(() => {
