@@ -23,17 +23,17 @@ public class GetAllTeamResponse extends GetAllTeamCommon{
                 .title(record.getTitle())
                 .recordUrl(record.getUrl())
                 .isPublic(record.isPublic())
-                .startAt(parseTime(record.getStartAt()))
-                .endAt(parseTime(record.getEndAt()))
+                .startAt(record.getStartAt())
+                .endAt(record.getEndAt())
                 .createAt(record.getCreatedAt())
                 .userId(record.getTeamUser().getUser().getUserId())
                 .nickname(record.getTeamUser().getUser().getNickname())
-                .positionId(record.getTeamUser().getPosition() != null ?
-                        record.getTeamUser().getPosition().getPositionId() : null)
-                .positionName(record.getTeamUser() != null ?
-                        record.getTeamUser().getPosition().getPositionName() : null)
-                .colorCode(record.getTeamUser().getPosition() != null && record.getTeamUser().getPosition().getColor() != null ?
-                        record.getTeamUser().getPosition().getColor().getColorCode() : null)
+                .positionId(record.getScore().getPosition() != null ?
+                        record.getScore().getPosition().getPositionId() : null)
+                .positionName(record.getScore().getPosition() != null ?
+                        record.getScore().getPosition().getPositionName() : null)
+                .colorCode(record.getScore().getPosition() != null && record.getScore().getPosition().getColor() != null ?
+                        record.getScore().getPosition().getColor().getColorCode() : null)
                 .build();
     }
 }
