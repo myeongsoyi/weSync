@@ -22,7 +22,7 @@ export default function ListRecord() {
   const fetchRecords = async () => {
     try {
       const response = await getMainRecords();
-      console.log(response)
+      // console.log(response)
       if (response.success) {
         setRecords(response.data);
         setSuccess(true);

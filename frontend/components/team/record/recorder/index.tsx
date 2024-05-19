@@ -134,8 +134,8 @@ export default function RecordAudioController() {
     mediaRecorder?.stop();
     setIsRecording(false);
     setEndAt(currentTime);
-    console.log('startAt:', startAt, 'endAt:', endAt);
-    console.log(currentTime);
+    // console.log('startAt:', startAt, 'endAt:', endAt);
+    // console.log(currentTime);
     if (timer) clearInterval(timer);
     setRecordingTime(0);
   };
@@ -168,7 +168,7 @@ export default function RecordAudioController() {
           file,
         );
         if (response.success) {
-          console.log('업로드 성공', response);
+          // console.log('업로드 성공', response);
           Swal.fire({
             icon: 'success',
             title: '녹음 파일 업로드 성공',

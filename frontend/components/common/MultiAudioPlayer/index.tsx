@@ -18,7 +18,7 @@ interface ITrack {
 
 export default function MultiAudioPlayer() {
   const [longestTrack, setLongestTrack] = useState<ITrack>();
-  const [volume, setVolume] = useState<number>(0.3);
+  const [volume, setVolume] = useState<number>(0.5);
 
   const { tracks, isPlaying, toggleTrack, setIsPlaying } = useMultiAudioStore();
   // const { currentId, playing, togglePlayPause, setCurrentTrack } =
