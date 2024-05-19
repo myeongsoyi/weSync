@@ -35,8 +35,9 @@ public class GetAllMyResponse {
                 .teamId(record.getScore().getTeam().getTeamId())
                 .teamUrl(record.getScore().getTeam().getProfileUrl())
                 .songName(record.getScore().getTitle())
-                .positionName(record.getScore().getPosition().getPositionName())
-                .colorCode(record.getScore().getPosition().getColor().getColorCode())
+                .positionName(record.getScore().getPosition() != null ? record.getScore().getPosition().getPositionName() : null)
+                .colorCode(record.getScore().getPosition() != null && record.getScore().getPosition().getColor() != null
+                        ? record.getScore().getPosition().getColor().getColorCode() : null )
                 .startAt(parseTime(record.getStartAt()))
                 .endAt(parseTime(record.getEndAt()))
                 .createdAt(record.getCreatedAt())
