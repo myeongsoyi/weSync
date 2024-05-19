@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Input, List, message, Space, Tooltip } from 'antd';
+import { Modal, Button, Input, List, message, Space, Tooltip, Avatar } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import LocalStorage from '@/utils/localStorage';
 import {
@@ -15,7 +15,7 @@ interface IComment {
   content: string; // 피드백 내용
   userId: number; // 피드백 생성한 팀원 id
   nickname: string; // 피드백 생성한 팀원 닉네임
-  imgUrl: string; // 피드백 생성한 팀원 프로필 이미지 주소
+  profileImg: string; // 피드백 생성한 팀원 프로필 이미지 주소
   createdAt: string; // 피드백 생성시간
   updatedAt: string; // 피드백 수정시간 (수정 안했으면 null)
 }
@@ -50,7 +50,7 @@ export default function CommentModal({
     if (response.success) {
       setSuccess(response.success);
       setComments(response.data);
-      // console.log(response.data);
+      console.log(response.data);
     } else {
       setSuccess(response.success);
       setError(response.error);
@@ -175,18 +175,21 @@ export default function CommentModal({
             <List.Item>
               <div className="flex w-full">
                 <div className="w-full">
-                  <strong>{item.nickname}</strong>
+                  <div className='mb-2'>
+                    <Avatar src={item.profileImg} alt='카카오프로필' size={40} ></Avatar>
+                    <strong className='ml-2'>{item.nickname}</strong>
+                    </div>
                   <p>{item.content}</p>
                 </div>
-                <div className="max-w-10">
+                <div className="max-w-10 justify-center flex flex-col">
                   {myId === item.userId && (
-                    <>
+                    <div className='m-auto'>
                       <Tooltip title="수정" placement="top">
                         <EditOutlined
                           style={{
                             color: 'blue',
                             fontSize: 18,
-                            marginBottom: 8,
+                            marginBottom: 12,
                           }}
                           onClick={() =>
                             handleEditComment(item.feedbackId, item.content)
@@ -201,7 +204,7 @@ export default function CommentModal({
                           }
                         />
                       </Tooltip>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>

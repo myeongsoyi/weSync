@@ -31,7 +31,7 @@ export default function PublicListRecord() {
 
   const fetchRecords = async () => {
     const response = await getTeamRecordsAll(teamId as string);
-    console.log(response);
+    // console.log(response);
     if (response.success) {
       setSuccess(response.success);
       setRecords(response.data);

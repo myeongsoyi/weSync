@@ -131,7 +131,7 @@ export default function CardTeams() {
                       style={{
                         border: `1px solid #${team.positionCode}`,
                         color: `#${team.positionCode}`,
-                        margin: '0.75rem 0',
+                        margin: '0.5rem 0',
                       }}
                       bordered={false}
                     >
@@ -145,7 +145,7 @@ export default function CardTeams() {
                   size={80}
                   style={{
                     border: '3px solid #FFC500',
-                    marginBottom: '0.5rem',
+                    margin: '0.5rem auto',
                   }}
                 />
                 <div className="flex mt-4 justify-center gap-1">
