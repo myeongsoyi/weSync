@@ -170,6 +170,7 @@ export default function RecordScore({ teamId }: IParams) {
             width={1000}
             height={1000}
             style={{ width: '100%' }}
+            unoptimized
           />
         </>
       )}

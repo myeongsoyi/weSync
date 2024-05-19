@@ -56,7 +56,9 @@ export default function scoreBox({ teamId }: IParams) {
             }),
           ),
         );
+        if (response.data.length > 0) {
         setScoreId(response.data[0].score_id);
+        }
       } else {
         setSuccess(response.success);
         setError(response.error);
@@ -160,6 +162,7 @@ export default function scoreBox({ teamId }: IParams) {
                   width={50}
                   height={50}
                   className="m-auto"
+                  unoptimized
                 />
               ) : (
                 <Image
@@ -168,6 +171,7 @@ export default function scoreBox({ teamId }: IParams) {
                   width={50}
                   height={50}
                   className="m-auto"
+                  unoptimized
                 />
               )}
             </Button>

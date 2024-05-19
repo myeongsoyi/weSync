@@ -94,8 +94,8 @@ export default function CardTeams() {
             <Link href={`/team/${team.teamId}/information`}>
               {team.isFinished && (
                 <div className={styles.isEndOverlay}>
-                  <h1>완료</h1>
-                  <h3>{DateStringFormat(team.createdAt)}</h3>
+                  <h1>종료</h1>
+                  <h4>{DateStringFormat(team.createdAt)} ~</h4>
                 </div>
               )}
               <Card
