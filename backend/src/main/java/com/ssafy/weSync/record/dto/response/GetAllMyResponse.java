@@ -17,8 +17,8 @@ public class GetAllMyResponse {
     private String title;
     private String recordUrl;
     private boolean isPublic;
-    private String startAt;
-    private String endAt;
+    private Long startAt;
+    private Long endAt;
     private LocalDateTime createdAt;
     private Long teamId;
     private String teamUrl;
@@ -38,15 +38,10 @@ public class GetAllMyResponse {
                 .positionName(record.getScore().getPosition() != null ? record.getScore().getPosition().getPositionName() : null)
                 .colorCode(record.getScore().getPosition() != null && record.getScore().getPosition().getColor() != null
                         ? record.getScore().getPosition().getColor().getColorCode() : null )
-                .startAt(parseTime(record.getStartAt()))
-                .endAt(parseTime(record.getEndAt()))
+                .startAt(record.getStartAt())
+                .endAt(record.getEndAt())
                 .createdAt(record.getCreatedAt())
                 .build();
     }
 
-    public static String parseTime(Long time){
-        long seconds = time / 1000;
-        long milliseconds = time % 1000;
-        return String.format("%d:%03d", seconds, milliseconds);
-    }
 }
