@@ -46,7 +46,7 @@ export default function PrivateListRecord() {
 
   const fetchRecords = async () => {
     const response = await getTeamRecordsMy(teamId as string);
-    console.log(response);
+    // console.log(response);
     if (response.success) {
       setSuccess(response.success);
       setRecords(response.data);

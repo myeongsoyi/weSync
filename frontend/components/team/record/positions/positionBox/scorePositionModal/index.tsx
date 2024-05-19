@@ -128,7 +128,7 @@ export default function PositionModal({
       message.error('포지션을 선택해 주세요.');
       return;
     } else if (selectedMemberId !== null) {
-      console.warn(selectedMemberId, selectedPosition.positionId)
+      // console.warn(selectedMemberId, selectedPosition.positionId)
       const response = await postScoreGetPosition(selectedMemberId, selectedPosition.positionId);
       if (response.success) {
         message.success('포지션 할당이 완료되었습니다.');

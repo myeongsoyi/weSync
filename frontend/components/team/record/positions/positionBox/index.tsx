@@ -41,7 +41,7 @@ export default function scoreBox({ teamId }: IParams) {
   useEffect(() => {
     const fetchScore = async () => {
       const response = await getScoreData(teamId);
-      console.log(response);
+      // console.log(response);
       if (response.success) {
         setSuccess(response.success);
         setScore(response.data);

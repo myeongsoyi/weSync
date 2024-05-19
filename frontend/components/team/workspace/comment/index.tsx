@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Input, List, message, Space, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import LocalStorage from '@/utils/localStorage';
-import { getFeedbacks, postFeedback, deleteFeedback, putFeedback } from '@/services/team/workspace';
+import {
+  getFeedbacks,
+  postFeedback,
+  deleteFeedback,
+  putFeedback,
+} from '@/services/team/workspace';
 import Swal from 'sweetalert2';
 
 interface IComment {
@@ -40,29 +45,18 @@ export default function CommentModal({
 
   const myId = parseInt(LocalStorage.getItem('memberId') ?? '0');
 
-  console.warn(
-    'myId: ',
-    myId,
-    'teamId: ',
-    teamId,
-    'songTitle: ',
-    songTitle,
-    'songId: ',
-    songId,
-  );
-
   const fetchComments = async () => {
     const response = await getFeedbacks(songId);
     if (response.success) {
       setSuccess(response.success);
       setComments(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } else {
       setSuccess(response.success);
       setError(response.error);
     }
   };
-  
+
   useEffect(() => {
     if (open) {
       fetchComments();
@@ -81,7 +75,9 @@ export default function CommentModal({
       if (result.isConfirmed) {
         const response = await deleteFeedback(feedbackId);
         if (!response.success) {
-          message.error(response.error.errorMessage || '댓글 삭제에 실패했습니다.');
+          message.error(
+            response.error.errorMessage || '댓글 삭제에 실패했습니다.',
+          );
           return;
         } else {
           message.success('댓글이 삭제되었습니다.');
@@ -109,7 +105,9 @@ export default function CommentModal({
       if (result.isConfirmed && result.value) {
         const response = await putFeedback(feedbackId, result.value);
         if (!response.success) {
-          message.error(response.error.errorMessage || '댓글 수정에 실패했습니다.');
+          message.error(
+            response.error.errorMessage || '댓글 수정에 실패했습니다.',
+          );
           return;
         } else {
           message.success('댓글이 수정되었습니다.');
@@ -181,18 +179,30 @@ export default function CommentModal({
                   <p>{item.content}</p>
                 </div>
                 <div className="max-w-10">
-                  <Tooltip title="수정" placement="top">
-                    <EditOutlined
-                      style={{ color: 'blue', fontSize: 18, marginBottom: 8 }}
-                      onClick={() => handleEditComment(item.feedbackId, item.content)}
-                    />
-                  </Tooltip>
-                  <Tooltip title="삭제" placement="top">
-                    <DeleteOutlined
-                      style={{ color: 'red', fontSize: 18 }}
-                      onClick={() => handleDeleteComment(item.feedbackId, item.content)}
-                    />
-                  </Tooltip>
+                  {myId === item.userId && (
+                    <>
+                      <Tooltip title="수정" placement="top">
+                        <EditOutlined
+                          style={{
+                            color: 'blue',
+                            fontSize: 18,
+                            marginBottom: 8,
+                          }}
+                          onClick={() =>
+                            handleEditComment(item.feedbackId, item.content)
+                          }
+                        />
+                      </Tooltip>
+                      <Tooltip title="삭제" placement="top">
+                        <DeleteOutlined
+                          style={{ color: 'red', fontSize: 18 }}
+                          onClick={() =>
+                            handleDeleteComment(item.feedbackId, item.content)
+                          }
+                        />
+                      </Tooltip>
+                    </>
+                  )}
                 </div>
               </div>
             </List.Item>
