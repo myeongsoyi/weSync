@@ -33,6 +33,8 @@ def upload_score(team_id: int, file: UploadFile = File(...), db: Session = Depen
         return CommonResponse(False, None, 400, "이미 악보가 등록되었습니다.")
     
     recognition(file, team_id, db)
+
+    db.close()
     
     return CommonResponse(
         True,
