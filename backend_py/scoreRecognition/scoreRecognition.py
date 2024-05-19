@@ -4,6 +4,7 @@ import tempfile
 import shutil
 import os
 import cv2
+import uuid
 import scoreRecognition.denoise as dn
 from mido import MidiFile, MidiTrack, MetaMessage
 import scoreRecognition.predict as pd
@@ -23,7 +24,7 @@ def recognition(file: UploadFile, team_id: int, db: Session):
         temp_file_path = temp_file.name
 
     doc = fitz.open(temp_file_path)
-    file_name = file.filename.split('.')[0]
+    file_name = uuid.uuid4()
     input_path = "./scoreRecognition/Input"
 
     if not os.path.exists(f"{input_path}"):
@@ -111,7 +112,7 @@ def recognition(file: UploadFile, team_id: int, db: Session):
 
                 up.upload_file_to_s3(f'{output_path}/img/{file_name}_part{i}.png', "scoreOutput/png/", f"{file_name}_part{i}.png")
 
-                db_img = Score(part_num = i, position_id = None, title = None, \
+                db_img = Score(part_num = i, position_id = None, title = file_name, \
                             score_url = f'https://{os.getenv("cloud_aws_s3_bucket")}.s3.{os.getenv("cloud_aws_region_static")}.amazonaws.com/{"scoreOutput/png/"}{file_name}_part{i}.png',\
                             team_id = team_id )
                 try:
