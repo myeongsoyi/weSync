@@ -19,14 +19,8 @@ public abstract class GetAllTeamCommon {
     private String title;
     private String recordUrl;
     private boolean isPublic;
-    private String startAt;
-    private String endAt;
+    private Long startAt;
+    private Long endAt;
     private LocalDateTime createAt;
-
-    public static String parseTime(Long time){
-        long seconds = time / 1000;
-        long milliseconds = time % 1000;
-        return String.format("%d:%03d", seconds, milliseconds);
-    }
 
 }
