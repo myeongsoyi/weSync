@@ -71,10 +71,10 @@ export default function MultiAudioPlayer() {
     Object.values(playersRef.current).forEach((audio) => {
       if (
         isPlaying &&
-        tracks.find((track) => track.url === audio.src.split('3000').pop()) &&
-        longestTrack?.url !== audio.src.split('3000').pop()
+        tracks.find((track) => track.url === audio.src) &&
+        longestTrack?.url !== audio.src
       ) {
-        // console.log('play', audio.src.split('3000').pop(), longestTrack?.url);
+        // console.log('play', audio.src, longestTrack?.url);
         audio.play();
       } else {
         // console.log('pause');
@@ -93,7 +93,7 @@ export default function MultiAudioPlayer() {
   const handleSeek = (time: number) => {
     Object.values(playersRef.current).forEach((audio) => {
       audio.currentTime = time;
-      if (longestTrack?.url !== audio.src.split('3000').pop())
+      if (longestTrack?.url !== audio.src)
       audio.play();
     });
   };

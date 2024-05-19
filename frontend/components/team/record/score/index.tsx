@@ -141,7 +141,7 @@ export default function RecordScore({ teamId }: IParams) {
       <FloatButton.Group
         trigger="click"
         type="primary"
-        style={{ right: 32, bottom: '18vh', zIndex: 3000 }}
+        style={{ right: 32, bottom: '15vh', zIndex: 3000 }}
         icon={<MenuOutlined />}
       >
         {score.length > 0 && (
