@@ -35,7 +35,7 @@ public class Score extends BaseTime {
     @JoinColumn(name = "part_num", nullable = false)
     private int partNum;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     private String title;
 
     @Column(name = "score_url", nullable = false)
