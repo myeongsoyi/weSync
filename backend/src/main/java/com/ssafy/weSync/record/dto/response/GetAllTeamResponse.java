@@ -28,9 +28,12 @@ public class GetAllTeamResponse extends GetAllTeamCommon{
                 .createAt(record.getCreatedAt())
                 .userId(record.getTeamUser().getUser().getUserId())
                 .nickname(record.getTeamUser().getUser().getNickname())
-                .positionId(record.getTeamUser().getPosition().getPositionId())
-                .positionName(record.getTeamUser().getPosition().getPositionName())
-                .colorCode(record.getTeamUser().getPosition().getColor().getColorCode())
+                .positionId(record.getTeamUser().getPosition() != null ?
+                        record.getTeamUser().getPosition().getPositionId() : null)
+                .positionName(record.getTeamUser() != null ?
+                        record.getTeamUser().getPosition().getPositionName() : null)
+                .colorCode(record.getTeamUser().getPosition() != null && record.getTeamUser().getPosition().getColor() != null ?
+                        record.getTeamUser().getPosition().getColor().getColorCode() : null)
                 .build();
     }
 }
