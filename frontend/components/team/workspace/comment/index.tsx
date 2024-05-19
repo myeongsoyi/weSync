@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Input, List, Popconfirm, message, Space } from 'antd';
-import { FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Modal, Button, Input, List, message, Space, Tooltip } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import LocalStorage from '@/utils/localStorage';
+import {
+  getFeedbacks,
+  postFeedback,
+  deleteFeedback,
+  putFeedback,
+} from '@/services/team/workspace';
+import Swal from 'sweetalert2';
 
 interface IComment {
-  id: number;
-  text: string;
-  author: string;
+  feedbackId: number; // 피드백 id
+  content: string; // 피드백 내용
+  userId: number; // 피드백 생성한 팀원 id
+  nickname: string; // 피드백 생성한 팀원 닉네임
+  imgUrl: string; // 피드백 생성한 팀원 프로필 이미지 주소
+  createdAt: string; // 피드백 생성시간
+  updatedAt: string; // 피드백 수정시간 (수정 안했으면 null)
 }
 
 interface ICommentModalProps {
@@ -17,91 +28,115 @@ interface ICommentModalProps {
   teamId: string;
 }
 
-const initialComments: IComment[] = [
-  { id: 1, text: '정말 멋진 곡이네요!', author: '홍길동' },
-  { id: 2, text: '이 부분이 제일 좋아요.', author: '김철수' },
-];
-
 export default function CommentModal({
   open,
   onClose,
   songTitle,
+  songId,
   teamId,
 }: ICommentModalProps) {
+  const [success, setSuccess] = useState<boolean>(true);
   const [comments, setComments] = useState<IComment[]>([]);
-  const [editId, setEditId] = useState<number | null>(null);
-  const [editText, setEditText] = useState<string>('');
+  const [error, setError] = useState<{
+    errorCode: string;
+    errorMessage: string;
+  } | null>(null);
   const [newCommentText, setNewCommentText] = useState('');
 
-  const myId = LocalStorage.getItem('memberId');
-  console.warn('myId: ', myId, 'teamId: ', teamId);
-  const currentUser = '현재 사용자'; // 실제 애플리케이션에서는 로그인 된 사용자 정보를 사용해야 함
+  const myId = parseInt(LocalStorage.getItem('memberId') ?? '0');
+
+  const fetchComments = async () => {
+    const response = await getFeedbacks(songId);
+    if (response.success) {
+      setSuccess(response.success);
+      setComments(response.data);
+      // console.log(response.data);
+    } else {
+      setSuccess(response.success);
+      setError(response.error);
+    }
+  };
 
   useEffect(() => {
     if (open) {
-      setComments(initialComments); // API 대신 더미 데이터 로드
+      fetchComments();
     }
   }, [open]);
 
-  const handleDeleteComment = (id: number) => {
-    setComments(comments.filter((comment) => comment.id !== id));
-    message.success('댓글이 삭제되었습니다.');
+  const handleDeleteComment = async (feedbackId: number, comment: string) => {
+    Swal.fire({
+      title: '정말 삭제하시겠습니까?',
+      text: comment,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await deleteFeedback(feedbackId);
+        if (!response.success) {
+          message.error(
+            response.error.errorMessage || '댓글 삭제에 실패했습니다.',
+          );
+          return;
+        } else {
+          message.success('댓글이 삭제되었습니다.');
+          fetchComments();
+        }
+      }
+    });
   };
 
-  const handleEditComment = (id: number) => {
-    const comment = comments.find((comment) => comment.id === id);
-    if (comment) {
-      setEditId(id);
-      setEditText(comment.text);
-    }
+  const handleEditComment = async (feedbackId: number, content: string) => {
+    Swal.fire({
+      title: '댓글 수정',
+      input: 'textarea',
+      inputLabel: '댓글 내용을 수정하세요',
+      inputValue: content,
+      showCancelButton: true,
+      confirmButtonText: '수정',
+      cancelButtonText: '취소',
+      inputValidator: (value) => {
+        if (!value) {
+          return '댓글을 입력하세요.';
+        }
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed && result.value) {
+        const response = await putFeedback(feedbackId, result.value);
+        if (!response.success) {
+          message.error(
+            response.error.errorMessage || '댓글 수정에 실패했습니다.',
+          );
+          return;
+        } else {
+          message.success('댓글이 수정되었습니다.');
+          fetchComments();
+        }
+      }
+    });
   };
 
-  const handleSaveEdit = () => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === editId ? { ...comment, text: editText } : comment,
-      ),
-    );
-    setEditId(null);
-    setEditText('');
-    message.success('댓글이 수정되었습니다.');
-  };
-
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!newCommentText.trim()) {
       message.error('댓글을 입력하세요.');
       return;
     }
-    const newComment = {
-      id: Math.max(...comments.map((c) => c.id)) + 1,
-      text: newCommentText,
-      author: currentUser,
-    };
-    setComments([...comments, newComment]);
-    setNewCommentText('');
-    message.success('댓글이 등록되었습니다.');
+
+    const response = await postFeedback(teamId, songId, newCommentText);
+    if (!response.success) {
+      message.error(response.error.errorMessage || '댓글 등록에 실패했습니다.');
+      return;
+    } else {
+      setNewCommentText('');
+      message.success('댓글이 등록되었습니다.');
+      fetchComments();
+    }
   };
 
-  const renderCommentActions = (comment: IComment) =>
-    comment.author === currentUser
-      ? [
-          <Button
-            key={1}
-            icon={<FormOutlined style={{ color: '#1890ff' }} />}
-            onClick={() => handleEditComment(comment.id)}
-            style={{
-              borderColor: '#1890ff',
-            }}
-          />,
-          <Popconfirm
-            key={2}
-            title="정말 삭제하시겠습니까?"
-            onConfirm={() => handleDeleteComment(comment.id)}
-          >
-            <Button icon={<DeleteOutlined />} danger />
-          </Popconfirm>,
-        ]
-      : [];
+  if (!success) {
+    return <p>{error?.errorMessage}</p>;
+  }
 
   return (
     <Modal
@@ -109,8 +144,6 @@ export default function CommentModal({
       open={open}
       onCancel={() => {
         onClose();
-        setEditId(null);
-        setEditText('');
         setNewCommentText('');
       }}
       footer={null}
@@ -139,35 +172,39 @@ export default function CommentModal({
         <List
           dataSource={comments}
           renderItem={(item) => (
-            <List.Item
-              actions={
-                editId === item.id ? undefined : renderCommentActions(item)
-              }
-            >
-              {editId === item.id ? (
-                <div style={{ width: '100%' }}>
-                  <Input
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    style={{ width: '85%', marginRight: '8px' }}
-                  />
-                  <Button
-                    onClick={handleSaveEdit}
-                    style={{
-                      backgroundColor: '#FFC500',
-                      borderColor: '#FFC500',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    수정
-                  </Button>
+            <List.Item>
+              <div className="flex w-full">
+                <div className="w-full">
+                  <strong>{item.nickname}</strong>
+                  <p>{item.content}</p>
                 </div>
-              ) : (
-                <div>
-                  <strong>{item.author}</strong>
-                  <p>{item.text}</p>
+                <div className="max-w-10">
+                  {myId === item.userId && (
+                    <>
+                      <Tooltip title="수정" placement="top">
+                        <EditOutlined
+                          style={{
+                            color: 'blue',
+                            fontSize: 18,
+                            marginBottom: 8,
+                          }}
+                          onClick={() =>
+                            handleEditComment(item.feedbackId, item.content)
+                          }
+                        />
+                      </Tooltip>
+                      <Tooltip title="삭제" placement="top">
+                        <DeleteOutlined
+                          style={{ color: 'red', fontSize: 18 }}
+                          onClick={() =>
+                            handleDeleteComment(item.feedbackId, item.content)
+                          }
+                        />
+                      </Tooltip>
+                    </>
+                  )}
                 </div>
-              )}
+              </div>
             </List.Item>
           )}
         />
