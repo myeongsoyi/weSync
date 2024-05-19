@@ -81,7 +81,7 @@ export async function putChangeRecordPublic(recordId: number) {
 
 export async function deleteRecord(recordId: number) {
   const response = await APIModule({
-    action: `/records/${recordId}/`,
+    action: `/records/${recordId}`,
     method: 'DELETE',
     data: null,
   });

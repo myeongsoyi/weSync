@@ -50,10 +50,10 @@ export interface MainRecords {
     recordId: number;
     title: string;
     recordUrl: string;
-    isPublic: boolean;
-    startAt: number;
-    createAt: string;
-    endAt: number;
+    public: boolean;
+    startAt: string;
+    createdAt: string;
+    endAt: string;
     teamId: number;
     teamUrl: string;
     songName: string|null;

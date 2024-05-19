@@ -100,6 +100,7 @@ const UpdatePositionModal: React.FC<UpdatePositionModalProps> = ({
     } else {
       onSuccess(response.data.positionId, response.data.positionName, selectedColorCode, selectedColorId);
       message.success('포지션 수정 성공');
+      window.location.reload();
       onCancel();
     }
   };

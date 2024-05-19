@@ -15,11 +15,7 @@ export default function FixedAudioPlayer() {
 
   useEffect(() => {
     if (audioRef.current && audioRef.current.audio.current) {
-      if (currentId === 1) {
-        audioRef.current.audio.current.volume = 0.2; // currentId가 1일 때 볼륨 0.5
-      } else {
-        audioRef.current.audio.current.volume = 0.3; // 그 외에는 기본 볼륨
-      }
+        audioRef.current.audio.current.volume = 0.5; // 그 외에는 기본 볼륨
     }
   }, [currentId]); // currentId가 변경될 때만 볼륨 상태 업데이트
 
@@ -54,6 +50,7 @@ export default function FixedAudioPlayer() {
             width: '100%',
             height: 'fit-content',
             minHeight: '100px',
+            zIndex: 2000,
           }}
         >
           <AudioPlayer
@@ -65,7 +62,7 @@ export default function FixedAudioPlayer() {
             preload="auto"
             ref={audioRef}
             // onPlay={() => console.log('Playing with ID:', currentId)}
-            style={{ height: '100%', zIndex: 1000, display: 'block' }}
+            style={{ height: '100%', zIndex: 2000, display: 'block', minHeight: '100px'}}
           />
         </div>
       )}
