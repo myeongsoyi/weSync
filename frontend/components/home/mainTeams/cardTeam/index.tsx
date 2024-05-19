@@ -117,8 +117,8 @@ export default function CardTeams() {
               }}
               hoverable
             >
-              <h3>{team.teamName}</h3>
-              <div className="flex mb-2 justify-between">
+              <h3 className='py-1'>{team.teamName}</h3>
+              <div className="flex mb-1 justify-between">
                 <Image
                   src="svgs/note.svg"
                   width={16}
@@ -136,7 +136,7 @@ export default function CardTeams() {
                     style={{
                       border: `1px solid #${team.positionCode}`,
                       color: `#${team.positionCode}`,
-                      margin: '0.75rem 0',
+                      margin: '0.5rem 0',
                     }}
                     bordered={false}
                   >
@@ -148,7 +148,7 @@ export default function CardTeams() {
                 src={team.teamProfileUrl}
                 alt="팀"
                 size={80}
-                style={{ borderColor: '#FFC500', marginBottom: '0.5rem' }}
+                style={{ borderColor: '#FFC500', margin: '0.5rem auto' }}
               />
               <div className="flex mt-4 justify-center gap-1">
                 <Group>
