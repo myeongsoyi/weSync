@@ -20,6 +20,7 @@ export interface RecordAll {
     title: string;
     recordUrl: string;
     userId: number;
+    public: boolean;
     startAt: string;
     endAt: string;
     createAt: string;

@@ -71,6 +71,7 @@ export default function PositionModal({
         if (response.success) {
           message.success(`${positionName}이(가) 삭제되었습니다.`);
           getPositions(teamId);
+          window.location.reload();
         } else {
           message.error('포지션 삭제에 실패했습니다.');
         }

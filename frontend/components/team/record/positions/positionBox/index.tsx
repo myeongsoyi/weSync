@@ -121,6 +121,7 @@ export default function scoreBox({ teamId }: IParams) {
 
   const handleModalOk = () => {
     setModalVisible(false);
+    window.location.reload();
   };
 
   const handleModalCancel = () => {
@@ -201,8 +202,8 @@ export default function scoreBox({ teamId }: IParams) {
             {score.position_name ? (
               <Tag
                 style={{
-                  color: `${score.color_code}`,
-                  borderColor: `${score.color_code}`,
+                  color: `#${score.color_code}`,
+                  borderColor: `#${score.color_code}`,
                   fontSize: 15,
                   width: '100%',
                   padding: 4,

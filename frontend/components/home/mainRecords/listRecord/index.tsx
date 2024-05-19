@@ -22,6 +22,7 @@ export default function ListRecord() {
   const fetchRecords = async () => {
     try {
       const response = await getMainRecords();
+      console.log(response)
       if (response.success) {
         setRecords(response.data);
         setSuccess(true);
@@ -98,10 +99,10 @@ export default function ListRecord() {
     });
   };
 
-  const handleDelete = async (recordId: number, songName: string | null) => {
+  const handleDelete = async (recordId: number, title: string | null) => {
     Swal.fire({
       title: '이 녹음을 삭제합니다.',
-      text: songName ?? '',
+      text: title ?? '',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -170,7 +171,7 @@ export default function ListRecord() {
         )}
       />
       <Column title="제목" dataIndex="title" key="title" />
-      <Column
+      {/* <Column
         title="길이"
         key="runTime"
         render={(record: MainRecords['data'][number]) => {
@@ -185,13 +186,13 @@ export default function ListRecord() {
             <Tag color="red">{runTime}초</Tag>
           );
         }}
-      />
+      /> */}
       <Column
         title="저장 일시"
-        dataIndex="createAt"
-        key="createAt"
-        render={(createAt: string) => {
-          const date = new Date(createAt);
+        dataIndex="createdAt"
+        key="createdAt"
+        render={(createdAt: string) => {
+          const date = new Date(createdAt);
           const formattedDate = date.toLocaleDateString('ko-KR', {
             year: 'numeric',
             month: '2-digit',
@@ -209,14 +210,15 @@ export default function ListRecord() {
               <Tag color="blue">{formattedDate}</Tag>
               <br />
               <Tag color="green">{formattedTime}</Tag>
+              {/* <p>{createdAt}</p> */}
             </>
           );
         }}
       />
       <Column
         title="비고"
-        dataIndex="isPublic"
-        key="isPublic"
+        dataIndex="public"
+        key="public"
         render={(isPublic, record: MainRecords['data'][number]) => {
           return (
             <div className="flex">
@@ -247,7 +249,7 @@ export default function ListRecord() {
               <Tooltip placement="top" title={'삭제'} arrow={true}>
                 <Button
                   type="text"
-                  onClick={() => handleDelete(record.recordId, record.songName)}
+                  onClick={() => handleDelete(record.recordId, record.title)}
                 >
                   <CloseCircleOutlined
                     style={{ color: 'red', fontSize: '1.2rem' }}
