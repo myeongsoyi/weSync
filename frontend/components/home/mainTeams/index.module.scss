@@ -1,0 +1,28 @@
+.outer {
+  background-color: $color-yellow;
+  border-radius: 20px;
+  padding: 15px;
+  margin-top: 2vh;
+  margin-bottom: 4vh;
+  box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.4);
+}
+
+.teamsLink {
+  display: flex;
+  align-items: center;
+
+  &:hover .plusIcon {
+    transform: rotate(180deg);
+  }
+}
+
+.plusIconWrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 6px;
+}
+
+.plusIcon {
+  transition: transform 0.3s ease-in-out;
+  transform-origin: center; /* 아이콘을 중앙을 기준으로 회전하도록 설정 */
+}
