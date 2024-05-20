@@ -2,17 +2,15 @@ package com.ssafy.weSync.record.entity;
 
 import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.global.entity.BaseTime;
-import com.ssafy.weSync.team.entity.Score;
-import com.ssafy.weSync.team.entity.TeamUser;
+import com.ssafy.weSync.score.entity.Score;
+import com.ssafy.weSync.teamUser.entity.TeamUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.lang.NonNull;
 
 import java.util.List;
 
