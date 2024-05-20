@@ -191,17 +191,6 @@ ${response.data.url}</textarea>
       ),
       key: 'create-invite-link',
     },
-    {
-      label: (
-        <p
-          style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer' }}
-          onClick={() => handleMenuClick('set-position')}
-        >
-          내 포지션 설정
-        </p>
-      ),
-      key: 'set-position',
-    },
   ];
 
   if (isLeader) {

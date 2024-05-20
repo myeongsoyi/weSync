@@ -1,12 +1,16 @@
 'use client';
-
 import React from 'react';
 import { EditFilled } from '@ant-design/icons';
 import { Button, Tooltip, message } from 'antd';
 import Swal from 'sweetalert2';
 import { postTeamNotice } from '@/services/team/notice';
 
-export default function NoticeWrite({teamId, fetchNotices}: {teamId: string, fetchNotices: () => void}) {
+interface NoticeWriteProps {
+  teamId: string;
+  fetchNotices: () => void;
+}
+
+const NoticeWrite: React.FC<NoticeWriteProps> = ({ teamId, fetchNotices }) => {
   const handlePrompt = () => {
     Swal.fire({
       title: '공지 작성',
@@ -19,13 +23,15 @@ export default function NoticeWrite({teamId, fetchNotices}: {teamId: string, fet
         if (!value) {
           return '내용을 입력해주세요!';
         }
+        return null;
       },
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await postTeamNotice(teamId, result.value);
+        const contentWithLineBreaks = result.value.replace(/\n/g, '<br />');
+        const response = await postTeamNotice(teamId, contentWithLineBreaks);
         if (response.success) {
           Swal.fire('등록완료', '글이 등록되었습니다', 'success').then(() => {
-            fetchNotices();  // 공지를 다시 가져옴
+            fetchNotices(); // 공지를 다시 가져옴
           });
         } else {
           Swal.fire('등록실패', '글 등록에 실패했습니다', 'error');
@@ -48,4 +54,6 @@ export default function NoticeWrite({teamId, fetchNotices}: {teamId: string, fet
       </div>
     </Tooltip>
   );
-}
+};
+
+export default NoticeWrite;
