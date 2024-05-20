@@ -79,6 +79,8 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
     if not scores:
         return CommonResponse(False, None, 400, "삭제할 악보가 없습니다.")
     
+    print(scores[0])
+
     try:
         for score in scores:
             print("*before => ", score)
