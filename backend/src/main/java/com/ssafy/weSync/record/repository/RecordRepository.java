@@ -13,7 +13,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @param userId
      * @return
      */
-    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
+    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN r.teamUser tu " +
             "JOIN tu.user u LEFT join p.color WHERE u.userId = :userId ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByUserId(@Param("userId") Long userId);
 
@@ -22,7 +22,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @param teamId
      * @return
      */
-    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
+    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN r.teamUser tu " +
             "JOIN tu.user u LEFT join p.color WHERE t.teamId = :teamId AND r.isPublic = true ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByTeamId(Long teamId);
 
@@ -32,7 +32,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @param positionId
      * @return
      */
-    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
+    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN r.teamUser tu " +
             "JOIN tu.user u LEFT JOIN p.color WHERE t.teamId = :teamId AND p.positionId = :positionId AND r.isPublic = true " +
             "ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByTeamIdByPosition(@Param("teamId") Long teamId, @Param("positionId") Long positionId);
@@ -43,7 +43,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      * @param teamId
      * @return
      */
-    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN t.teamUsers tu " +
+    @Query("SELECT r FROM Record r JOIN r.score s LEFT JOIN s.position p JOIN s.team t JOIN r.teamUser tu " +
             "JOIN tu.user u LEFT JOIN p.color WHERE u.userId = :userId AND t.teamId = :teamId ORDER BY r.createdAt DESC LIMIT 10")
     List<Record> findAllByUserIdByTeamId(@Param("userId") Long userId, @Param("teamId") Long teamId);
 
