@@ -2,7 +2,7 @@ package com.ssafy.weSync.notice.entity;
 
 import com.ssafy.weSync.global.entity.BaseTime;
 import com.ssafy.weSync.team.entity.Team;
-import com.ssafy.weSync.team.entity.TeamUser;
+import com.ssafy.weSync.teamUser.entity.TeamUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

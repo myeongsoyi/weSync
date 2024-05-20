@@ -1,12 +1,18 @@
 package com.ssafy.weSync.team.service;
 
+import com.ssafy.weSync.color.repository.ColorRepository;
 import com.ssafy.weSync.global.ApiResponse.*;
 import com.ssafy.weSync.global.entity.Expunger;
+import com.ssafy.weSync.invitation.repository.InvitationRepository;
+import com.ssafy.weSync.position.entity.Position;
+import com.ssafy.weSync.position.repository.PositionRepository;
 import com.ssafy.weSync.team.dto.request.*;
 import com.ssafy.weSync.team.dto.response.*;
+import com.ssafy.weSync.teamUser.entity.TeamUser;
 import com.ssafy.weSync.team.entity.*;
 import com.ssafy.weSync.team.repository.*;
 import com.ssafy.weSync.s3.service.S3Service;
+import com.ssafy.weSync.teamUser.repository.TeamUserRepository;
 import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +20,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -26,12 +30,10 @@ public class TeamService {
     private final S3Service s3Service;
 
     private final TeamRepository teamRepository;
-    private final InvitationRepository invitationRepository;
     private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
     private final ColorRepository colorRepository;
     private final PositionRepository positionRepository;
-    private final ScoreRepository scoreRepository;
 
     private final AccessTokenValidationAspect accessTokenValidationAspect;
 
@@ -239,313 +241,6 @@ public class TeamService {
                 .anyMatch(teamUser -> Objects.equals(teamUser.getUser().getUserId(), userId));
     }
 
-    //팀 링크 생성
-    public ResponseEntity<Response<TeamLinkDto>> getTeamLink(Long id){
-
-        Long userId = accessTokenValidationAspect.getUserId();
-
-        if(!checkAuthorized(id, userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        UUID uuid = UUID.randomUUID();
-        String randomLink = "https://wesync.co.kr/api/team/invite/" + uuid;
-        String sendLink = "https://wesync.co.kr/invite/" + uuid;
-
-        //팀 링크 등록
-        Invitation newInvitation = new Invitation();
-        newInvitation.setLink(randomLink);
-        if(teamRepository.findByTeamId(id).isEmpty()){
-            throw new GlobalException(CustomError.NO_TEAM);
-        }
-        newInvitation.setTeam(teamRepository.findByTeamId(id).get());
-        newInvitation.setIsValid(true);
-        invitationRepository.save(newInvitation);
-
-        //응답
-        TeamLinkDto teamLinkDto = new TeamLinkDto(sendLink);
-        return ResponseFactory.success(teamLinkDto);
-    }
-
-    //팀원 강퇴(방장만 가능)
-    public ResponseEntity<Response<TeamUserDto>> deleteTeamUser(Long id){
-
-        Long userId = accessTokenValidationAspect.getUserId();
-
-        Optional<TeamUser> deleteUser = teamUserRepository.findByTeamUserId(id);
-
-        if(deleteUser.isEmpty() || deleteUser.get().getIsBanned()){
-            throw new GlobalException(CustomError.NO_TEAMUSER);
-        }
-
-        if(!Objects.equals(deleteUser.get().getTeam().getTeamLeaderId(), userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        if(Objects.equals(deleteUser.get().getUser().getUserId(), userId)){
-            throw new GlobalException(CustomError.CANNOT_BAN_YOURSELF);
-        }
-
-        //강퇴
-        deleteUser.get().setIsBanned(true);
-        deleteUser.get().setDeleted(true);
-        teamUserRepository.save(deleteUser.get());
-
-        //응답
-        TeamUserDto teamUserDto = new TeamUserDto(id);
-        return ResponseFactory.success(teamUserDto);
-    }
-
-    //팀 링크 접속
-    public ResponseEntity<Response<TeamIdDto>>redirectToTeam(String UUID){
-        Long id = accessTokenValidationAspect.getUserId();
-        String link = "https://wesync.co.kr/api/team/invite/" + UUID;
-
-        if(invitationRepository.findByLink(link).isEmpty() ||
-                !invitationRepository.findByLink(link).get().getIsValid()){
-            throw new GlobalException(CustomError.NO_TEAM);
-        }
-
-        Invitation invitation = invitationRepository.findByLink(link).get();
-
-        LocalDateTime createdAt = invitation.getCreatedAt();
-        LocalDateTime now = LocalDateTime.now();
-
-        long daysDifference = ChronoUnit.DAYS.between(createdAt.toLocalDate(), now.toLocalDate());
-        if (daysDifference >= 8) {
-            throw new GlobalException(CustomError.EXPIRED_INVITATION);
-        }
-
-        //이미 존재하는 회원인지 확인
-        List<TeamUser> teamUserList = teamUserRepository.findByUser(userRepository.findByUserId(id).get());
-        Long linkTeamId = invitation.getTeam().getTeamId();
-        boolean isAlreadyExist = teamUserList.stream()
-                .anyMatch(teamUser -> Objects.equals(teamUser.getTeam().getTeamId(), linkTeamId));
-
-        if(isAlreadyExist){
-            throw new GlobalException(CustomError.DUPLICATE_USER);
-        }
-
-        //팀원 추가
-        TeamUser newTeamUser = new TeamUser();
-        if(userRepository.findByUserId(id).isEmpty()){
-            throw new GlobalException(CustomError.NO_USER);
-        }
-        if(teamRepository.findByTeamId(invitation.getTeam().getTeamId()).isEmpty() ||
-                teamRepository.findByTeamId(invitation.getTeam().getTeamId()).get().isDeleted()){
-            throw new GlobalException(CustomError.NO_TEAM);
-        }
-        newTeamUser.setUser(userRepository.findByUserId(id).get());
-        newTeamUser.setTeam(teamRepository.findByTeamId(invitation.getTeam().getTeamId()).get());
-        newTeamUser.setIsBanned(false);
-        teamUserRepository.save(newTeamUser);
-
-        //응답
-        TeamIdDto teamIdDto = new TeamIdDto(invitation.getTeam().getTeamId());
-        return ResponseFactory.success(teamIdDto);
-    }
-
-    //악보별 포지션 할당
-    public ResponseEntity<Response<ScorePositionDto>> scorePositionMapping(ScorePositionDto scorePositionDto){
-
-        Long userId = accessTokenValidationAspect.getUserId();
-
-        if(scoreRepository.findByScoreId(scorePositionDto.getScoreId()).isEmpty()){
-            throw new GlobalException(CustomError.NO_SCORE);
-        }
-        else if(positionRepository.findByPositionId(scorePositionDto.getPositionId()).isEmpty()){
-            throw new GlobalException(CustomError.NO_POSITION);
-        }
-
-        Score score = scoreRepository.findByScoreId(scorePositionDto.getScoreId()).get();
-
-        Position position = positionRepository.findByPositionId(scorePositionDto.getPositionId()).get();
-
-        if(!score.getTeam().equals(position.getTeam())){
-            throw new GlobalException(CustomError.POSITION_SCORE_MISMATCH);
-        }
-
-        if(!checkAuthorized(score.getTeam().getTeamId(), userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        score.setPosition(positionRepository.findByPositionId(scorePositionDto.getPositionId()).get());
-        scoreRepository.save(score);
-
-        //응답
-        return ResponseFactory.success(scorePositionDto);
-    }
-
-    //색상 조회
-    public ResponseEntity<Response<List<ColorDto>>> getColorList(){
-        List<ColorDto> colorData = new ArrayList<>();
-        List<Color> colorList = colorRepository.findAllByOrderByColorIdAsc();
-        for(Color color : colorList){
-            ColorDto colorDto = new ColorDto();
-            colorDto.setColorId(color.getColorId());
-            colorDto.setColorName(color.getColorName());
-            colorDto.setColorCode(color.getColorCode());
-            colorData.add(colorDto);
-        }
-
-        //응답
-        return ResponseFactory.success(colorData);
-    }
-
-    //포지션 조회
-    public ResponseEntity<Response<List<PositionDto>>> getPositionList(Long id){
-
-        Long userId = accessTokenValidationAspect.getUserId();
-
-        if(!checkAuthorized(id, userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        List<PositionDto> positionData = new ArrayList<>();
-        if(teamRepository.findByTeamId(id).isEmpty()){
-            throw new GlobalException(CustomError.NO_TEAM);
-        }
-        List<Position> positionList = positionRepository.findByTeam(teamRepository.findByTeamId(id).get());
-
-        for(Position position : positionList){
-            PositionDto positionDto = new PositionDto();
-            positionDto.setPositionId(position.getPositionId());
-            positionDto.setPositionName(position.getPositionName());
-            positionDto.setColorId(position.getColor().getColorId());
-            positionDto.setColorCode(position.getColor().getColorCode());
-            positionData.add(positionDto);
-        }
-
-        //응답
-        return ResponseFactory.success(positionData);
-    }
-
-    //커스텀 포지션 생성
-    public ResponseEntity<Response<PositionDto>> addCustomPosition(CustomPositionDto customPositionDto){
-        Long userId = accessTokenValidationAspect.getUserId();
-        if(teamRepository.findByTeamId(customPositionDto.getTeamId()).isEmpty()){
-            throw new GlobalException(CustomError.NO_TEAM);
-        }
-
-        if(!checkAuthorized(customPositionDto.getTeamId(), userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        //중복체크
-        List<Position> positionList = positionRepository.findByTeam(teamRepository.findByTeamId(customPositionDto.getTeamId()).get());
-        String newPositionName = customPositionDto.getPositionName();
-        boolean isDuplicate = false;
-        for(Position position : positionList){
-            if(newPositionName.equals(position.getPositionName())){
-                isDuplicate = true;
-                break;
-            }
-        }
-        if(isDuplicate){
-            throw new GlobalException(CustomError.DUPLICATE_POSITION);
-        }
-            //등록
-            Position newPosition = new Position();
-            newPosition.setPositionName(customPositionDto.getPositionName());
-            newPosition.setTeam(teamRepository.findByTeamId(customPositionDto.getTeamId()).get());
-            if(colorRepository.findByColorId(customPositionDto.getColorId()).isEmpty()){
-                throw new GlobalException(CustomError.POSITION_COLOR_NOT_FOUND);
-            }
-            newPosition.setColor(colorRepository.findByColorId(customPositionDto.getColorId()).get());
-            Long newPositionId = positionRepository.save(newPosition).getPositionId();
-
-            //응답
-            PositionDto positionDto = new PositionDto(newPositionId, customPositionDto.getPositionName(), customPositionDto.getColorId(), colorRepository.findByColorId(customPositionDto.getColorId()).get().getColorCode());
-            return ResponseFactory.success(positionDto);
-    }
-
-    //포지션 수정
-    public ResponseEntity<Response<PositionDto>> editCustomPosition(PositionDto positionDto){
-        Long userId = accessTokenValidationAspect.getUserId();
-
-        if(positionDto.getPositionId()==null ||
-                positionDto.getPositionName()==null ||
-                positionRepository.findByPositionId(positionDto.getPositionId()).isEmpty()){
-            throw new GlobalException(CustomError.NO_POSITION);
-        }
-
-        Long teamId = positionRepository.findByPositionId(positionDto.getPositionId()).get().getTeam().getTeamId();
-
-        if(!checkAuthorized(teamId, userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        if(teamRepository.findByTeamId(teamId).isEmpty()){
-            throw new GlobalException(CustomError.NO_TEAM);
-        }
-
-        //중복 확인
-        String newPositionName = positionDto.getPositionName();
-        Long positionId = positionDto.getPositionId();
-
-        boolean isDuplicate = positionRepository.findByTeam(teamRepository.findByTeamId(teamId).get()).stream()
-                .anyMatch(position -> newPositionName.equals(position.getPositionName()) &&
-                        !Objects.equals(position.getPositionId(), positionId));
-        if (isDuplicate) {
-            throw new GlobalException(CustomError.DUPLICATE_POSITION);
-        }
-
-        if(positionDto.getColorId()==null ||
-                colorRepository.findByColorId(positionDto.getColorId()).isEmpty()){
-            throw new GlobalException(CustomError.POSITION_COLOR_NOT_FOUND);
-        }
-
-        Position editPosition = positionRepository.findByPositionId(positionDto.getPositionId()).get();
-
-        editPosition.setPositionId(positionDto.getPositionId());
-        editPosition.setPositionName(positionDto.getPositionName());
-        editPosition.setColor(colorRepository.findByColorId(positionDto.getColorId()).get());
-
-        positionRepository.save(editPosition);
-
-        //응답
-        positionDto.setColorCode(colorRepository.findByColorId(positionDto.getColorId()).get().getColorCode());
-        return ResponseFactory.success(positionDto);
-    }
-
-    //포지션 삭제
-    public ResponseEntity<Response<PositionDto>> deleteCustomPosition(PositionDto positionDto){
-        Long userId = accessTokenValidationAspect.getUserId();
-        if(positionDto.getPositionId()==null ||
-                positionRepository.findByPositionId(positionDto.getPositionId()).isEmpty()){
-            throw new GlobalException(CustomError.NO_POSITION);
-        }
-
-        Long teamId = positionRepository.findByPositionId(positionDto.getPositionId()).get().getTeam().getTeamId();
-
-        if(!checkAuthorized(teamId, userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        Position deletePosition = positionRepository.findByPositionId(positionDto.getPositionId()).get();
-
-        deletePosition.setDeleted(true);
-        deletePosition.setDeletedBy(Expunger.normal);
-
-        positionRepository.save(deletePosition);
-
-        List<TeamUser> teamUserList = teamUserRepository.findByPosition(deletePosition);
-        for(TeamUser teamUser:teamUserList){
-            teamUser.setPosition(null);
-        }
-
-        List<Score> scoreList = scoreRepository.findByPosition(deletePosition);
-        for(Score score : scoreList){
-            score.setPosition(null);
-        }
-
-        //응답
-        positionDto.setPositionName(deletePosition.getPositionName());
-        positionDto.setColorId(deletePosition.getColor().getColorId());
-        positionDto.setColorCode(deletePosition.getColor().getColorCode());
-        return ResponseFactory.success(positionDto);
-    }
-
     //팀 정보 추출
     private List<LongTeamInfoDto> extractTeamInfo(List<TeamUser> teamUserList, Long id, boolean activeTeamsOnly) {
         List<LongTeamInfoDto> longTeamInfoDtoList = new ArrayList<>();
@@ -624,72 +319,6 @@ public class TeamService {
         List<TeamUser> teamUserList = teamUserRepository.findByUserOrderByCreatedAtDesc(userRepository.findByUserId(userId).get());
         List<LongTeamInfoDto> longTeamInfoDtoList = extractTeamInfo(teamUserList, userId, false);
         return ResponseFactory.success(longTeamInfoDtoList);
-    }
-
-    //팀원 teamUserId, 이름, 리더 여부, 프로필, 포지션 존재 여부, 포지션 이름, 색깔 이름, 색깔 코드 조회
-    public ResponseEntity<Response<List<LongMemberInfoDto>>> getTeamMembersInfo(Long id){
-        Long userId = accessTokenValidationAspect.getUserId();
-
-        if(teamRepository.findByTeamId(id).isEmpty()){
-            throw new GlobalException(CustomError.NO_TEAM);
-        }
-        Team team = teamRepository.findByTeamId(id).get();
-
-        if(!checkAuthorized(team.getTeamId(), userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        List<TeamUser> teamUserList = team.getTeamUsers();
-        teamUserList.sort(Comparator.comparing(TeamUser::getTeamUserId));
-        List<LongMemberInfoDto> memberInfoDtoList = new ArrayList<>();
-        for(TeamUser member : teamUserList){
-            if(member.getIsBanned()){
-                continue;
-            }
-            LongMemberInfoDto memberInfoDto = new LongMemberInfoDto();
-            memberInfoDto.setLeader(Objects.equals(team.getTeamLeaderId(), member.getUser().getUserId()));
-            memberInfoDto.setTeamUserId(member.getTeamUserId());
-            memberInfoDto.setNickName(member.getUser().getNickname());
-            memberInfoDto.setLeader(Objects.equals(team.getTeamLeaderId(), member.getUser().getUserId()));
-            memberInfoDto.setUserProfileUrl(member.getUser().getImgUrl());
-            if(member.getPosition()!=null){
-                memberInfoDto.setPositionExist(true);
-                memberInfoDto.setPositionName(member.getPosition().getPositionName());
-                memberInfoDto.setColorName(member.getPosition().getColor().getColorName());
-                memberInfoDto.setColorCode(member.getPosition().getColor().getColorCode());
-            }
-            else{
-                memberInfoDto.setPositionExist(false);
-            }
-            memberInfoDtoList.add(memberInfoDto);
-        }
-        return ResponseFactory.success(memberInfoDtoList);
-    }
-
-    //팀원 포지션 설정, 변경
-    public ResponseEntity<Response<TeamUserPositionDto>> teamUserPositionMapping(TeamUserPositionDto teamUserPositionDto) {
-        if(teamUserRepository.findByTeamUserId(teamUserPositionDto.getTeamUserId()).isEmpty()){
-            throw new GlobalException(CustomError.NO_TEAMUSER);
-        }
-        else if(positionRepository.findByPositionId(teamUserPositionDto.getPositionId()).isEmpty()){
-            throw new GlobalException(CustomError.NO_POSITION);
-        }
-
-        TeamUser teamUser = teamUserRepository.findByTeamUserId(teamUserPositionDto.getTeamUserId()).get();
-        if(!teamUser.getTeam().equals(positionRepository.findByPositionId(teamUserPositionDto.getPositionId()).get().getTeam())){
-            throw new GlobalException(CustomError.POSITION_TEAMUSER_MISMATCH);
-        }
-
-        Long userId = accessTokenValidationAspect.getUserId();
-        if(!checkAuthorized(teamUser.getTeam().getTeamId(), userId)){
-            throw new GlobalException(CustomError.UNAUTHORIZED_USER);
-        }
-
-        teamUser.setPosition(positionRepository.findByPositionId(teamUserPositionDto.getPositionId()).get());
-        teamUserRepository.save(teamUser);
-
-        //응답
-        return ResponseFactory.success(teamUserPositionDto);
     }
 
     //팀 삭제(방장만 가능)

@@ -1,10 +1,11 @@
 package com.ssafy.weSync.user.entity;
 
 import com.ssafy.weSync.global.entity.BaseTime;
-import com.ssafy.weSync.team.entity.TeamUser;
+import com.ssafy.weSync.teamUser.entity.TeamUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE user_id=?")
