@@ -288,6 +288,7 @@ public class TeamService {
 
         //강퇴
         deleteUser.get().setIsBanned(true);
+        deleteUser.get().setDeleted(true);
         teamUserRepository.save(deleteUser.get());
 
         //응답
