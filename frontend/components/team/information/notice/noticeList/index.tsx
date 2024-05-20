@@ -64,7 +64,8 @@ const NoticeList: React.FC<NoticeListProps> = ({ teamId }) => {
       message.success('삭제되었습니다.');
       fetchNotices();
     } else {
-      message.error(response.error.errorMessage);
+      // message.error(response.error.errorMessage);
+      message.error('삭제 권한이 없습니다.');
     }
   };
 
