@@ -74,7 +74,7 @@ def get_scores(team_id: int, db: Session = Depends(get_db)):
 
 @rScore.delete('/{team_id}', tags=['score'], response_model=BaseResponse)
 def delete_scores(team_id: int, db: Session = Depends(get_db)):
-    scores = db.query(Score).filter(Score.team_id == team_id).filter(Score.is_deleted == False).all()
+    scores = db.query(Score).filter(Score.team_id == team_id).filter(Score.is_deleted == 0).all()
 
     if not scores:
         return CommonResponse(False, None, 400, "삭제할 악보가 없습니다.")
@@ -84,9 +84,9 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
     try:
         for score in scores:
             print("*before => ", score)
-            score.is_deleted = True
+            score.is_deleted = 1
             if score.accompaniment:
-                score.accompaniment.is_deleted = True
+                score.accompaniment.is_deleted = 1
             print("  *after => ", score)
         
         db.commit()
