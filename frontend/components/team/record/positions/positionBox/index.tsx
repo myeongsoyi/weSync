@@ -135,9 +135,9 @@ export default function scoreBox({ teamId }: IParams) {
     setModalVisible(true);
   }
 
-  useEffect(() => {
-    console.log(isPlaying);
-  }, [isPlaying]);
+  // useEffect(() => {
+  //   console.log(isPlaying);
+  // }, [isPlaying]);
 
   if (!success) {
     return <p>{error?.errorMessage}</p>;
