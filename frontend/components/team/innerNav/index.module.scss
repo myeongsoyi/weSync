@@ -1,0 +1,21 @@
+.navContainer {
+    height: rem(60);
+}
+
+
+.yes {
+    background-color: $color-yellow;
+    @include team-nav;
+    color: $color-brown;
+}
+
+.no {
+    background-color: $color-white-yellow;
+    @include team-nav;
+}
+
+.title {
+    font-size: rem(30);
+    font-weight: bold;
+    margin: auto;
+}
