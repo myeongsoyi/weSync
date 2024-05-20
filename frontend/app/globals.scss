@@ -1,0 +1,329 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// html {
+//   min-width: 320px;
+//   max-width: 600px;
+//   margin: 0 auto;
+//   // border: 1px solid black;
+
+//   // 스크롤바 숨기기
+//   -ms-overflow-style: none; /* IE and Edge */
+//   scrollbar-width: none; /* Firefox */
+//   ::-webkit-scrollbar {
+//     display: none; /* Chrome, Safari, Opera*/
+//   }
+// }
+
+// body {
+//   padding: rem(16) rem(26);
+// }
+
+// .box {
+//   -ms-overflow-style: none; /* IE and Edge */
+//   scrollbar-width: none; /* Firefox */
+// }
+// .box::-webkit-scrollbar {
+//   display: none; /* Chrome, Safari, Opera*/
+// }
+
+body {
+    font-size: rem(16);
+}
+
+// 최소 너비 설정
+html {
+    min-width: 684px;
+}
+
+.content {
+    // 100vh에서 nav와 footer의 높이만큼 뺀다.
+    min-height: min(100vh - 12vh - 14vh, 100vh - 90px - 100px);
+    min-width: 684px;
+    margin: 0 12%;
+    @media screen and (max-width: 900px){
+      margin: 0 auto;     
+      width: 684px;
+    }
+    padding: rem(12) 0 rem(32);
+}
+
+// 푸터 관련 설정
+html, body {
+    // min-height: 100%; /* 브라우저 창 전체 높이로 설정 */
+    min-height: 100%; /* 브라우저 창 전체 높이로 설정 */
+    margin: 0;
+    padding: 0;
+}
+
+.loading {
+  display: flex;
+  min-height: min(100vh - 14vh, 100vh - 100px);
+}
+
+.welcome {
+  // 100vh에서 nav와 footer의 높이만큼 뺀다.
+  min-height: min(100vh - 14vh, 100vh - 100px);
+  min-width: 684px;
+  margin: 0 12%;
+  @media screen and (max-width: 900px){
+    margin: 0 auto;     
+    width: 684px;
+  }
+  padding: rem(12) 0 rem(32);
+}
+
+.swal2-height-auto {
+    height: 100% !important;  /* 또는 원하는 높이 값으로 설정 */
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; /* 최소 높이를 화면 높이로 설정 */
+}
+
+main {
+    flex: 1; /* main 내용이 확장하여 남은 공간을 모두 채움 */
+}
+
+footer {
+    height: 14vh;
+    min-height: 100px;
+    background: #ccc; /* 푸터 배경색 설정 */
+    padding: 10px 0; /* 푸터 패딩 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+//font
+
+@for $i from 1 through length($headingFontList) {
+  /* 리스트 길이 만큼 순회 */
+  h#{$i} {
+    font-size: nth($headingFontList, $i);
+    font-weight: bold;
+    // color: $color-text1;
+    line-height: normal;
+  }
+}
+
+.text-body {
+  font-size: $fs-5;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+.text-body2 {
+  font-size: $fs-6;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+.text-caption {
+  font-size: $fs-7;
+  font-weight: $fw-medium;
+  color: $color-text1;
+  line-height: normal;
+}
+
+.text-button {
+  font-size: $fs-4;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+// .text-logo {
+//   font-family: "Oliver";
+//   font-size: $fs-3;
+//   color: $color-text1;
+// }
+
+// .text-big-logo {
+//   font-family: "Oliver";
+//   font-size: rem(40);
+//   color: $color-text1;
+// }
+
+// .text-deco {
+//   font-family: "UhBeeSe_hyun";
+//   font-size: $fs-3;
+//   color: $color-text1;
+// }
+
+.c-text2 {
+  color: $color-text2;
+}
+
+.c-text3 {
+  color: $color-text3;
+}
+
+.c-main {
+  color: $color-red;
+}
+
+// 아래는 기본 스타일 초기화 코드 (주석화)
+
+// html,
+// body,
+// div,
+// span,
+// applet,
+// object,
+// iframe,
+// // h# 은 따로 만들어야하지만 일단 기본값을 쓰자.
+// // h1,
+// // h2,
+// // h3,
+// // h4,
+// // h5,
+// // h6,
+// p,
+// blockquote,
+// pre,
+// a,
+// abbr,
+// acronym,
+// address,
+// big,
+// cite,
+// code,
+// del,
+// dfn,
+// em,
+// img,
+// ins,
+// kbd,
+// q,
+// s,
+// samp,
+// small,
+// strike,
+// strong,
+// sub,
+// sup,
+// tt,
+// var,
+// b,
+// u,
+// i,
+// center,
+// dl,
+// dt,
+// dd,
+// ol,
+// ul,
+// li,
+// fieldset,
+// form,
+// label,
+// legend,
+// table,
+// caption,
+// tbody,
+// tfoot,
+// thead,
+// tr,
+// th,
+// td,
+// article,
+// aside,
+// canvas,
+// details,
+// embed,
+// figure,
+// figcaption,
+// footer,
+// header,
+// hgroup,
+// menu,
+// nav,
+// output,
+// ruby,
+// section,
+// summary,
+// time,
+// mark,
+// audio,
+// video {
+//     margin: 0;
+//     padding: 0;
+//     border: 0;
+//     font-size: 100%;
+//     font: inherit;
+//     vertical-align: baseline;
+// }
+
+// /* HTML5 display-role reset for older browsers */
+// article,
+// aside,
+// details,
+// figcaption,
+// figure,
+// footer,
+// header,
+// hgroup,
+// menu,
+// nav,
+// section {
+//     display: block;
+// }
+
+// body {
+//     line-height: 1;
+// }
+
+// ol,
+// ul {
+//     list-style: none;
+// }
+
+// blockquote,
+// q {
+//     quotes: none;
+// }
+
+// blockquote:before,
+// blockquote:after,
+// q:before,
+// q:after {
+//     content: "";
+//     content: none;
+// }
+
+// table {
+//     border-collapse: collapse;
+//     border-spacing: 0;
+// }
+
+/* body {
+    padding-top: 150px;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        "Open Sans",
+        "Helvetica Neue",
+        sans-serif;
+    background-color: black;
+    color: white;
+    font-size: 18px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+} */
+
+
+

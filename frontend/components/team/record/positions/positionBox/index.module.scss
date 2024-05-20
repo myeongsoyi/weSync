@@ -1,0 +1,31 @@
+.section {
+    height: fit-content;
+}
+
+.controller {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    // justify-content: center;
+    padding: rem(4);
+    margin: rem(12) rem(4);
+    border: 1.5px solid $color-gray;
+    border-radius: rem(4);
+    min-height: 80px;
+}
+
+.box_slider {
+    width: 70%;
+    margin: auto 5%;
+}
+
+.add_controller {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: rem(4);
+    margin: 0 rem(4);
+    border: 1.5px solid $color-gray;
+    border-radius: rem(4);
+  }
+  
