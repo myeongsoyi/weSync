@@ -29,13 +29,14 @@ export default function scoreBox({ teamId }: IParams) {
   const [error, setError] = useState<ScoreResponse['error']>(null);
   const [scorePosition, setScorePosition] = useState<number|null>(null);
 
-  const { scoreIndex, setScoreIndex, setTracks, toggleTrack, setVolumeTrack, setScoreId } = useRecordAudioStore((state) => ({
+  const { scoreIndex, setScoreIndex, setTracks, toggleTrack, setVolumeTrack, setScoreId, isPlaying } = useRecordAudioStore((state) => ({
     setTracks: state.setTracks,
     scoreIndex: state.scoreIndex,
     setScoreIndex: state.setScoreIndex,
     toggleTrack: state.toggleTrack,
     setVolumeTrack: state.setVolume,
     setScoreId: state.setScoreId,
+    isPlaying: state.isPlaying,
   }));
 
   useEffect(() => {
@@ -133,6 +134,10 @@ export default function scoreBox({ teamId }: IParams) {
     setModalVisible(true);
   }
 
+  useEffect(() => {
+    console.log(isPlaying);
+  }, [isPlaying]);
+
   if (!success) {
     return <p>{error?.errorMessage}</p>;
   } else if (score.length === 0) {
@@ -154,7 +159,7 @@ export default function scoreBox({ teamId }: IParams) {
                 height: 'auto',
                 zIndex: 10,
               }}
-              disabled={volume[index].isAudio ? false : true}
+              disabled={!volume[index].isAudio || isPlaying ? true : false}
             >
               {!volume[index].isMute ? (
                 <Image
@@ -224,7 +229,7 @@ export default function scoreBox({ teamId }: IParams) {
               defaultValue={50}
               value={volume[index].isMute ? 0 : volume[index].volume}
               onChange={(value) => changeVolume(index, value)}
-              disabled={volume[index].isAudio ? false : true}
+              disabled={!volume[index].isAudio || isPlaying ? true : false}
             ></Slider>
           </div>
         </div>
