@@ -1,19 +1,18 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import { Card, Space, Button, Tooltip, Pagination, message } from 'antd';
 import { PushpinFilled, DeleteFilled } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import { TeamNotices } from '@/types/teamDetail';
-import {
-  getTeamNotices,
-  putChangeFixed,
-  deleteNotice,
-} from '@/services/team/notice';
+import { getTeamNotices, putChangeFixed, deleteNotice } from '@/services/team/notice';
 import NoticeWrite from '../noticeWrite/noticeWrite';
 import { DateNoticeTimeFormat } from '@/utils/format';
 
-export default function NoticeList({ teamId }: { teamId: string }) {
+interface NoticeListProps {
+  teamId: string;
+}
+
+const NoticeList: React.FC<NoticeListProps> = ({ teamId }) => {
   const [success, setSuccess] = useState<TeamNotices['success']>(true);
   const [noticeList, setNoticeList] = useState<TeamNotices['data']>([]);
   const [error, setError] = useState<TeamNotices['error']>(null);
@@ -141,9 +140,8 @@ export default function NoticeList({ teamId }: { teamId: string }) {
               <h4
                 className="text-center text-pretty"
                 style={{ wordWrap: 'break-word', padding: '10px 120px' }}
-              >
-                {notice.content}
-              </h4>
+                dangerouslySetInnerHTML={{ __html: notice.content }}
+              />
             </div>
           </Card>
         ))
@@ -160,4 +158,6 @@ export default function NoticeList({ teamId }: { teamId: string }) {
       </div>
     </Space>
   );
-}
+};
+
+export default NoticeList;
