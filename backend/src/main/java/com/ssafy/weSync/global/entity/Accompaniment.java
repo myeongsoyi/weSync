@@ -1,6 +1,6 @@
 package com.ssafy.weSync.global.entity;
 
-import com.ssafy.weSync.team.entity.Score;
+import com.ssafy.weSync.score.entity.Score;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,7 +2,7 @@ package com.ssafy.weSync.feedback.dto.request;
 
 import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.record.entity.Record;
-import com.ssafy.weSync.team.entity.TeamUser;
+import com.ssafy.weSync.teamUser.entity.TeamUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
