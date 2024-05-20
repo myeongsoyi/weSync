@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Slider, Tag, message } from 'antd';
-import { getScoreData, postAddScorePosition } from '@/services/team/record';
+import { Button, Slider, Tag } from 'antd';
+// import { getScoreData, postAddScorePosition } from '@/services/team/record';
+import { getScoreData } from '@/services/team/record';
 import { ScoreResponse } from '@/types/record';
 import { useRecordAudioStore } from '@/store/recordAudioStore';
 import ScorePositionModal from './scorePositionModal';
@@ -111,14 +112,14 @@ export default function scoreBox({ teamId }: IParams) {
     toggleTrack(id, url, name);
   }
 
-  const clickAddPosition = async (teamId: string, partNum: number) => {
-    const response = await postAddScorePosition(teamId, partNum);
-    if (response.success) {
-      window.location.reload();
-    } else {
-      message.error('포지션 추가에 실패했습니다.');
-    }
-  };
+  // const clickAddPosition = async (teamId: string, partNum: number) => {
+  //   const response = await postAddScorePosition(teamId, partNum);
+  //   if (response.success) {
+  //     window.location.reload();
+  //   } else {
+  //     message.error('포지션 추가에 실패했습니다.');
+  //   }
+  // };
 
   const handleModalOk = () => {
     setModalVisible(false);
@@ -234,7 +235,7 @@ export default function scoreBox({ teamId }: IParams) {
           </div>
         </div>
       ))}
-      <>
+      {/* <>
         <div className={styles.add_controller}>
           <Button
             onClick={() => clickAddPosition(teamId, score.length)}
@@ -244,7 +245,7 @@ export default function scoreBox({ teamId }: IParams) {
             <h2>포지션 추가</h2>
           </Button>
         </div>
-      </>
+      </> */}
       <ScorePositionModal
         open={modalVisible}
         onOk={handleModalOk}
