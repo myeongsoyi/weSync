@@ -88,11 +88,13 @@ def delete_scores(team_id: int, db: Session = Depends(get_db)):
             if score.accompaniment:
                 score.accompaniment.is_deleted = 1
             print("  *after => ", score)
-        
-        db.commit()
+            try:
+                db.commit()
+            except Exception as e:
+                db.rollback()  # 예외 발생 시 롤백
+                return CommonResponse(False, None, 400, "DB commit에 실패했습니다. 다시 시도해 주세요.")
     except Exception as e:
-        db.rollback()  # 예외 발생 시 롤백
-        return CommonResponse(False, None, 400, "DB commit에 실패했습니다. 다시 시도해 주세요.")
+        print(e)
     finally:
         db.close()
 
