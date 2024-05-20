@@ -1,0 +1,52 @@
+.isEndOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4); // 반투명 검은색 배경
+    z-index: 1000;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 10px; // 카드의 모서리와 일치
+
+    h1 {
+        // 폰트 사이즈를 vw 단위로 설정하되, 최소값과 최대값을 지정
+        font-size: calc(16px + 4vw); // 기본적으로 뷰포트 너비의 4%에 16px을 더함
+
+        @media (min-width: 1200px) {
+            font-size: 64px; // 뷰포트 너비가 1280px 이상일 때 폰트 사이즈를 80px로 고정
+        }
+
+        @media (max-width: 640px) {
+            font-size: 40px; // 뷰포트 너비가 640px 이하일 때 폰트 사이즈를 48px로 고정
+        }
+
+        margin: rem(12) 0;
+    }
+
+    h3 {
+        // 폰트 사이즈를 vw 단위로 설정하되, 최소값과 최대값을 지정
+        font-size: calc((16px + 4vw)/2); // 기본적으로 뷰포트 너비의 2%에 8px을 더함
+
+        @media (min-width: 1200px) {
+            font-size: 30px; // 뷰포트 너비가 1280px 이상일 때 폰트 사이즈를 36px로 고정
+        }
+
+        @media (max-width: 640px) {
+            font-size: 20px; // 뷰포트 너비가 640px 이하일 때 폰트 사이즈를 20px로 고정
+        }
+        
+        margin: rem(6) 0;
+    }
+}
+
+.cardContainer {
+    position: relative;
+    // width: 32%;
+    // margin-top: 16px; // 필요하다면 조정
+}

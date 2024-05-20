@@ -1,0 +1,50 @@
+//color
+
+// $color-red: #e52d2b;
+// $color-orange: #ff682e;
+// $color-pink: #ffe2d8;
+// $color-brown: #764c32;
+// $color-yellow: #ffcf00;
+// $color-light-yellow: #fff3c1;
+$color-red: #ff1616;
+$color-orange: #ff9314;
+$color-pink: #ffe2d8;
+$color-brown: #966000;
+$color-black: #121212;
+$color-light-black: #505050;
+$color-gray: #d1d1d1;
+$color-dark-yellow: #ffc500;
+$color-yellow: #ffe27f;
+$color-light-yellow: #ffeeb2;
+$color-white-yellow: #fffae9;
+$color-text1: #363636;
+$color-text2: #656565;
+$color-text3: #999999;
+$color-text4: #d9d9d9;
+$color-text5: #f5f5f5;
+$color-white: #ffffff;
+
+//px -> rem
+$browser-context: 16; // 브라우저의 기본 폰트
+
+@function rem($pixels, $context: $browser-context) {
+  @return #{$pixels/$context}rem;
+}
+
+//font
+$fs-1: rem(32);
+$fs-2: rem(26);
+$fs-3: rem(22);
+$fs-4: rem(20);
+$fs-5: rem(16);
+$fs-6: rem(13);
+$fs-7: rem(12);
+
+$headingFontList: ($fs-1, $fs-2, $fs-3, $fs-4);
+
+$fw-bold: bold;
+$fw-medium: 500;
+
+//min, max width
+// $min-width: 320px;
+// $max-width: 600px;

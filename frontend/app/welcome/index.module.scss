@@ -1,0 +1,57 @@
+.welcome {
+  position: relative;
+  padding: 12px;
+}
+
+.floatingButton {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; /* 다른 요소들보다 위에 표시 */
+}
+
+.startButton {
+  width: 150px; /* 기본 너비 */
+  height: auto; /* 높이 자동 조정 */
+  max-width: 100%; /* 최대 너비를 부모 요소에 맞춤 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1); /* 약간 확대하여 빛이 지나가는 듯한 효과 */
+    // box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* 빛이 지나가는 효과를 위해 그림자 추가 */
+  }
+}
+
+.introLink {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 중앙 정렬을 위해 추가 */
+  transition: all 0.3s ease;
+}
+
+.logo {
+  width: 25vw;
+  min-width: rem(300);
+  margin: auto;
+}
+
+.kakao {
+  margin-top: 3vh;
+  margin-bottom: 2vh;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 중앙 정렬을 위한 속성 추가 */
+}
+
+.content {
+  padding: 12px;
+}
+
+.carouselWrapper {
+  margin: 0 auto; /* 중앙 정렬을 위해 auto 마진 */
+  width: 90%; /* 전체 너비의 80%로 설정 */
+  max-width: 1200px; /* 최대 너비 설정 */
+  position: relative; /* 플로팅 버튼을 내부에 배치하기 위해 상대적 위치 설정 */
+  margin-bottom: 2rem; /* 캐러셀과 푸터 사이에 공간 추가 */
+}

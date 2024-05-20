@@ -1,0 +1,154 @@
+//flex-box
+@mixin flex($align: center, $justify: center, $direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: $align;
+  justify-content: $justify;
+}
+
+//padding
+@mixin pad($left, $right, $top, $bottom) {
+  padding-left: $left !important;
+  padding-right: $right !important;
+  padding-top: $top !important;
+  padding-bottom: $bottom !important;
+}
+
+@mixin pad-h($left, $right) {
+  padding-left: $left !important;
+  padding-right: $right !important;
+}
+
+@mixin pad-v($top, $bottom) {
+  padding-top: $top !important;
+  padding-bottom: $bottom !important;
+}
+
+//margin
+@mixin mar($left, $right, $top, $bottom) {
+  margin-left: $left !important;
+  margin-right: $right !important;
+  margin-top: $top !important;
+  margin-bottom: $bottom !important;
+}
+
+@mixin mar-h($left, $right) {
+  margin-left: $left !important;
+  margin-right: $right !important;
+}
+
+@mixin mar-v($top, $bottom) {
+  margin-top: $top !important;
+  margin-bottom: $bottom !important;
+}
+
+//shadow
+@mixin sha-drop() {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+@mixin sha-inset() {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+//screen
+
+// $breakpoint-tablet: 1024px; /* 함수 선언 */
+// $breakpoint-mobile: 640px; /* 변수 선언 */
+
+// /* $break-point 이하 */
+// @mixin max-screen($break-point) {
+//   @media screen and (max-width: $break-point) {
+//     @content;
+//   }
+// }
+// /* $break-point 이상 */
+// @mixin max-screen($break-point) {
+//   @media screen and (min-width: $break-point) {
+//     @content;
+//   }
+// }
+// /* $break-point-min이상、$break-point-max이하 */
+// @mixin screen($break-point-min, $break-point-max) {
+//   @media screen and (min-width: $break-point-min) and (max-width: $break-point-max) {
+//     @content;
+//   }
+// }
+
+// //font
+// @font-face {
+//   font-family: "UhBeeSe_hyun";
+//   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_five@.2.0/UhBeeSe_hyun.woff")
+//     format("woff");
+//   font-weight: normal;
+//   font-style: normal;
+// }
+
+// @font-face {
+//   font-family: "Oliver";
+//   src: url("../../public/fonts/Oliver-Regular.ttf");
+//   font-weight: 400;
+//   font-style: normal;
+// }
+
+@mixin text-body {
+  font-size: $fs-5;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+@mixin text-body2 {
+  font-size: $fs-6;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+@mixin text-caption {
+  font-size: $fs-7;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+@mixin text-button {
+  font-size: $fs-4;
+  font-weight: $fw-medium;
+  color: $color-text1;
+}
+
+// @mixin text-logo {
+//   font-family: "Oliver";
+//   font-size: $fs-3;
+//   color: $color-text1;
+// }
+
+// @mixin text-big-logo {
+//   font-family: "Oliver";
+//   font-size: rem(40);
+//   color: $color-text1;
+// }
+
+// @mixin text-deco {
+//   font-family: "UhBeeSe_hyun";
+//   font-size: $fs-3;
+//   color: $color-text1;
+// }
+
+@mixin c-text2 {
+  color: $color-text2;
+}
+
+@mixin c-text3 {
+  color: $color-text3;
+}
+
+@mixin team-nav {
+  outline: rem(3) solid $color-dark-yellow;
+  color: $color-text3;
+  border-top-left-radius: rem(16);
+  border-top-right-radius: rem(16);
+  display: flex;
+  &:nth-child(even) {
+    margin: 0 rem(3) rem(3);
+  }
+  margin-bottom: rem(3);
+}
