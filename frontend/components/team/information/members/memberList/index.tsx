@@ -22,6 +22,7 @@ export default function TeamMemberList({ teamId }: IParams) {
 
   const fetchMembers = async () => {
     const members = await getTeamMembers(teamId);
+    // console.log(members);
     setSuccess(members.success);
     setMembers(members.data);
     setError(members.error);
@@ -134,6 +135,7 @@ export default function TeamMemberList({ teamId }: IParams) {
                           ),
                         style: { textAlign: 'center', fontWeight: 'bold' },
                       },
+                      
                       {
                         key: 'remove_member',
                         label: '멤버 강퇴',
