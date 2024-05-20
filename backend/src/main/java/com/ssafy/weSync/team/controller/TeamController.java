@@ -36,60 +36,6 @@ public class TeamController {
         return teamService.getActiveTeamsShort(teamId);
     }
 
-    //팀 초대 링크 생성
-    @GetMapping("/{id}")
-    public ResponseEntity<Response<TeamLinkDto>> getTeamLink(@PathVariable Long id) {
-        return teamService.getTeamLink(id);
-    }
-
-    //유저 강퇴
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Response<TeamUserDto>> deleteTeamUser(@PathVariable Long id) {
-        return teamService.deleteTeamUser(id);
-    }
-
-    //초대된 팀으로 이동
-    @GetMapping("/invite/{UUID}")
-    public ResponseEntity<Response<TeamIdDto>> redirectToTeam(@PathVariable String UUID) {
-        return teamService.redirectToTeam(UUID);
-    }
-
-    //악보별 포지션 할당
-    @PostMapping("/score-position")
-    public ResponseEntity<Response<ScorePositionDto>> scorePositionMapping(@RequestBody ScorePositionDto scorePositionDto) {
-        return teamService.scorePositionMapping(scorePositionDto);
-    }
-
-    //색상 조회
-    @GetMapping("/color")
-    public ResponseEntity<Response<List<ColorDto>>> getColorList() {
-        return teamService.getColorList();
-    }
-
-    //포지션 조회
-    @GetMapping("/position")
-    public ResponseEntity<Response<List<PositionDto>>> getPositionList(@RequestParam() Long teamId) {
-        return teamService.getPositionList(teamId);
-    }
-
-    //커스텀 포지션 생성
-    @PostMapping("/position")
-    public ResponseEntity<Response<PositionDto>> addCustomPosition(@RequestBody CustomPositionDto customPositionDto) {
-        return teamService.addCustomPosition(customPositionDto);
-    }
-
-    //포지션 수정
-    @PutMapping("/position")
-    public ResponseEntity<Response<PositionDto>> editCustomPosition(@RequestBody PositionDto positionDto) {
-        return teamService.editCustomPosition(positionDto);
-    }
-
-    //포지션 삭제
-    @DeleteMapping("/position")
-    public ResponseEntity<Response<PositionDto>> deleteCustomPosition(@RequestBody PositionDto positionDto) {
-        return teamService.deleteCustomPosition(positionDto);
-    }
-
     //진행중인 팀목록 조회
     @GetMapping("/active")
     public ResponseEntity<Response<List<LongTeamInfoDto>>> getActiveTeams() {
@@ -100,18 +46,6 @@ public class TeamController {
     @GetMapping("/total")
     public ResponseEntity<Response<List<LongTeamInfoDto>>> getAllTeams() {
         return teamService.getAllTeams();
-    }
-
-    //팀원 teamUserId, 이름, 리더 여부, 프로필, 포지션 존재 여부, 포지션 이름, 색깔 이름, 색깔 코드 조회
-    @GetMapping("/members/{id}")
-    public ResponseEntity<Response<List<LongMemberInfoDto>>> getTeamMembersInfo(@PathVariable Long id) {
-        return teamService.getTeamMembersInfo(id);
-    }
-
-    //팀원 포지션 설정, 변경
-    @PutMapping("/team-position")
-    public ResponseEntity<Response<TeamUserPositionDto>> teamUserPositionMapping(@RequestBody TeamUserPositionDto teamUserPositionDto) {
-        return teamService.teamUserPositionMapping(teamUserPositionDto);
     }
 
     //팀 삭제

@@ -2,7 +2,7 @@ package com.ssafy.weSync.notice.dto.request;
 
 import com.ssafy.weSync.notice.entity.Notice;
 import com.ssafy.weSync.team.entity.Team;
-import com.ssafy.weSync.team.entity.TeamUser;
+import com.ssafy.weSync.teamUser.entity.TeamUser;
 import lombok.*;
 
 @Data

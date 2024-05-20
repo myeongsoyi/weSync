@@ -1,17 +1,21 @@
 package com.ssafy.weSync.team.entity;
 
 import com.ssafy.weSync.global.entity.BaseTime;
+import com.ssafy.weSync.invitation.entity.Invitation;
 import com.ssafy.weSync.notice.entity.Notice;
+import com.ssafy.weSync.position.entity.Position;
+import com.ssafy.weSync.score.entity.Score;
+import com.ssafy.weSync.teamUser.entity.TeamUser;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.lang.NonNull;
 
 import java.util.List;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE team SET is_deleted = true WHERE team_id=?")
