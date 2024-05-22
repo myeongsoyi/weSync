@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* lilypond-2.14.0-1.linux-64.sh
 
 COPY requirements.txt /wesync/requirements.txt
+COPY .env /wesync/.env
 
 RUN pip install --no-cache-dir --upgrade -r /wesync/requirements.txt
 
