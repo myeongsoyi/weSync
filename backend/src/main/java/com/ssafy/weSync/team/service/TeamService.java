@@ -339,11 +339,6 @@ public class TeamService {
         deleteTeam.get().setIsFinished(true);
         teamRepository.save(deleteTeam.get());
 
-        List<TeamUser> teamUserList = teamUserRepository.findByTeam(deleteTeam.get());
-        for(TeamUser teamUser : teamUserList){
-            teamUser.setTeam(null);
-        }
-
         //응답
         TeamIdDto teamIdDto = new TeamIdDto(id);
         return ResponseFactory.success(teamIdDto);

@@ -3,6 +3,7 @@ package com.ssafy.weSync.notice.service;
 import com.ssafy.weSync.global.ApiResponse.AccessTokenValidationAspect;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
+import com.ssafy.weSync.global.entity.Expunger;
 import com.ssafy.weSync.notice.dto.request.CreateRequest;
 import com.ssafy.weSync.notice.dto.request.UpdateRequest;
 import com.ssafy.weSync.notice.dto.response.CreateResponse;
@@ -61,11 +62,7 @@ public class NoticeService {
         return getAllResponses;
     }
 
-    /***
-     * 상단고정여부 변경
-     * @param noticeId
-     * @param userId
-     */
+    // 상단고정여부 변경
     public FixUpdateResponse updateNotice(Long noticeId, Long userId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
         TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
@@ -113,6 +110,7 @@ public class NoticeService {
             throw new GlobalException(CustomError.NOT_TEAM_LEADER);
         }
 
+        notice.setDeletedBy(Expunger.normal);
         noticeRepository.deleteById(noticeId);
     }
 
