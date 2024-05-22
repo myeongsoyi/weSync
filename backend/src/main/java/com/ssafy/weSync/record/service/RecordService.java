@@ -41,6 +41,7 @@ public class RecordService {
     private final TeamUserRepository teamUserRepository;
     private final TeamRepository teamRepository;
     private final FeedBackService feedBackService;
+    private final FeedBackRepository feedBackRepository;
 
     public CreateResponse createRecord(CreateRequest createRequest, MultipartFile file, Long scoreId, Long userId) throws IOException {
         Score score = scoreRepository.findByScoreId(scoreId).orElseThrow(() -> new GlobalException(CustomError.NO_SCORE));
@@ -145,7 +146,9 @@ public class RecordService {
         s3Service.deleteS3Object(parsedKey);
 
         for (FeedBack fb : record.getFeedBacks()){
-            feedBackService.deleteFeedback(userId, fb.getFeedBackId());
+            fb.setDeletedBy(Expunger.normal);
+            fb.setDeleted(true);
+            feedBackRepository.save(fb);
         }
 
         record.setDeletedBy(Expunger.normal);

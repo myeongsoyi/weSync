@@ -6,11 +6,13 @@ import com.ssafy.weSync.global.entity.Expunger;
 import com.ssafy.weSync.invitation.repository.InvitationRepository;
 import com.ssafy.weSync.invitation.service.InvitationService;
 import com.ssafy.weSync.notice.entity.Notice;
+import com.ssafy.weSync.notice.respository.NoticeRepository;
 import com.ssafy.weSync.notice.service.NoticeService;
 import com.ssafy.weSync.position.entity.Position;
 import com.ssafy.weSync.position.repository.PositionRepository;
 import com.ssafy.weSync.position.service.PositionService;
 import com.ssafy.weSync.score.entity.Score;
+import com.ssafy.weSync.score.repository.ScoreRepository;
 import com.ssafy.weSync.score.service.ScoreService;
 import com.ssafy.weSync.team.dto.request.*;
 import com.ssafy.weSync.team.dto.response.*;
@@ -50,6 +52,8 @@ public class TeamService {
     private final TeamUserService teamUserService;
     private final NoticeService noticeService;
     private final ScoreService scoreService;
+    private final ScoreRepository scoreRepository;
+    private final NoticeRepository noticeRepository;
 
     //팀 생성
     public ResponseEntity<Response<TeamIdDto>> createTeam(CreateTeamInfoDto createTeamInfoDto) throws IOException {
@@ -345,11 +349,15 @@ public class TeamService {
         }
 
         for (Notice n : deleteTeam.get().getNotices()){
-            noticeService.deleteNotice(n.getNoticeId(), userId);
+            n.setDeletedBy(Expunger.normal);
+            n.setDeleted(true);
+            noticeRepository.save(n);
         }
 
         for (Score s : deleteTeam.get().getScores()){
-            scoreService.deleteScore(userId, s.getScoreId());
+            s.setDeletedBy(Expunger.normal);
+            s.setDeleted(true);
+            scoreRepository.save(s);
         }
 
         for (TeamUser tu : deleteTeam.get().getTeamUsers()) {
