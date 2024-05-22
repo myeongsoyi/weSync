@@ -174,7 +174,6 @@ export default async function TeamModify(
 
   if (formValues) {
     const { teamName, teamSong, isFinished, teamProfile } = formValues;
-    // console.log(teamId, teamName, teamSong, isFinished, teamProfile);
     const response = await patchTeamInfo(
       teamId,
       teamName,
