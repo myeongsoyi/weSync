@@ -345,7 +345,9 @@ public class TeamService {
         }
 
         for (TeamUser tu : deleteTeam.get().getTeamUsers()) {
-            teamUserService.deleteTeamUser(tu.getTeamUserId());
+            tu.setDeletedBy(Expunger.normal);
+            tu.setDeleted(true);
+            teamUserRepository.save(tu);
         }
 
         for (Notice n : deleteTeam.get().getNotices()){
