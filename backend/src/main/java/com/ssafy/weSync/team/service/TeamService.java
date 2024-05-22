@@ -344,18 +344,18 @@ public class TeamService {
             throw new GlobalException(CustomError.UNAUTHORIZED_USER);
         }
 
-        for (TeamUser tu : deleteTeam.get().getTeamUsers()) {
-            tu.setDeletedBy(Expunger.normal);
-            tu.setDeleted(true);
-            teamUserRepository.save(tu);
-        }
-
         for (Notice n : deleteTeam.get().getNotices()){
             noticeService.deleteNotice(n.getNoticeId(), userId);
         }
 
         for (Score s : deleteTeam.get().getScores()){
             scoreService.deleteScore(userId, s.getScoreId());
+        }
+
+        for (TeamUser tu : deleteTeam.get().getTeamUsers()) {
+            tu.setDeletedBy(Expunger.normal);
+            tu.setDeleted(true);
+            teamUserRepository.save(tu);
         }
 
         deleteTeam.get().setDeleted(true);
