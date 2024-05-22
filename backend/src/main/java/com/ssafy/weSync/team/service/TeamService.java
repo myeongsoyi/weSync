@@ -4,8 +4,14 @@ import com.ssafy.weSync.color.repository.ColorRepository;
 import com.ssafy.weSync.global.ApiResponse.*;
 import com.ssafy.weSync.global.entity.Expunger;
 import com.ssafy.weSync.invitation.repository.InvitationRepository;
+import com.ssafy.weSync.invitation.service.InvitationService;
+import com.ssafy.weSync.notice.entity.Notice;
+import com.ssafy.weSync.notice.service.NoticeService;
 import com.ssafy.weSync.position.entity.Position;
 import com.ssafy.weSync.position.repository.PositionRepository;
+import com.ssafy.weSync.position.service.PositionService;
+import com.ssafy.weSync.score.entity.Score;
+import com.ssafy.weSync.score.service.ScoreService;
 import com.ssafy.weSync.team.dto.request.*;
 import com.ssafy.weSync.team.dto.response.*;
 import com.ssafy.weSync.teamUser.entity.TeamUser;
@@ -13,6 +19,7 @@ import com.ssafy.weSync.team.entity.*;
 import com.ssafy.weSync.team.repository.*;
 import com.ssafy.weSync.s3.service.S3Service;
 import com.ssafy.weSync.teamUser.repository.TeamUserRepository;
+import com.ssafy.weSync.teamUser.service.TeamUserService;
 import com.ssafy.weSync.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +47,9 @@ public class TeamService {
     private static final String[] DefaultPositionName = {"소프라노","메조소프라노", "알토", "바리톤", "테너", "베이스", "퍼커션"}; // 디폴트 포지션 이름
     private static final Long[] DefaultColorId = {1L,2L,3L,4L,5L,6L,7L}; // 디폴트 포지션별 colorId
     private static final String defaultProfileUrl = "https://we-sync.s3.ap-southeast-2.amazonaws.com/front/wesync_icon.svg"; // 디폴트 팀 프로필
+    private final TeamUserService teamUserService;
+    private final NoticeService noticeService;
+    private final ScoreService scoreService;
 
     //팀 생성
     public ResponseEntity<Response<TeamIdDto>> createTeam(CreateTeamInfoDto createTeamInfoDto) throws IOException {
@@ -332,6 +342,18 @@ public class TeamService {
         Long userId = accessTokenValidationAspect.getUserId();
         if(!Objects.equals(deleteTeam.get().getTeamLeaderId(), userId)){
             throw new GlobalException(CustomError.UNAUTHORIZED_USER);
+        }
+
+        for (TeamUser tu : deleteTeam.get().getTeamUsers()) {
+            teamUserService.deleteTeamUser(tu.getTeamUserId());
+        }
+
+        for (Notice n : deleteTeam.get().getNotices()){
+            noticeService.deleteNotice(n.getNoticeId(), userId);
+        }
+
+        for (Score s : deleteTeam.get().getScores()){
+            scoreService.deleteScore(userId, s.getScoreId());
         }
 
         deleteTeam.get().setDeleted(true);

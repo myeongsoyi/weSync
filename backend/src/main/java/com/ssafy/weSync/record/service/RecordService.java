@@ -2,6 +2,7 @@ package com.ssafy.weSync.record.service;
 
 import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.feedback.repository.FeedBackRepository;
+import com.ssafy.weSync.feedback.service.FeedBackService;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
 import com.ssafy.weSync.global.entity.Expunger;
@@ -39,8 +40,7 @@ public class RecordService {
     private final ScoreRepository scoreRepository;
     private final TeamUserRepository teamUserRepository;
     private final TeamRepository teamRepository;
-    private final UserRepository userRepository;
-    private final FeedBackRepository feedBackRepository;
+    private final FeedBackService feedBackService;
 
     public CreateResponse createRecord(CreateRequest createRequest, MultipartFile file, Long scoreId, Long userId) throws IOException {
         Score score = scoreRepository.findByScoreId(scoreId).orElseThrow(() -> new GlobalException(CustomError.NO_SCORE));
@@ -143,6 +143,10 @@ public class RecordService {
         String parsing = beforeParsingKey.replaceAll("%20", " ");
         String parsedKey = parsing.replaceAll("%3A", ":");
         s3Service.deleteS3Object(parsedKey);
+
+        for (FeedBack fb : record.getFeedBacks()){
+            feedBackService.deleteFeedback(userId, fb.getFeedBackId());
+        }
 
         record.setDeletedBy(Expunger.normal);
         recordRepository.deleteById(recordId);
