@@ -45,10 +45,10 @@ public class Score extends BaseTime {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToMany(mappedBy = "score")
+    @OneToMany(mappedBy = "score", orphanRemoval = true)
     private List<Record> records;
 
-    @OneToMany(mappedBy = "score")
+    @OneToMany(mappedBy = "score", orphanRemoval = true)
     private List<Accompaniment> accompaniments;
 
 }

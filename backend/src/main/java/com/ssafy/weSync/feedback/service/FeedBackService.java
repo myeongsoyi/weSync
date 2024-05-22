@@ -9,6 +9,7 @@ import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.feedback.repository.FeedBackRepository;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
+import com.ssafy.weSync.global.entity.Expunger;
 import com.ssafy.weSync.record.entity.Record;
 import com.ssafy.weSync.record.repository.RecordRepository;
 import com.ssafy.weSync.team.entity.Team;
@@ -70,6 +71,7 @@ public class FeedBackService {
             throw new GlobalException(CustomError.UNAUTHORIZED_USER);
         }
 
+        feedBack.setDeletedBy(Expunger.normal);
         feedBackRepository.deleteById(feedbackId);
     }
 }
