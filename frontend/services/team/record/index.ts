@@ -65,8 +65,6 @@ export async function postSaveRecord(
   } catch (error) {
     return response;
   }
-  // console.log('postSaveRecord', scoreId, title, startAt, endAt, file);
-  // return {success: true, data: [], error: {errorCode: '', errorMessage: ''}};
 }
 
 export async function putChangeRecordPublic(recordId: number) {

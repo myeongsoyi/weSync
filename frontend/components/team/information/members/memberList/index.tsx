@@ -22,7 +22,6 @@ export default function TeamMemberList({ teamId }: IParams) {
 
   const fetchMembers = async () => {
     const members = await getTeamMembers(teamId);
-    // console.log(members);
     setSuccess(members.success);
     setMembers(members.data);
     setError(members.error);
@@ -54,7 +53,6 @@ export default function TeamMemberList({ teamId }: IParams) {
 
       if (result.isConfirmed) {
         const response = await deleteTeamMember(memberId);
-        // console.log(response);
         if (response.success) {
           message.success('멤버가 강퇴되었습니다.');
           fetchMembers();
@@ -70,7 +68,6 @@ export default function TeamMemberList({ teamId }: IParams) {
 
   const handleModalOk = () => {
     setModalVisible(false);
-    // console.log('Position change confirmed for member ID:', selectedMemberId);
   };
 
   const handleModalCancel = () => {

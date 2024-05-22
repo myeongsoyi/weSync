@@ -12,7 +12,6 @@ export default function InviteComponent({ code }: { code: string }) {
   useEffect(() => {
     const fetchTeamInviteAccept = async () => {
       const res = await getTeamInviteAccept(code);
-      // console.log(res);
       if (res.success) {
         setSuccess(res.success);
         router.push(`/team/${res.data.teamId}/information`);
