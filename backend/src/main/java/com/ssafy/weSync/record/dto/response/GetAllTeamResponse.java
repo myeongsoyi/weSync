@@ -27,7 +27,7 @@ public class GetAllTeamResponse extends GetAllTeamCommon{
                 .isPublic(record.isPublic())
                 .startAt(record.getStartAt())
                 .endAt(record.getEndAt())
-                .createAt(record.getCreatedAt())
+                .createdAt(record.getCreatedAt())
                 .userId(record.getTeamUser().getUser().getUserId())
                 .nickname(record.getTeamUser().getUser().getNickname())
                 .positionId(record.getScore().getPosition() != null ?
