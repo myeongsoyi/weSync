@@ -11,13 +11,7 @@ interface TrackState {
   }>;
   isPlaying: boolean;
   toggleTrack: (id: number, url: string, name: string) => void;
-  togglePlayPauseOne: (id: number) => void;
-  setVolume: (id: number, volume: number) => void;
-  playAll: () => void;
-  pauseAll: () => void;
-  setVolumeAll: (volume: number) => void;
   setIsPlaying: (isPlaying: boolean) => void;
-  // setCurrentTime: (id: number, time: number) => void;
 }
 
 export const useMultiAudioStore = create<TrackState>((set, get) => ({
@@ -30,37 +24,7 @@ export const useMultiAudioStore = create<TrackState>((set, get) => ({
       : [...get().tracks, { id, url, name, playing: false, volume: 0.5 }];
     set({ tracks: newTracks });
   },
-  togglePlayPauseOne: (id: number,) => {
-    const newTracks = get().tracks.map(track =>
-      track.id === id ? { ...track, playing: !track.playing } : track
-    );
-    set({ tracks: newTracks });
-  },
-  setVolume: (id, volume) => {
-    const newTracks = get().tracks.map(track =>
-      track.id === id ? { ...track, volume: volume } : track
-    );
-    set({ tracks: newTracks });
-  },
-  playAll: () => {
-    const newTracks = get().tracks.map(track => ({ ...track, playing: true }));
-    set({ tracks: newTracks });
-  },
-  pauseAll: () => {
-    const newTracks = get().tracks.map(track => ({ ...track, playing: false }));
-    set({ tracks: newTracks });
-  },
-  setVolumeAll: volume => {
-    const newTracks = get().tracks.map(track => ({ ...track, volume }));
-    set({ tracks: newTracks });
-  },
   setIsPlaying: isPlaying => {
     set({ isPlaying });
   },
-  // setCurrentTime: (id, time) => {
-  //   const newTracks = get().tracks.map(track =>
-  //     track.id === id ? { ...track, currentTime: time } : track
-  //   );
-  //   set({ tracks: newTracks });
-  // },
 }));
