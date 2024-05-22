@@ -48,26 +48,26 @@ public class Team extends BaseTime {
     private Long teamLeaderId;
 
     //팀원
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "team_users")
     private List<TeamUser> teamUsers;
 
     //악보
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "score")
     private List<Score> scores;
 
     //포지션
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "position")
     private List<Position> positions;
 
     //초대
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @Column(name = "invitation")
     private List<Invitation> invitations;
 
     //공지
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Notice> notices;
 }
