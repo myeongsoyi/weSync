@@ -35,7 +35,7 @@ export default function PublicListRecord() {
       setSuccess(response.success);
       setRecords(response.data);
       setError(response.error);
-      console.log(response)
+      // console.log(response)
     } else {
       setSuccess(response.success);
       setError(response.error);
