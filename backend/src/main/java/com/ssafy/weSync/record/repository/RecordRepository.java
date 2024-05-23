@@ -53,6 +53,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     @Query("SELECT r FROM Record r JOIN FETCH r.score s JOIN FETCH s.team t JOIN FETCH t.teamUsers tu JOIN FETCH tu.user u " +
             "WHERE r.recordId = :recordId")
-    Optional<Record> findByRecordIdWithScoreAndTeamAndTeamUserByUserId(@Param("recordId") Long recordId);
+    Optional<Record> findByRecordIdWithScoreAndTeamAndTeamUser(@Param("recordId") Long recordId);
 
 }
