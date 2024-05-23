@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -118,7 +119,8 @@ public class RecordService {
     // public -> private
     // private -> public
     public UpdateResponse updateRecord(Long userId, Long recordId) {
-        Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        Record record = recordRepository.findByRecordIdWithTeamUser(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        TeamUser teamUser = record.getTeamUser();
         
         // 권한 체크
         if (record.getTeamUser().getUser().getUserId() != userId) {
@@ -131,7 +133,8 @@ public class RecordService {
     }
 
     public void deleteRecord(Long userId, Long recordId) {
-        Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        Record record = recordRepository.findByRecordIdWithTeamUser(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        TeamUser teamUser = record.getTeamUser();
 
         // 권한 체크
         if (record.getTeamUser().getUser().getUserId() != userId) {
