@@ -211,10 +211,10 @@ export default function PrivateListRecord() {
         <Column title="제목" dataIndex="title" key="title" />
         <Column
           title="일시"
-          dataIndex="createAt"
-          key="createAt"
-          render={(createAt) => {
-            const date = new Date(createAt);
+          dataIndex="createdAt"
+          key="createdAt"
+          render={(createdAt) => {
+            const date = new Date(createdAt);
             const formattedDate = date.toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: '2-digit',
