@@ -43,7 +43,6 @@ export default function scoreBox({ teamId }: IParams) {
   useEffect(() => {
     const fetchScore = async () => {
       const response = await getScoreData(teamId);
-      // console.log(response);
       if (response.success) {
         setSuccess(response.success);
         setScore(response.data);
@@ -83,10 +82,6 @@ export default function scoreBox({ teamId }: IParams) {
       }))
     );
   }, [score]);
-
-  // useEffect(() => {
-  //   console.log(scoreIndex);
-  // }, [scoreIndex]);
 
   function changeVolume(index: number, value: number) {
     setVolume((prev) => {
@@ -134,10 +129,6 @@ export default function scoreBox({ teamId }: IParams) {
     setScorePosition(score_id);
     setModalVisible(true);
   }
-
-  // useEffect(() => {
-  //   console.log(isPlaying);
-  // }, [isPlaying]);
 
   if (!success) {
     return <p>{error?.errorMessage}</p>;
@@ -192,7 +183,6 @@ export default function scoreBox({ teamId }: IParams) {
                 height: 'auto',
                 zIndex: 10,
               }}
-              // disabled={volume[index].isAudio ? false : true}
             >
               <CheckCircleOutlined
                 style={
