@@ -35,7 +35,7 @@ public class FeedBackService {
 
     public CreateResponse createFeedBack(CreateRequest createRequest, Long userId, Long teamId, Long recordId) {
         Team team =  teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
-        Record record = recordRepository.findByRecordIdWithScoreAndTeamAndTeamUserByUserId(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        Record record = recordRepository.findByRecordIdWithScoreAndTeamAndTeamUser(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
         TeamUser teamUser = null;
         for (TeamUser tu : record.getScore().getTeam().getTeamUsers()) {
             if (tu.getUser().getUserId() == userId){
