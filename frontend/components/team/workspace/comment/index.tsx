@@ -50,7 +50,6 @@ export default function CommentModal({
     if (response.success) {
       setSuccess(response.success);
       setComments(response.data);
-      // console.log(response.data);
     } else {
       setSuccess(response.success);
       setError(response.error);

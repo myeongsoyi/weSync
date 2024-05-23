@@ -31,11 +31,11 @@ export default function PublicListRecord() {
 
   const fetchRecords = async () => {
     const response = await getTeamRecordsAll(teamId as string);
-    // console.log(response);
     if (response.success) {
       setSuccess(response.success);
       setRecords(response.data);
       setError(response.error);
+      // console.log(response)
     } else {
       setSuccess(response.success);
       setError(response.error);
@@ -70,9 +70,6 @@ export default function PublicListRecord() {
     setCommentModalVisible(true);
   };
 
-  // useEffect(() => {
-  //   console.log(tracks);
-  // }, [tracks]);
 
   // 포지션 필터링 임시 함수
   // const positionFilters = Array.from(
@@ -108,15 +105,6 @@ export default function PublicListRecord() {
         } catch (err) {
           message.error('공유 상태 변경에 실패했습니다.');
         }
-        // const newRecords = records.map((record) => {
-        //   if (record.recordId === recordId) {
-        //     return { ...record, isPublic: !record.isPublic };
-        //   }
-        //   return record;
-        // });
-        // const msg = isPublic ? '공유가 취소되었습니다.' : '공유가 시작되었습니다.';
-        // message.success(msg);
-        // setRecords(newRecords);
       }
     });
   };
@@ -241,32 +229,12 @@ export default function PublicListRecord() {
           )}
         />
         <Column title="제목" dataIndex="title" key="title" />
-        {/* <Column
-          title="길이"
-          dataIndex="startAt"
-          key="startAt"
-          sorter={(a: { startAt: number, endAt: number }, b: { startAt: number, endAt: number }) =>
-            (a.endAt - a.startAt) - (b.endAt - b.startAt)
-          }
-          render={(runTime) => {
-            const minutes = Math.floor(runTime / 60);
-            const seconds = runTime % 60;
-            if (runTime >= 60) {
-              return (
-                <Tag color="red">
-                  {minutes}분 {seconds}초
-                </Tag>
-              );
-            }
-            return <Tag color="red">{runTime}초</Tag>;
-          }}
-        /> */}
         <Column
           title="일시"
-          dataIndex="createAt"
-          key="createAt"
-          render={(createAt) => {
-            const date = new Date(createAt);
+          dataIndex="createdAt"
+          key="createdAt"
+          render={(createdAt) => {
+            const date = new Date(createdAt);
             const formattedDate = date.toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: '2-digit',

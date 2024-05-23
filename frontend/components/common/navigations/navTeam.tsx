@@ -52,7 +52,7 @@ export default function TeamPage() {
         // 빌드를 위해 추가한 코드
         didOpen: () => {
           console.warn(error);
-        }
+        },
       });
     }
   };
@@ -194,56 +194,58 @@ ${response.data.url}</textarea>
   ];
 
   if (isLeader) {
-    items.push(
-      {
-        label: (
-          <p
-            style={{
-              fontWeight: 'bold',
-              textAlign: 'center',
-              color: 'blue',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleMenuClick('edit-team-info')}
-          >
-            팀 정보 변경
-          </p>
-        ),
-        key: 'edit-team-info',
-      },
-      {
-        label: (
-          <p
-            style={{
-              fontWeight: 'bold',
-              color: 'red',
-              textAlign: 'center',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleMenuClick('leave-team')}
-          >
-            팀 나가기
-          </p>
-        ),
-        key: 'leave-team',
-      },
-      {
-        label: (
-          <p
-            style={{
-              fontWeight: 'bold',
-              textAlign: 'center',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleMenuClick('delete-team')}
-          >
-            팀 삭제
-          </p>
-        ),
-        key: 'delete-team',
-        style: { backgroundColor: '#d33', color: 'white' },
-      },
-    );
+    items.push({
+      label: (
+        <p
+          style={{
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: 'blue',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleMenuClick('edit-team-info')}
+        >
+          팀 정보 변경
+        </p>
+      ),
+      key: 'edit-team-info',
+    });
+  }
+
+  items.push({
+    label: (
+      <p
+        style={{
+          fontWeight: 'bold',
+          color: 'red',
+          textAlign: 'center',
+          cursor: 'pointer',
+        }}
+        onClick={() => handleMenuClick('leave-team')}
+      >
+        팀 나가기
+      </p>
+    ),
+    key: 'leave-team',
+  });
+
+  if (isLeader) {
+    items.push({
+      label: (
+        <p
+          style={{
+            fontWeight: 'bold',
+            textAlign: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleMenuClick('delete-team')}
+        >
+          팀 삭제
+        </p>
+      ),
+      key: 'delete-team',
+      style: { backgroundColor: '#d33', color: 'white' },
+    });
   }
 
   const content = (

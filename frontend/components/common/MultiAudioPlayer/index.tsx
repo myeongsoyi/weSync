@@ -58,7 +58,6 @@ export default function MultiAudioPlayer() {
       });
       if (!playersRef.current[track.id]) {
         audio.load();
-        // console.log(volume);
         audio.volume = volume;
         audio.currentTime = 0;
         playersRef.current[track.id] = audio;
@@ -74,10 +73,8 @@ export default function MultiAudioPlayer() {
         tracks.find((track) => track.url === audio.src) &&
         longestTrack?.url !== audio.src
       ) {
-        // console.log('play', audio.src, longestTrack?.url);
         audio.play();
       } else {
-        // console.log('pause');
         audio.pause();
       }
     });
@@ -117,15 +114,9 @@ export default function MultiAudioPlayer() {
   return (
     <div
     >
-      {/* <div>
-        <p>
-          {tracks.toString()}
-          {longestTrack?.name}
-        </p>
-      </div> */}
       {longestTrack &&
         tracks.length > 0 &&
-        playing === false && ( // Added parentheses here
+        playing === false && ( 
           <div
             style={{
               position: 'fixed',
