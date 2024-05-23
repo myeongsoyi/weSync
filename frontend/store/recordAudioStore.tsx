@@ -11,19 +11,13 @@ interface TrackState {
   }>;
   isPlaying: boolean;
   isRecording: boolean;
-  isPlayable: boolean;
   scoreIndex: number;
   currentTime: number;
   scoreId: number;
   toggleTrack: (id: number, url: string, name: string) => void;
-  togglePlayPauseOne: (id: number) => void;
   setVolume: (id: number, volume: number) => void;
-  playAll: () => void;
-  pauseAll: () => void;
-  setVolumeAll: (volume: number) => void;
   setIsPlaying: (isPlaying: boolean) => void;
   setIsRecording: (isRecording: boolean) => void;
-  setIsPlayable: (isPlayable: boolean) => void;
   setTracks: (tracks: Array<{
     id: number;
     url: string;
@@ -37,10 +31,9 @@ interface TrackState {
 }
 
 export const useRecordAudioStore = create<TrackState>((set, get) => ({
-  tracks: [],
+  tracks: [], 
   isPlaying: false,
   isRecording: false,
-  isPlayable: false,
   scoreIndex: 0,
   currentTime: 0,
   scoreId: 0,
@@ -53,28 +46,10 @@ export const useRecordAudioStore = create<TrackState>((set, get) => ({
     newTracks.sort((a, b) => a.id - b.id);
     set({ tracks: newTracks });
   },
-  togglePlayPauseOne: (id: number,) => {
-    const newTracks = get().tracks.map(track =>
-      track.id === id ? { ...track, playing: !track.playing } : track
-    );
-    set({ tracks: newTracks });
-  },
   setVolume: (id, volume) => {
     const newTracks = get().tracks.map(track =>
       track.id === id ? { ...track, volume: volume } : track
     );
-    set({ tracks: newTracks });
-  },
-  playAll: () => {
-    const newTracks = get().tracks.map(track => ({ ...track, playing: true }));
-    set({ tracks: newTracks });
-  },
-  pauseAll: () => {
-    const newTracks = get().tracks.map(track => ({ ...track, playing: false }));
-    set({ tracks: newTracks });
-  },
-  setVolumeAll: volume => {
-    const newTracks = get().tracks.map(track => ({ ...track, volume }));
     set({ tracks: newTracks });
   },
   setIsPlaying: isPlaying => {
@@ -82,9 +57,6 @@ export const useRecordAudioStore = create<TrackState>((set, get) => ({
   },
   setIsRecording: isRecording => {
     set({ isRecording });
-  },
-  setIsPlayable: isPlayable => {
-    set({ isPlayable });
   },
   setScoreIndex: index => {
     set({ scoreIndex: index });

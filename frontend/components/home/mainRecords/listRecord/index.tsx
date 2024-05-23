@@ -22,7 +22,6 @@ export default function ListRecord() {
   const fetchRecords = async () => {
     try {
       const response = await getMainRecords();
-      // console.log(response)
       if (response.success) {
         setRecords(response.data);
         setSuccess(true);
@@ -38,27 +37,6 @@ export default function ListRecord() {
   useEffect(() => {
     fetchRecords();
   }, []);
-
-  // useEffect(() => {
-  //   setRecords([
-  //     {
-  //       recordId: 1,
-  //       title: '안녕akfaefaslkdjaslkdaskldj',
-  //       isPublic: true,
-  //       recordUrl:
-  //         'https://we-sync.s3.ap-southeast-2.amazonaws.com/record/m2.mp3',
-  //       teamId: 1,
-  //       teamUrl:
-  //         'https://we-sync.s3.ap-southeast-2.amazonaws.com/front/3d-render-of-red-paper-clipboard-with-cross-mark.png',
-  //       songName: '노래1',
-  //       positionName: '포지션1',
-  //       colorCode: 'FFE27F',
-  //       startAt: 1.5,
-  //       endAt: 13,
-  //       createAt: '2024-05-12T02:45:33.926036',
-  //     },
-  //   ]);
-  // }, []);
 
   const handlePublic = async (recordId: number, isPublic: boolean) => {
     Swal.fire({
@@ -86,15 +64,6 @@ export default function ListRecord() {
         } catch (err) {
           message.error('공유 상태 변경에 실패했습니다.');
         }
-        // const newRecords = records.map((record) => {
-        //   if (record.recordId === recordId) {
-        //     return { ...record, isPublic: !record.isPublic };
-        //   }
-        //   return record;
-        // });
-        // const msg = isPublic ? '공유가 취소되었습니다.' : '공유가 시작되었습니다.';
-        // message.success(msg);
-        // setRecords(newRecords);
       }
     });
   };
@@ -117,7 +86,6 @@ export default function ListRecord() {
             message.success('녹음이 삭제되었습니다.');
             fetchRecords();
           } else {
-            // message.error(response.error?.errorMessage);
             message.error('녹음 삭제에 실패했습니다.');
           }
         } catch (err) {
@@ -171,22 +139,6 @@ export default function ListRecord() {
         )}
       />
       <Column title="제목" dataIndex="title" key="title" />
-      {/* <Column
-        title="길이"
-        key="runTime"
-        render={(record: MainRecords['data'][number]) => {
-          const runTime = record.endAt - record.startAt;
-          const minutes = Math.floor(runTime / 60);
-          const seconds = Math.floor(runTime % 60);
-          return runTime >= 60 ? (
-            <Tag color="red">
-              {minutes}분 {seconds}초
-            </Tag>
-          ) : (
-            <Tag color="red">{runTime}초</Tag>
-          );
-        }}
-      /> */}
       <Column
         title="저장 일시"
         dataIndex="createdAt"
@@ -210,7 +162,6 @@ export default function ListRecord() {
               <Tag color="blue">{formattedDate}</Tag>
               <br />
               <Tag color="green">{formattedTime}</Tag>
-              {/* <p>{createdAt}</p> */}
             </>
           );
         }}

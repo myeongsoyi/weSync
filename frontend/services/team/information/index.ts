@@ -51,8 +51,6 @@ export async function postTeamPosition(
     positionName,
     colorId,
   };
-  // data를 먼저 확인해보자
-  // console.log('data:', data);
 
   const response = await APIModule({
     action: '/team/position',

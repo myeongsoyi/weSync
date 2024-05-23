@@ -23,7 +23,7 @@ export interface RecordAll {
     public: boolean;
     startAt: string;
     endAt: string;
-    createAt: string;
+    createdAt: string;
     nickname: string;
     positionId: number;
     positionName: string;
@@ -44,7 +44,7 @@ export interface RecordMy {
     userId: number;
     startAt: string;
     endAt: string;
-    createAt: string;
+    createdAt: string;
     positionId: number;
     positionName: string;
     colorCode: string;
@@ -64,7 +64,7 @@ export interface RecordFiltered {
     userId: number;
     startAt: string;
     endAt: string;
-    createAt: string;
+    createdAt: string;
     nickname: string;
     positionId: number;
     positionName: string;

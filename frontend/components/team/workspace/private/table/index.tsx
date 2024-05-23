@@ -46,7 +46,6 @@ export default function PrivateListRecord() {
 
   const fetchRecords = async () => {
     const response = await getTeamRecordsMy(teamId as string);
-    // console.log(response);
     if (response.success) {
       setSuccess(response.success);
       setRecords(response.data);
@@ -62,8 +61,6 @@ export default function PrivateListRecord() {
   }, []);
 
   const { Column } = Table;
-  // const { Column, ColumnGroup } = Table;
-  // console.log(records);
 
   // 포지션 필터링 임시 함수
   // const positionFilters = Array.from(
@@ -109,15 +106,6 @@ export default function PrivateListRecord() {
         } catch (err) {
           message.error('공유 상태 변경에 실패했습니다.');
         }
-        // const newRecords = records.map((record) => {
-        //   if (record.recordId === recordId) {
-        //     return { ...record, isPublic: !record.isPublic };
-        //   }
-        //   return record;
-        // });
-        // const msg = isPublic ? '공유가 취소되었습니다.' : '공유가 시작되었습니다.';
-        // message.success(msg);
-        // setRecords(newRecords);
       }
     });
   };
@@ -221,32 +209,12 @@ export default function PrivateListRecord() {
           )}
         />
         <Column title="제목" dataIndex="title" key="title" />
-        {/* <Column
-          title="길이"
-          dataIndex="runTime"
-          key="runTime"
-          sorter={(a: { runTime: number }, b: { runTime: number }) =>
-            a.runTime - b.runTime
-          }
-          render={(runTime) => {
-            const minutes = Math.floor(runTime / 60);
-            const seconds = runTime % 60;
-            if (runTime >= 60) {
-              return (
-                <Tag color="red">
-                  {minutes}분 {seconds}초
-                </Tag>
-              );
-            }
-            return <Tag color="red">{runTime}초</Tag>;
-          }}
-        /> */}
         <Column
           title="일시"
-          dataIndex="createAt"
-          key="createAt"
-          render={(createAt) => {
-            const date = new Date(createAt);
+          dataIndex="createdAt"
+          key="createdAt"
+          render={(createdAt) => {
+            const date = new Date(createdAt);
             const formattedDate = date.toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: '2-digit',
