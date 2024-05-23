@@ -68,6 +68,6 @@ public class Team extends BaseTime {
     private List<Invitation> invitations;
 
     //공지
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Notice> notices;
 }
