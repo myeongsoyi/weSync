@@ -57,7 +57,6 @@ export default function RecordAudioPlayer() {
       });
       if (!playersRef.current[track.id]) {
         audio.load();
-        // console.log(volume);
         audio.volume = volume;
         audio.currentTime = 0;
         playersRef.current[track.id] = audio;
@@ -67,17 +66,14 @@ export default function RecordAudioPlayer() {
 
   const handlePlayPause = (isPlaying: boolean) => {
     setIsPlaying(isPlaying);
-    // setIsRecording(isPlaying);
     Object.values(playersRef.current).forEach((audio) => {
       if (
         isPlaying &&
         tracks.find((track) => track.url === audio.src) &&
         longestTrack?.url !== audio.src
       ) {
-        // console.log('play', audio.src.split('3000').pop(), longestTrack?.url);
         audio.play();
       } else {
-        // console.log('pause');
         audio.pause();
       }
     });
@@ -102,28 +98,6 @@ export default function RecordAudioPlayer() {
       }
     });
   };
-
-  // const headerTracks = (
-  //   <>
-  //     <Button onClick={() => console.log(tracks)}>console.log(tracks)</Button>
-  //     <>
-  //       {tracks.map((track) => (
-  //         <Button
-  //           key={track.id}
-  //           onClick={() => toggleTrack(track.id, track.url, track.name)}
-  //           disabled={isPlaying}
-  //           style={{ marginRight: '8px' }}
-  //         >
-  //           <span>{track.name}</span>
-  //           <DeleteTwoTone
-  //             twoToneColor={'#FF1616'}
-  //             style={{ opacity: isPlaying ? 0.4 : 1 }}
-  //           />
-  //         </Button>
-  //       ))}
-  //     </>
-  //   </>
-  // );
 
   return (
     <div

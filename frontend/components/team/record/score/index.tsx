@@ -36,7 +36,6 @@ export default function RecordScore({ teamId }: IParams) {
   useEffect(() => {
     const fetchScore = async () => {
       const response = await getScoreData(teamId);
-      // console.log(response);
       if (response.success) {
         setSuccess(response.success);
         setScore(response.data);
@@ -51,7 +50,6 @@ export default function RecordScore({ teamId }: IParams) {
 
   useEffect(() => {
     if (score !== undefined && score.length > 0) {
-      // console.log(score[scoreIndex], score);
       if (score[scoreIndex]?.score_url) {
         setScoreUrl(score[scoreIndex].score_url);
       } else {
@@ -92,7 +90,6 @@ export default function RecordScore({ teamId }: IParams) {
         formData.append('file', file);
 
         const response = await postUploadScore(teamId, formData);
-        // console.log('업로드 시도', response);
         if (response.success) {
           Swal.fire({
             icon: 'success',
@@ -112,7 +109,6 @@ export default function RecordScore({ teamId }: IParams) {
 
   async function handleDelete(teamId: string) {
     const response = await deleteScore(teamId);
-    // console.log(response);
     if (response.success) {
       Swal.fire({
         icon: 'success',

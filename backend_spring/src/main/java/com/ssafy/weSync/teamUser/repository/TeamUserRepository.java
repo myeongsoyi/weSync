@@ -21,9 +21,7 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
     Optional<TeamUser> findByUserUserIdAndTeamTeamId(Long userId, Long teamId);
     List<TeamUser> findByPosition(Position position);
 
-    @Query("SELECT tu FROM TeamUser tu JOIN tu.team t JOIN tu.user u WHERE u.userId = :userId And t.teamId = :teamId")
+    @Query("SELECT tu FROM TeamUser tu JOIN FETCH tu.team t JOIN tu.user u WHERE u.userId = :userId And t.teamId = :teamId")
     Optional<TeamUser> findByUserIdAndTeamId(@Param("userId") Long userId, @Param("teamId") Long teamId);
 
-    @Query("SELECT tu FROM TeamUser tu JOIN tu.notices n JOIN tu.user u WHERE n.noticeId =:noticeId AND u.userId = :userId")
-    Optional<TeamUser> findByUserIdAndNoticeId(@Param("userId") Long userId, @Param("noticeId") Long noticeId);
 }
