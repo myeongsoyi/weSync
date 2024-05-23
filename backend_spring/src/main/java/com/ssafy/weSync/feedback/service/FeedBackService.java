@@ -9,6 +9,7 @@ import com.ssafy.weSync.feedback.entity.FeedBack;
 import com.ssafy.weSync.feedback.repository.FeedBackRepository;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
+import com.ssafy.weSync.global.entity.Expunger;
 import com.ssafy.weSync.record.entity.Record;
 import com.ssafy.weSync.record.repository.RecordRepository;
 import com.ssafy.weSync.team.entity.Team;
@@ -34,9 +35,14 @@ public class FeedBackService {
 
     public CreateResponse createFeedBack(CreateRequest createRequest, Long userId, Long teamId, Long recordId) {
         Team team =  teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, team.getTeamId()).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
-        Record record = recordRepository.findById(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
-
+        Record record = recordRepository.findByRecordIdWithScoreAndTeamAndTeamUser(recordId).orElseThrow(() -> new GlobalException(CustomError.NO_RECORD));
+        TeamUser teamUser = null;
+        for (TeamUser tu : record.getScore().getTeam().getTeamUsers()) {
+            if (tu.getUser().getUserId() == userId){
+                teamUser = tu;
+                break;
+            }
+        }
         FeedBack feedBack = feedBackRepository.save(createRequest.toEntity(record, teamUser));
         return CreateResponse.toDto(feedBack);
     }
@@ -50,7 +56,7 @@ public class FeedBackService {
     }
 
     public UpdateResponse updateFeedBack(UpdateRequest updateRequest, Long userId, Long feedbackId) {
-        FeedBack feedBack = feedBackRepository.findById(feedbackId).orElseThrow(() -> new GlobalException(CustomError.NO_FEEDBACK));
+        FeedBack feedBack = feedBackRepository.findByFeedbackId(feedbackId).orElseThrow(() -> new GlobalException(CustomError.NO_FEEDBACK));
 
         // 권한 체크
         if (feedBack.getTeamUser().getUser().getUserId() != userId){
@@ -63,13 +69,14 @@ public class FeedBackService {
     }
 
     public void deleteFeedback(Long userId, Long feedbackId) {
-        FeedBack feedBack = feedBackRepository.findById(feedbackId).orElseThrow(() -> new GlobalException(CustomError.NO_FEEDBACK));
+        FeedBack feedBack = feedBackRepository.findByFeedbackId(feedbackId).orElseThrow(() -> new GlobalException(CustomError.NO_FEEDBACK));
 
         // 권한 체크
         if (feedBack.getTeamUser().getUser().getUserId() != userId){
             throw new GlobalException(CustomError.UNAUTHORIZED_USER);
         }
 
+        feedBack.setDeletedBy(Expunger.normal);
         feedBackRepository.deleteById(feedbackId);
     }
 }

@@ -3,6 +3,7 @@ package com.ssafy.weSync.notice.service;
 import com.ssafy.weSync.global.ApiResponse.AccessTokenValidationAspect;
 import com.ssafy.weSync.global.ApiResponse.CustomError;
 import com.ssafy.weSync.global.ApiResponse.GlobalException;
+import com.ssafy.weSync.global.entity.Expunger;
 import com.ssafy.weSync.notice.dto.request.CreateRequest;
 import com.ssafy.weSync.notice.dto.request.UpdateRequest;
 import com.ssafy.weSync.notice.dto.response.CreateResponse;
@@ -35,8 +36,8 @@ public class NoticeService {
     private final TeamUserRepository teamUserRepository;
 
     public CreateResponse createNotice(CreateRequest createRequest, Long teamId, Long userId) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
         TeamUser teamUser = teamUserRepository.findByUserIdAndTeamId(userId, teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
+        Team team = teamUser.getTeam();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -52,24 +53,18 @@ public class NoticeService {
     }
 
     public List<GetAllResponse> getAllNotices(Long teamId) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
-
-        List<Notice> notices = noticeRepository.findAllByTeamId(teamId);
+        Team team = teamRepository.findByTeamIdWithNotices(teamId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAM));
+        List<Notice> notices = team.getNotices();
         List<GetAllResponse> getAllResponses = notices.stream()
                 .map(GetAllResponse::toDto)
                 .collect(Collectors.toList());
         return getAllResponses;
     }
 
-    /***
-     * 상단고정여부 변경
-     * @param noticeId
-     * @param userId
-     */
+    // 상단고정여부 변경
     public FixUpdateResponse updateNotice(Long noticeId, Long userId) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
-        Team team = teamUser.getTeam();
+        Notice notice = noticeRepository.findByNoticeIdWithTeamAndTeamUser(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
+        Team team = notice.getTeam();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -81,17 +76,10 @@ public class NoticeService {
         return FixUpdateResponse.toDto(newNotice.isFixed());
     }
 
-    /***
-     * 공지내용변경
-     * @param updateRequest
-     * @param noticeId
-     * @param userId
-     * @return UpdateResponse
-     */
+    // 공지내용변경
     public ContentUpdateResponse updateNotice(UpdateRequest updateRequest, Long noticeId, Long userId){
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
-        Team team = teamUser.getTeam();
+        Notice notice = noticeRepository.findByNoticeIdWithTeamAndTeamUser(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
+        Team team = notice.getTeam();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
@@ -104,15 +92,15 @@ public class NoticeService {
     }
 
     public void deleteNotice(Long noticeId, Long userId) {
-        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
-        TeamUser teamUser = teamUserRepository.findByUserIdAndNoticeId(userId, noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_TEAMUSER));
-        Team team = teamUser.getTeam();
+        Notice notice = noticeRepository.findByNoticeIdWithTeamAndTeamUser(noticeId).orElseThrow(() -> new GlobalException(CustomError.NO_NOTICE));
+        Team team = notice.getTeam();
 
         // 권한체크
         if (userId != team.getTeamLeaderId()){
             throw new GlobalException(CustomError.NOT_TEAM_LEADER);
         }
 
+        notice.setDeletedBy(Expunger.normal);
         noticeRepository.deleteById(noticeId);
     }
 

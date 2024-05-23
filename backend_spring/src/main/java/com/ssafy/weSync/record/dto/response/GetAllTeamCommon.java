@@ -21,6 +21,6 @@ public abstract class GetAllTeamCommon {
     private boolean isPublic;
     private Long startAt;
     private Long endAt;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
 }
