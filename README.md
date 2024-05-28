@@ -1,11 +1,9 @@
 # <img src="./images/logo.png" style="width: 36px; vertical-align: middle;"> 아카펠라 연습 스페이스 "weSync"
 
-
-<br>
-
 > 아카펠라 팀관리에 어려움이 있으신가요?📢<br>
 팀연습이 끝난 후 집에서 개인연습까지 하고 싶으신가요?🎤<br>
 weSync로 이 모든 고민을 해결해보세요!✅
+<br><br>
 
 ## 🔗 소개영상
 [UCC](https://drive.google.com/file/d/1kScbcJ66ZIOAQU7XDiMLnwCNyM7wiKO5/view?usp=drive_link)
@@ -17,11 +15,13 @@ weSync로 이 모든 고민을 해결해보세요!✅
 ![](./images/변환결과.gif)
 <br>
 **weSync**는 여러 파트로 구성된 아카펠라 악보를 **파트별로 자동으로 분할**해 줍니다. 팀스페이스에서 하나의 악보가 업로드되면 다수의 파트별 악보를 생성하여 제공합니다.
+<br><br>
 
 ### 🎹 반주재생
 ![](./images/반주재생.gif)
 <br>
 파트별 악보에는 **반주도 함께 제공**됩니다. 모든 파트를 동시 재생하여 완성된 멜로디를 듣거나 원하는 파트만 재생하여 정확한 음을 파악할 수 있습니다.
+<br><br>
 
 ### 🎙️ 녹음
 ![](./images/녹음.gif)
