@@ -1,4 +1,4 @@
-# <img src="./images/wesync_icon.png" style="width: 36px; vertical-align: middle;"> 아카펠라 연습 스페이스 "weSync"
+# <img src="./images/logo.png" style="width: 36px; vertical-align: middle;"> 아카펠라 연습 스페이스 "weSync"
 
 
 <br>
@@ -62,7 +62,7 @@ weSync로 이 모든 고민을 해결해보세요!✅
 <br><br>
 
 ## ⚙️ 아키텍처
-![](./images/architecture.PNG)
+![](./images/architecture.png   )
 <br><br>
 
 ## 🔑 ERD
